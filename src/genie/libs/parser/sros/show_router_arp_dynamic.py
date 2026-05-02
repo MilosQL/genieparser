@@ -36,10 +36,15 @@ class ShowRouterArpDynamic(ShowRouterArpDynamicSchema):
 			out = output
 		
 		parsed_dict = {}
-
-		#ARP Table Router: (Base)
-		p0 = re.compile(r'^ARP Table Router: \((?P<router>\S+)\)$')
-
+		
+		
+		#ARP Table Router: (Base) 
+		#    or
+		#ARP Table (Router: Base) 
+		p0 = re.compile(r'^ARP Table.*[\s(](?P<router>[^)]+)\)$')
+		#
+		# Note: By examining the YANG model and its type definitions, we can see that `router-name` may contain spaces. 
+		
 		#No. of ARP Entries: 4
 		p1 = re.compile(r'^No. of ARP Entries: (?P<entries>\d+)$')
 
