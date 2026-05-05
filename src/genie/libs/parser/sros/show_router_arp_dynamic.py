@@ -1,6 +1,7 @@
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Any
 import re
+from lxml import etree
 
 # ======================================================
 # Schema for 'show router arp dynamic'
@@ -83,5 +84,86 @@ class ShowRouterArpDynamic(ShowRouterArpDynamicSchema):
 				interface_dict["expiry"] = expiry
 				interface_dict["type"] = type_mac
 				continue
+
+		return parsed_dict
+
+	def yang(self, output=None):
+
+		if output is None:
+			filter_xml = """
+			<filter xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
+				<state xmlns="urn:nokia.com:sros:ns:yang:sr:state">
+					<router>
+						<interface>
+							<ipv4>
+								<neighbor-discovery>
+									<neighbor/>
+								</neighbor-discovery>
+							</ipv4>
+						</interface>
+					</router>
+				</state>
+			</filter>
+			"""
+			ele_filter = etree.fromstring(filter_xml)
+			response = self.device.nc.get(filter=ele_filter)
+			output = response.data_xml
+
+		parsed_dict = {'router': {}}
+
+		# Handle strings vs bytes safely for lxml
+		if isinstance(output, str):
+			root = etree.fromstring(output.encode('utf-8'))
+		else:
+			root = etree.fromstring(output)
+
+		ns = {'sros': 'urn:nokia.com:sros:ns:yang:sr:state'}
+
+		# Iterate hierarchically: Router -> Interface -> Neighbor
+		for router in root.xpath('.//sros:router', namespaces=ns):
+			router_name = router.findtext('sros:router-name', namespaces=ns)
+			
+			if not router_name:
+				continue
+
+			router_dict = {
+				'entries': 0,
+				'ip_address': {}
+			}
+
+			for interface in router.xpath('.//sros:interface', namespaces=ns):
+				# Grab the interface name once per interface, not once per neighbor
+				intf_name = interface.findtext('sros:interface-name', namespaces=ns)
+
+				for nbr in interface.xpath('.//sros:ipv4/sros:neighbor-discovery/sros:neighbor', namespaces=ns):
+					typ = nbr.findtext('sros:type', namespaces=ns)
+
+					# Optional filter: skip non-dynamic entries immediately
+					if typ != 'dynamic':
+						continue
+
+					ip = nbr.findtext('sros:ipv4-address', namespaces=ns)
+					mac = nbr.findtext('sros:mac-address', namespaces=ns)
+
+					seconds = int(nbr.findtext('sros:timer', namespaces=ns))
+					# Accoding to the YANG model, the maximum allowed value 
+					# for seconds is 65535, which is less than 19h
+					h = seconds // 3600
+					m = (seconds % 3600) // 60
+					s = seconds % 60 
+					timer = f"{h:02d}h{m:02d}m{s:02d}s"
+
+					if ip:
+						router_dict['ip_address'][ip] = {
+							'interface': intf_name,
+							'mac_add': mac,
+							'expiry': timer,
+							'type': 'Dyn[I]'  # Hardcoded since we already filtered for 'dynamic'
+						}
+						router_dict['entries'] += 1
+
+			# Only add the router to the final dict if it actually has valid neighbors
+			if router_dict['ip_address']:
+				parsed_dict['router'][router_name] = router_dict
 
 		return parsed_dict
