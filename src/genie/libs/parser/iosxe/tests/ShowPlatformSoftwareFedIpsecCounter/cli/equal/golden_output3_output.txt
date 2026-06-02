@@ -1,0 +1,31 @@
+########################################
+Flow Stats for if-id 0x5c
+########################################
+-----------------------------------
+Inbound Flow Info for flow id: 11
+  FVRF ID: 0  IVRF ID: 0
+------------------------------
+SA Index: 1
+--------------------
+Asic Instance 0: SA Stats
+  Packet Format Check Error:	0
+  Invalid SA:			0
+  Auth Fail:			0
+  Sequence Number Overflows:	0
+  Anti-Replay Fail:		0
+  Packet Count:			20019
+  Byte Count:			20802622
+-----------------------------------
+Outbound Flow Info for flow id: 12
+  FVRF ID: 0  IVRF ID: 0
+------------------------------
+SA Index: 1026
+--------------------
+Asic Instance 0: SA Stats
+  Packet Format Check Error:	0
+  Invalid SA:			0
+  Auth Fail:			0
+  Sequence Number Overflows:	0
+  Anti-Replay Fail:		0
+  Packet Count:			20019
+  Byte Count:			21323230

@@ -1,0 +1,59 @@
+9300stack#$show platform software fed switch 3 security-fed storm-control if-id 0x90    
+Platform Storm Control Information
+
+
+IIF-ID   : 0000000000000090
+IIF-Name : GigabitEthernet3/0/28
+Action   : TRAP
+Speed    : 1000000000 BitsPerSecond
+
+Traffic type: BCAST
+  
+  Supp Type    : BPS
+  Level        : 150000000
+  Low Level    : 50000000
+  Storm Exists : No
+  Bytes        : 0
+  Packets      : 0
+  Prev Bytes   : 0
+  Prev Packets : 0
+  Current Rate : 0
+
+Traffic type: MCAST
+  
+  Supp Type    : BPS
+  Level        : 150000000
+  Low Level    : 50000000
+  Storm Exists : No
+  Bytes        : 0
+  Packets      : 0
+  Prev Bytes   : 0
+  Prev Packets : 0
+  Current Rate : 0
+          
+Traffic type: UCAST
+          
+  Supp Type    : BPS
+  Level        : 150000000
+  Low Level    : 50000000
+  Storm Exists : No
+  Bytes        : 0
+  Packets      : 0
+  Prev Bytes   : 0
+  Prev Packets : 0
+  Current Rate : 0
+          
+Traffic type: UNKNOWN_UCAST
+          
+  Supp Type    : BPS
+  Level        : 150000000
+  Low Level    : 50000000
+  Storm Exists : No
+  Bytes        : 0
+  Packets      : 0
+  Prev Bytes   : 0
+  Prev Packets : 0
+  Current Rate : 0
+          
+Traffic type: SHARED
+Storm Control Not Configured

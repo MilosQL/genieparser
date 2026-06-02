@@ -19,6 +19,7 @@ from pyats.utils.import_utils import get_entry_points
 
 from genie.abstract.package import AbstractTree, DEFAULT_ABSTRACT_ORDER
 from genie.abstract import Lookup
+from genie.abstract.decorator import with_deprecation_context
 
 from .extension import ExtendParsers
 
@@ -506,7 +507,13 @@ def _get_parser_cls(command, abstract):
 
         # get the best fit class of the command for this device
         try:
-            return matrix_ptr.load_ptr()
+            parser_class = matrix_ptr.load_ptr()
+            return with_deprecation_context(
+                parser_class,
+                matrix_ptr=matrix_ptr,
+                abstract_tree=data,
+                tokens=abstract,
+                top=command)
             # we only need one result for this command
         except KeyError:
             # fallback to lower priority token values

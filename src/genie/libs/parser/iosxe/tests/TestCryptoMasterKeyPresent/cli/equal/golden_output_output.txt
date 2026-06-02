@@ -1,0 +1,2 @@
+Switch#test crypto master-key present
+test master key: Master key present: 1

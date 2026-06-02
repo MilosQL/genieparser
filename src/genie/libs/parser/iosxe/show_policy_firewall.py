@@ -5,6 +5,7 @@ IOSXE parsers for the following show commands:
     * show policy-firewall stats zone {zone}
     * show policy-firewall sessions platform destination-port {port}
     * show policy-firewall stats global
+    * show policy-firewall stats vrf global
 """
 
 # Python
@@ -567,5 +568,160 @@ class ShowPolicyFirewallSessionsPlatformDestinationPort(ShowPolicyFirewallSessio
                     'utd': groups['u'].strip(),
                     'appfw': groups['ad'].strip()
             }
+
+        return ret_dict
+
+
+class ShowPolicyFirewallStatsVrfGlobalSchema(MetaParser):
+    schema = {
+        "vrf": {
+            Any(): {
+                "global_table_statistics": {
+                    "total_session": {
+                        "count_estab_plus_half_open": int,
+                        "exceed": int
+                    },
+                    "total_session_aggressive_aging": {
+                        "period": str,
+                        "event_count": int
+                    },
+                    "half_open": {
+                        "protocols": {
+                            "all": {
+                                "session_count": int,
+                                "exceed": int
+                            },
+                            "udp": {
+                                "session_count": int,
+                                "exceed": int
+                            },
+                            "icmp": {
+                                "session_count": int,
+                                "exceed": int
+                            },
+                            "tcp": {
+                                "session_count": int,
+                                "exceed": int
+                            }
+                        },
+                        "tcp_syn_flood": {
+                            "half_open_count": int,
+                            "exceed": int
+                        },
+                        "aggressive_aging": {
+                            "period": str,
+                            "event_count": int
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+class ShowPolicyFirewallStatsVrfGlobal(ShowPolicyFirewallStatsVrfGlobalSchema):
+    cli_command = "show policy-firewall stats vrf global"
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        ret_dict = {}
+
+        #   Global table statistics
+        p1 = re.compile(r'^\s*Global\s+table\s+statistics$')
+
+        #        Total Session Count(estab + half-open): 502, Exceed: 0
+        p2 = re.compile(r'^\s*Total\s+Session\s+Count\(estab\s+\+\s+half-open\)\s*:\s*(?P<count>\d+)\s*,\s*Exceed\s*:\s*(?P<exceed>\d+)\s*$')
+
+        #        Total Session Aggressive Aging Period Off, Event Count: 0
+        p3 = re.compile(r'^\s*Total\s+Session\s+Aggressive\s+Aging\s+Period\s+(?P<period>On|Off)\s*,\s*Event\s+Count\s*:\s*(?P<event_count>\d+)\s*$')
+
+        #               	Half Open
+        p4 = re.compile(r'^\s*Half\s+Open\s*$')
+
+        #        All	500		232667
+        p5 = re.compile(r'^\s*(?P<protocol>All|UDP|ICMP|TCP)\s+(?P<session_count>\d+)\s+(?P<exceed>\d+)\s*$')
+
+        #        TCP Syn Flood Half Open Count: 0, Exceed: 0
+        p6 = re.compile(r'^\s*TCP\s+Syn\s+Flood\s+Half\s+Open\s+Count\s*:\s*(?P<half_open_count>\d+)\s*,\s*Exceed\s*:\s*(?P<exceed>\d+)\s*$')
+
+        #        Half Open Aggressive Aging Period On, Event Count: 1
+        p7 = re.compile(r'^\s*Half\s+Open\s+Aggressive\s+Aging\s+Period\s+(?P<period>On|Off)\s*,\s*Event\s+Count\s*:\s*(?P<event_count>\d+)\s*$')
+
+        for line in output.splitlines():
+            line = line.strip()
+            if not line:
+                continue
+
+            #   Global table statistics
+            m = p1.match(line)
+            if m:
+                vrf_dict = ret_dict.setdefault("vrf", {}).setdefault("global", {})
+                vrf_dict.setdefault("global_table_statistics", {})
+                continue
+
+            #        Total Session Count(estab + half-open): 502, Exceed: 0
+            m = p2.match(line)
+            if m:
+                vrf_dict = ret_dict.setdefault("vrf", {}).setdefault("global", {})
+                gts = vrf_dict.setdefault("global_table_statistics", {})
+                total_session = gts.setdefault("total_session", {})
+                total_session["count_estab_plus_half_open"] = int(m.group("count"))
+                total_session["exceed"] = int(m.group("exceed"))
+                continue
+
+            #        Total Session Aggressive Aging Period Off, Event Count: 0
+            m = p3.match(line)
+            if m:
+                vrf_dict = ret_dict.setdefault("vrf", {}).setdefault("global", {})
+                gts = vrf_dict.setdefault("global_table_statistics", {})
+                tsaa = gts.setdefault("total_session_aggressive_aging", {})
+                tsaa["period"] = m.group("period")
+                tsaa["event_count"] = int(m.group("event_count"))
+                continue
+
+            #               	Half Open
+            m = p4.match(line)
+            if m:
+                vrf_dict = ret_dict.setdefault("vrf", {}).setdefault("global", {})
+                gts = vrf_dict.setdefault("global_table_statistics", {})
+                gts.setdefault("half_open", {})
+                continue
+
+            #        All	500		232667
+            m = p5.match(line)
+            if m:
+                protocol = m.group("protocol").lower()
+                session_count = int(m.group("session_count"))
+                exceed = int(m.group("exceed"))
+                proto_dict = vrf_dict.setdefault("global_table_statistics", {}) \
+                    .setdefault("half_open", {}) \
+                    .setdefault("protocols", {}) \
+                    .setdefault(protocol, {})
+                proto_dict["session_count"] = session_count
+                proto_dict["exceed"] = exceed
+                continue
+
+            #        TCP Syn Flood Half Open Count: 0, Exceed: 0
+            m = p6.match(line)
+            if m:
+                vrf_dict = ret_dict.setdefault("vrf", {}).setdefault("global", {})
+                gts = vrf_dict.setdefault("global_table_statistics", {})
+                half_open = gts.setdefault("half_open", {})
+                tcp_syn = half_open.setdefault("tcp_syn_flood", {})
+                tcp_syn["half_open_count"] = int(m.group("half_open_count"))
+                tcp_syn["exceed"] = int(m.group("exceed"))
+                continue
+
+            #        Half Open Aggressive Aging Period On, Event Count: 1
+            m = p7.match(line)
+            if m:
+                vrf_dict = ret_dict.setdefault("vrf", {}).setdefault("global", {})
+                gts = vrf_dict.setdefault("global_table_statistics", {})
+                half_open = gts.setdefault("half_open", {})
+                aggr = half_open.setdefault("aggressive_aging", {})
+                aggr["period"] = m.group("period")
+                aggr["event_count"] = int(m.group("event_count"))
+                continue
 
         return ret_dict

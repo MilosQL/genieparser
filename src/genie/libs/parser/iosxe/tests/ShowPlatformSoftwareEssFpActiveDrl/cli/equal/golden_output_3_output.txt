@@ -1,0 +1,6 @@
+show platform software ess FP active drl
+Subscriber Policing records: Total  : 0
+
+Segment             ClassIn     ClassOut    EVSI        QFP Hdl     AOM State
+InRate              InBc        InBe        OutRate     OutBc       OutBe
+-----------------------------------------------------------------------------

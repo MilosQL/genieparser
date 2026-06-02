@@ -18,6 +18,7 @@ expected_output =  {
                  'netmask': '255.255.255.252',
              },
              'mtu': 1500,
+             'ip_tcp_adjust_mss': 1360
          },
      },
  }

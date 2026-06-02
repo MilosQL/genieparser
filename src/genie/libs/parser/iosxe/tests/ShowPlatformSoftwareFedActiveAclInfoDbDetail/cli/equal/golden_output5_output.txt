@@ -1,0 +1,245 @@
+--------------------------------------------------------------
+         ACLs details (programmed in datapath)
+--------------------------------------------------------------
+
+[Vacl, CG ID: 2578]    CG Name: VACL_40_inout
+ Feature: Vacl    Prot: IPv4
+ Region grp: 0x7700a158    Dir: Ingress
+ SDK-handle(asic: 0, OID: 0xCB8)
+
+    Seq Num:22
+        ipv4_src: value = 0x00000000       mask = 0x00000000
+        ipv4_dst: value = 0x28010102       mask = 0xffffffff
+            proto    frag    tcp_flg    tcp_op    src_port    dst_port
+        V:  0x0       0x0      0x0         0x0        0x0          0x0
+        M:  0x0       0x0      0x0         0x0        0x0          0x0
+            tos      ttl       cos      v4_opt    src_obj     dst_obj
+        V:  0x0       0x0      0x0         0x0        0x0          0x0
+        M:  0x0       0x0      0x0         0x0        0x0          0x0
+    Result  action: FWD    Logging: NONE
+
+    Seq Num:22
+        ipv4_src: value = 0x00000000       mask = 0x00000000
+        ipv4_dst: value = 0xc0a80202       mask = 0xffffffff
+            proto    frag    tcp_flg    tcp_op    src_port    dst_port
+        V:  0x0       0x0      0x0         0x0        0x0          0x0
+        M:  0x0       0x0      0x0         0x0        0x0          0x0
+            tos      ttl       cos      v4_opt    src_obj     dst_obj
+        V:  0x0       0x0      0x0         0x0        0x0          0x0
+        M:  0x0       0x0      0x0         0x0        0x0          0x0
+    Result  action: FWD    Logging: NONE
+
+    Seq Num:22
+        ipv4_src: value = 0x00000000       mask = 0x00000000
+        ipv4_dst: value = 0x00000000       mask = 0x00000000
+            proto    frag    tcp_flg    tcp_op    src_port    dst_port
+        V:  0x1       0x0      0x0         0x0        0x0          0x0
+        M:  0xff       0x0      0x0         0x0        0x0          0x0
+            tos      ttl       cos      v4_opt    src_obj     dst_obj
+        V:  0x0       0x0      0x0         0x0        0x0          0x0
+        M:  0x0       0x0      0x0         0x0        0x0          0x0
+    Result  action: FWD    Logging: NONE
+
+    Seq Num:102
+        ipv4_src: value = 0x00000000       mask = 0x00000000
+        ipv4_dst: value = 0x00000000       mask = 0x00000000
+            proto    frag    tcp_flg    tcp_op    src_port    dst_port
+        V:  0x0       0x0      0x0         0x0        0x0          0x0
+        M:  0x0       0x0      0x0         0x0        0x0          0x0
+            tos      ttl       cos      v4_opt    src_obj     dst_obj
+        V:  0x0       0x0      0x0         0x0        0x0          0x0
+        M:  0x0       0x0      0x0         0x0        0x0          0x0
+        Counter handle: (asic: 0 , OID: 0x1151 (0))
+    Result  action: DROP    Logging: NONE
+
+    Seq Num:4294967294
+        ipv4_src: value = 0x00000000       mask = 0x00000000
+        ipv4_dst: value = 0xe0000000       mask = 0xffffff00
+            proto    frag    tcp_flg    tcp_op    src_port    dst_port
+        V:  0x0       0x0      0x0         0x0        0x0          0x0
+        M:  0x0       0x0      0x0         0x0        0x0          0x0
+            tos      ttl       cos      v4_opt    src_obj     dst_obj
+        V:  0x0       0x0      0x0         0x0        0x0          0x0
+        M:  0x0       0x0      0x0         0x0        0x0          0x0
+        Counter handle: (asic: 0 , OID: 0x1152 (0))
+    Result  action: PERMIT    Logging: NONE
+
+    Seq Num:4294967295
+        ipv4_src: value = 0x00000000       mask = 0x00000000
+        ipv4_dst: value = 0x00000000       mask = 0x00000000
+            proto    frag    tcp_flg    tcp_op    src_port    dst_port
+        V:  0x0       0x0      0x0         0x0        0x0          0x0
+        M:  0x0       0x0      0x0         0x0        0x0          0x0
+            tos      ttl       cos      v4_opt    src_obj     dst_obj
+        V:  0x0       0x0      0x0         0x0        0x0          0x0
+        M:  0x0       0x0      0x0         0x0        0x0          0x0
+        Counter handle: (asic: 0 , OID: 0x1153 (0))
+    Result  action: DENY    Logging: NONE
+
+[Vacl, CG ID: 2578]    CG Name: VACL_40_inout
+ Feature: Vacl    Prot: IPv4
+ Region grp: 0x7700a158    Dir: Egress
+ SDK-handle(asic: 0, OID: 0x17F6)
+
+    Seq Num:22
+        ipv4_src: value = 0x00000000       mask = 0x00000000
+        ipv4_dst: value = 0x28010102       mask = 0xffffffff
+            proto    frag    tcp_flg    tcp_op    src_port    dst_port
+        V:  0x0       0x0      0x0         0x0        0x0          0x0
+        M:  0x0       0x0      0x0         0x0        0x0          0x0
+            tos      ttl       cos      v4_opt    src_obj     dst_obj
+        V:  0x0       0x0      0x0         0x0        0x0          0x0
+        M:  0x0       0x0      0x0         0x0        0x0          0x0
+    Result  action: FWD    Logging: NONE
+
+    Seq Num:22
+        ipv4_src: value = 0x00000000       mask = 0x00000000
+        ipv4_dst: value = 0xc0a80202       mask = 0xffffffff
+            proto    frag    tcp_flg    tcp_op    src_port    dst_port
+        V:  0x0       0x0      0x0         0x0        0x0          0x0
+        M:  0x0       0x0      0x0         0x0        0x0          0x0
+            tos      ttl       cos      v4_opt    src_obj     dst_obj
+        V:  0x0       0x0      0x0         0x0        0x0          0x0
+        M:  0x0       0x0      0x0         0x0        0x0          0x0
+    Result  action: FWD    Logging: NONE
+
+    Seq Num:22
+        ipv4_src: value = 0x00000000       mask = 0x00000000
+        ipv4_dst: value = 0x00000000       mask = 0x00000000
+            proto    frag    tcp_flg    tcp_op    src_port    dst_port
+        V:  0x1       0x0      0x0         0x0        0x0          0x0
+        M:  0xff       0x0      0x0         0x0        0x0          0x0
+            tos      ttl       cos      v4_opt    src_obj     dst_obj
+        V:  0x0       0x0      0x0         0x0        0x0          0x0
+        M:  0x0       0x0      0x0         0x0        0x0          0x0
+    Result  action: FWD    Logging: NONE
+
+    Seq Num:102
+        ipv4_src: value = 0x00000000       mask = 0x00000000
+        ipv4_dst: value = 0x00000000       mask = 0x00000000
+            proto    frag    tcp_flg    tcp_op    src_port    dst_port
+        V:  0x0       0x0      0x0         0x0        0x0          0x0
+        M:  0x0       0x0      0x0         0x0        0x0          0x0
+            tos      ttl       cos      v4_opt    src_obj     dst_obj
+        V:  0x0       0x0      0x0         0x0        0x0          0x0
+        M:  0x0       0x0      0x0         0x0        0x0          0x0
+        Counter handle: (asic: 0 , OID: 0x17F7 (0))
+    Result  action: DROP    Logging: NONE
+
+    Seq Num:4294967294
+        ipv4_src: value = 0x00000000       mask = 0x00000000
+        ipv4_dst: value = 0xe0000000       mask = 0xffffff00
+            proto    frag    tcp_flg    tcp_op    src_port    dst_port
+        V:  0x0       0x0      0x0         0x0        0x0          0x0
+        M:  0x0       0x0      0x0         0x0        0x0          0x0
+            tos      ttl       cos      v4_opt    src_obj     dst_obj
+        V:  0x0       0x0      0x0         0x0        0x0          0x0
+        M:  0x0       0x0      0x0         0x0        0x0          0x0
+        Counter handle: (asic: 0 , OID: 0x17F8 (0))
+    Result  action: PERMIT    Logging: NONE
+
+    Seq Num:4294967295
+        ipv4_src: value = 0x00000000       mask = 0x00000000
+        ipv4_dst: value = 0x00000000       mask = 0x00000000
+            proto    frag    tcp_flg    tcp_op    src_port    dst_port
+        V:  0x0       0x0      0x0         0x0        0x0          0x0
+        M:  0x0       0x0      0x0         0x0        0x0          0x0
+            tos      ttl       cos      v4_opt    src_obj     dst_obj
+        V:  0x0       0x0      0x0         0x0        0x0          0x0
+        M:  0x0       0x0      0x0         0x0        0x0          0x0
+        Counter handle: (asic: 0 , OID: 0x17F9 (0))
+    Result  action: DENY    Logging: NONE
+
+[Vacl, CG ID: 2706]    CG Name: VACL_40_inout
+ Feature: Vacl    Prot: MAC
+ Region grp: 0x2c8739e8    Dir: Ingress
+ SDK-handle(asic: 0, OID: 0x17FB)
+
+    Seq Num:12
+        src_mac: value = 0x0.0x0.0x0.0x0.0x0.0x0
+                  mask = 0x0.0x0.0x0.0x0.0x0.0x0
+        mac_dst: value = 0x1.0x0.0x5e.0x0.0x0.0x1
+                  mask = 0xff.0xff.0xff.0xff.0xff.0xff
+            cos      eth_type     vlan_id
+        V:  0x0       0x0           0x0
+        M:  0x0      0x0           0x0
+    Result  action: FWD    Logging: NONE
+
+    Seq Num:12
+        src_mac: value = 0x0.0x0.0x0.0x0.0x0.0x0
+                  mask = 0x0.0x0.0x0.0x0.0x0.0x0
+        mac_dst: value = 0x1.0x0.0x5e.0x0.0x0.0x2
+                  mask = 0xff.0xff.0xff.0xff.0xff.0xff
+            cos      eth_type     vlan_id
+        V:  0x0       0x0           0x0
+        M:  0x0      0x0           0x0
+    Result  action: FWD    Logging: NONE
+
+    Seq Num:102
+        src_mac: value = 0x0.0x0.0x0.0x0.0x0.0x0
+                  mask = 0x0.0x0.0x0.0x0.0x0.0x0
+        mac_dst: value = 0x0.0x0.0x0.0x0.0x0.0x0
+                  mask = 0x0.0x0.0x0.0x0.0x0.0x0
+            cos      eth_type     vlan_id
+        V:  0x0       0x0           0x0
+        M:  0x0      0x0           0x0
+        Counter handle: (asic: 0 , OID: 0x17FC (0))
+    Result  action: DROP    Logging: NONE
+
+    Seq Num:4294967295
+        src_mac: value = 0x0.0x0.0x0.0x0.0x0.0x0
+                  mask = 0x0.0x0.0x0.0x0.0x0.0x0
+        mac_dst: value = 0x0.0x0.0x0.0x0.0x0.0x0
+                  mask = 0x0.0x0.0x0.0x0.0x0.0x0
+            cos      eth_type     vlan_id
+        V:  0x0       0x0           0x0
+        M:  0x0      0x0           0x0
+        Counter handle: (asic: 0 , OID: 0x17FD (0))
+    Result  action: DENY    Logging: NONE
+
+[Vacl, CG ID: 2706]    CG Name: VACL_40_inout
+ Feature: Vacl    Prot: MAC
+ Region grp: 0x2c8739e8    Dir: Egress
+ SDK-handle(asic: 0, OID: 0x17FE)
+
+    Seq Num:12
+        src_mac: value = 0x0.0x0.0x0.0x0.0x0.0x0
+                  mask = 0x0.0x0.0x0.0x0.0x0.0x0
+        mac_dst: value = 0x1.0x0.0x5e.0x0.0x0.0x1
+                  mask = 0xff.0xff.0xff.0xff.0xff.0xff
+            cos      eth_type     vlan_id
+        V:  0x0       0x0           0x0
+        M:  0x0      0x0           0x0
+    Result  action: FWD    Logging: NONE
+
+    Seq Num:12
+        src_mac: value = 0x0.0x0.0x0.0x0.0x0.0x0
+                  mask = 0x0.0x0.0x0.0x0.0x0.0x0
+        mac_dst: value = 0x1.0x0.0x5e.0x0.0x0.0x2
+                  mask = 0xff.0xff.0xff.0xff.0xff.0xff
+            cos      eth_type     vlan_id
+        V:  0x0       0x0           0x0
+        M:  0x0      0x0           0x0
+    Result  action: FWD    Logging: NONE
+
+    Seq Num:102
+        src_mac: value = 0x0.0x0.0x0.0x0.0x0.0x0
+                  mask = 0x0.0x0.0x0.0x0.0x0.0x0
+        mac_dst: value = 0x0.0x0.0x0.0x0.0x0.0x0
+                  mask = 0x0.0x0.0x0.0x0.0x0.0x0
+            cos      eth_type     vlan_id
+        V:  0x0       0x0           0x0
+        M:  0x0      0x0           0x0
+        Counter handle: (asic: 0 , OID: 0x1800 (0))
+    Result  action: DROP    Logging: NONE
+
+    Seq Num:4294967295
+        src_mac: value = 0x0.0x0.0x0.0x0.0x0.0x0
+                  mask = 0x0.0x0.0x0.0x0.0x0.0x0
+        mac_dst: value = 0x0.0x0.0x0.0x0.0x0.0x0
+                  mask = 0x0.0x0.0x0.0x0.0x0.0x0
+            cos      eth_type     vlan_id
+        V:  0x0       0x0           0x0
+        M:  0x0      0x0           0x0
+        Counter handle: (asic: 0 , OID: 0x1801 (0))
+    Result  action: DENY    Logging: NONE

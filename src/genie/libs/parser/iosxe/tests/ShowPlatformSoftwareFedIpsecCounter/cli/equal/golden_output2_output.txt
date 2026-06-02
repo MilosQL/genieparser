@@ -1,0 +1,28 @@
+########################################
+IPSec Stats for if-id 0x485 (Tunnel1)
+########################################
+  SADB ID: 0x9
+  Flags: 0x0
+  FVRF: 0  IVRF: 4294967295
+  Sec Switch: 1  Sec ASIC: 0
+-----------------------------------
+  Inbound Flow ID: 55  SPI: 2850041856 (deleted)
+  Inbound Flow ID: 58  SPI: 1709866656
+    SA Bytes:            20042218
+    SA Packets:          20023
+    Control Packets:     0
+    Error Packets:       0
+    Auth Error Packets:  0
+    Invalid SA Packets:  0
+    Late Packets:        0
+-----------------------------------
+Current Outbound Flow:
+  VRF: 0
+  Outbound Flow ID: 57  SPI: 1647985786
+    SA Bytes:            20041938
+    SA Packets:          20019
+    Control Packets:     0
+    Error Packets:       0
+    Auth Error Packets:  0
+    Invalid SA Packets:  0
+    Late Packets:        0

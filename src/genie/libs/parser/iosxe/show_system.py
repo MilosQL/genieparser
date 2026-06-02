@@ -19,6 +19,7 @@ from genie.metaparser.util.schemaengine import (
     And,
     Default,
     Use,
+    ListOf
 )
 
 
@@ -932,6 +933,280 @@ class ShowSystemInsecureConfiguration(ShowSystemInsecureConfigurationSchema):
             m = p19.match(line)
             if m:
                 data_dict["database_integrity"] = m.group("database_integrity")
+                continue
+
+        return ret_dict
+
+class ShowSystemInsecureProfileSchema(MetaParser):
+    """Schema for show system insecure profile"""
+
+    schema = {
+        "total_patterns_loaded": int,
+        "profile_type": str,
+        "profile_status": str,
+        "total_configuration_submodes": int,
+        "modules": {
+            str: {
+                "entries": ListOf({
+                    "entry_number": int,
+                    "submode": str,
+                    "submode_string": str,
+                    "command_regex": str,
+                    "description": str,
+                    "reason": str,
+                    "remediation": str,
+                    "restriction": str,
+                    "execmode": str,
+                }),
+            }
+        },
+        "profile_summary": {
+            "total_security_patterns": int,
+            "hash_table_status": str,
+            "bloom_filter_status": str,
+        },
+        "insecure_cli_submode_database": {
+            Any(): {
+                "configuration_submode": str,
+            }
+        },
+        "submode_summary": {
+            "submode_database_status": str,
+            "submode_hash_table_status": str,
+        },
+
+    }
+
+class ShowSystemInsecureProfile(ShowSystemInsecureProfileSchema):
+    """Parser for show system insecure profile"""
+
+    cli_command = "show system insecure profile"
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        ret_dict = {}
+
+        # Total Patterns Loaded: 82
+        p1 = re.compile(r"^Total Patterns Loaded: +(?P<total>\d+)$")
+
+        # Profile Type: Security Policy Database
+        p2 = re.compile(r"^Profile Type: +(?P<type>.+)$")
+
+        # Profile Status: Active and Loaded
+        p3 = re.compile(r"^Profile Status: +(?P<status>.+)$")
+
+        # Total Configuration Submodes: 19
+        p4 = re.compile(r"^Total Configuration Submodes: +(?P<total>\d+)$")
+
+        # | MODULE:                                            LOGGING |
+        p5 = re.compile(r"^\|\s+MODULE:\s+(?P<module>\S+)\s+\|$")
+
+        # | ENTRY 1 FOR MODULE:                               LOGGING |
+        p6 = re.compile(r"^\|\s+ENTRY (?P<num>\d+) FOR MODULE:\s+(?P<module>\S+) \|$")
+
+        # |              Submode: tls-profile
+        p7 = re.compile(r"^\|\s+Submode:\s+(?P<submode>.+)$")
+
+        # |       Submode String: logging tls-profile
+        p8 = re.compile(r"^\|\s+Submode String:\s+(?P<submode_string>.+)$")
+
+        # |        Command Regex: ^tls-version[[:space:]]+TLSv1.1[[:space:]]*$
+        p9 = re.compile(r"^\|\s+Command Regex:\s+(?P<regex>.+)$")
+
+        # |          Description: Logging TLS profile configured with TLS version 1.1
+        p10 = re.compile(r"^\|\s+Description:\s+(?P<description>.+)$")
+
+        # |               Reason: Weak tls version
+        p11 = re.compile(r"^\|\s+Reason:\s+(?P<reason>.+)$")
+
+        # |          Remediation: Use stronger tls version to enhance security
+        p12 = re.compile(r"^\|\s+Remediation:\s+(?P<remediation>.+)$")
+
+        # |          Restriction: YES
+        p13 = re.compile(r"^\|\s+Restriction:\s+(?P<restriction>\S+)$")
+
+        # |             Execmode: NO
+        p14 = re.compile(r"^\|\s+Execmode:\s+(?P<execmode>\S+)$")
+
+        # PROFILE SUMMARY
+        p15 = re.compile(r"^PROFILE SUMMARY$")
+
+        # Total Security Patterns: 82
+        p16 = re.compile(r"^Total Security Patterns: +(?P<total>\d+)$")
+
+        # Hash Table Status: Operational
+        p17 = re.compile(r"^Hash Table Status: +(?P<hash_status>.+)$")
+
+        # Bloom Filter Status: Active
+        p18 = re.compile(r"^Bloom Filter Status: +(?P<bloom_status>.+)$")
+
+        # INSECURE CLI SUBMODE DATABASE
+        p19 = re.compile(r"^INSECURE CLI SUBMODE DATABASE$")
+
+        # |   1 |                                  sep-listen-config |
+        p20 = re.compile(r"^\|\s+(?P<num>\d+)\s+\|\s+(?P<configuration_submode>.+)\s+\|$")
+
+        # SUBMODE SUMMARY
+        p21 = re.compile(r"^SUBMODE SUMMARY$")
+
+        # Submode Database Status: Active and Loaded
+        p22 = re.compile(r"^Submode Database Status: +(?P<submode_status>.+)$")
+
+        # Submode Hash Table Status: Operational
+        p23 = re.compile(r"^Submode Hash Table Status: +(?P<submode_hash_status>.+)$")
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Total Patterns Loaded: 82
+            m = p1.match(line)
+            if m:
+                ret_dict["total_patterns_loaded"] = int(m.group("total"))
+                continue
+
+            # Profile Type: Security Policy Database
+            m = p2.match(line)
+            if m:
+                ret_dict["profile_type"] = m.group("type")
+                continue
+
+            # Profile Status: Active and Loaded
+            m = p3.match(line)
+            if m:
+                ret_dict["profile_status"] = m.group("status")
+                continue
+
+            # Total Configuration Submodes: 19
+            m = p4.match(line)
+            if m:
+                ret_dict["total_configuration_submodes"] = int(m.group("total"))
+                continue
+
+            # | MODULE:                                            LOGGING |
+            m = p5.match(line)
+            if m:
+                module_dict = ret_dict.setdefault("modules", {}).setdefault(m.group("module"), {})
+                continue
+
+            # | ENTRY 1 FOR MODULE:                               LOGGING |
+            m = p6.match(line)
+            if m:
+                entries = module_dict.setdefault("entries", [])
+                entries.append({
+                    "entry_number": int(m.group("num")),
+                })
+
+            # |              Submode: tls-profile
+            m = p7.match(line)
+            if m:
+                if entries:
+                    entries[-1]["submode"] = m.group("submode").strip()
+                continue
+
+            # |       Submode String: logging tls-profile
+            m = p8.match(line)
+            if m:
+                if entries:
+                    entries[-1]["submode_string"] = m.group("submode_string").strip()
+                continue
+
+            # |        Command Regex: ^tls-version[[:space:]]+TLSv1.1[[:space:]]*$
+            m = p9.match(line)
+            if m:
+                if entries:
+                    entries[-1]["command_regex"] = m.group("regex").strip()
+                continue
+
+            # |          Description: Logging TLS profile configured with TLS version 1.1
+            m = p10.match(line)
+            if m:
+                if entries:
+                    entries[-1]["description"] = m.group("description").strip()
+                continue
+
+            # |               Reason: Weak tls version
+            m = p11.match(line)
+            if m:
+                if entries:
+                    entries[-1]["reason"] = m.group("reason").strip()
+                continue
+
+            # |          Remediation: Use stronger tls version to enhance security
+            m = p12.match(line)
+            if m:
+                if entries:
+                    entries[-1]["remediation"] = m.group("remediation").strip()
+                continue
+
+            # |          Restriction: YES
+            m = p13.match(line)
+            if m:
+                if entries:
+                    entries[-1]["restriction"] = m.group("restriction").strip()
+                continue
+
+            # |             Execmode: NO
+            m = p14.match(line)
+            if m:
+                if entries:
+                    entries[-1]["execmode"] = m.group("execmode").strip()
+                continue
+
+            # PROFILE SUMMARY
+            m = p15.match(line)
+            if m:
+                profile_dict = ret_dict.setdefault("profile_summary", {})
+                continue
+
+            # Total Security Patterns: 82
+            m = p16.match(line)
+            if m:
+                profile_dict["total_security_patterns"] = int(m.group("total"))
+                continue
+
+            # Hash Table Status: Operational
+            m = p17.match(line)
+            if m:
+                profile_dict["hash_table_status"] = m.group("hash_status")
+                continue
+
+            # Bloom Filter Status: Active
+            m = p18.match(line)
+            if m:
+                profile_dict["bloom_filter_status"] = m.group("bloom_status")
+                continue
+
+            # INSECURE CLI SUBMODE DATABASE
+            m = p19.match(line)
+            if m:
+                submode_db_dict = ret_dict.setdefault("insecure_cli_submode_database", {})
+                continue
+
+            # |   1 |                                  sep-listen-config |
+            m = p20.match(line)
+            if m:
+                config_dict = submode_db_dict.setdefault(int(m.group("num")), {})
+                config_dict["configuration_submode"] = m.group("configuration_submode").strip()
+                continue
+
+            # SUBMODE SUMMARY
+            m = p21.match(line)
+            if m:
+                submode_summary_dict = ret_dict.setdefault("submode_summary", {})
+                continue
+
+            # Submode Database Status: Active and Loaded
+            m = p22.match(line)
+            if m:
+                submode_summary_dict["submode_database_status"] = m.group("submode_status")
+                continue
+
+            # Submode Hash Table Status: Operational
+            m = p23.match(line)
+            if m:
+                submode_summary_dict["submode_hash_table_status"] = m.group("submode_hash_status")
                 continue
 
         return ret_dict

@@ -1,0 +1,6 @@
+iolxtr12#show lisp 0 instance-id 4 named-services map-cache
+LISP DN Mapping Cache for LISP 0 EID-table N/A (IID 4), 1 entries
+
+firewall, uptime: 00:00:07, expires: 23:59:52, via transient-publication, complete
+  Locator       Uptime    State  Pri/Wgt     Encap-IID
+  100.11.11.11  00:00:07  up      10/50        -

@@ -1,0 +1,9 @@
+show mpls l2transport summary
+Destination address: 101.1.1.1, total number of vc: 10
+  0 unknown, 10 up, 0 down, 0 admin down, 0 recovering, 0 standby, 0 hotstandby
+  5 active vc on MPLS interface Tp2
+  5 active vc on MPLS interface Tp1
+Destination address: 102.2.2.2, total number of vc: 10
+  0 unknown, 10 up, 0 down, 0 admin down, 0 recovering, 0 standby, 0 hotstandby
+  5 active vc on MPLS interface Tp2002
+  5 active vc on MPLS interface Tp2001

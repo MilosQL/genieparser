@@ -1,0 +1,95 @@
+***********************************************************************************
+ [GigabitEthernet2/0/2, 1p1q, Egress]: CGID = 0x383810 
+***********************************************************************************
+  cgid: 0x383810
+  No of classes: 3
+  TCG ref count: 3
+  Filter state: UP TO DATE
+  VMR state: DIRTY
+
+  ============================================================
+   Classmap Information
+  ============================================================
+  Class name: tc7(cgid: 0x383810, clid: 0x7A671)
+    TCCG ref count: 3
+    NULL Bind count: 3
+    Class seq no.: 0x1FFFFF
+    No of child classes: 0
+    Filter: FILTER_MATCH_TRAFFIC_CLASS
+      Value: 0x7
+
+  Class name: tc6(cgid: 0x383810, clid: 0x7A661)
+    TCCG ref count: 3
+    NULL Bind count: 3
+    Class seq no.: 0x4003FE
+    No of child classes: 0
+    Filter: FILTER_MATCH_TRAFFIC_CLASS
+      Value: 0x6
+
+  Class name: class-default(cgid: 0x383810, clid: 0x639)
+    TCCG ref count: 3
+    NULL Bind count: 3
+    Class seq no.: 0xFFFFFFFF
+    No of child classes: 0
+    Filter: FILTER_MATCH_ANY
+      Value: 0x0
+
+  ============================================================
+   TCG Information
+  ============================================================
+  NPI TCG Values:
+    Config state: VALID
+    Operational state: IN HARDWARE
+    Parent Info: [0x0, 0x0, 0]
+    No of Child TCGs: 0
+    Mark Action count: 0
+    Police Action count: 0
+    Queue Action count: 3
+    No of TCCGs: 3
+
+   TCCG 0:
+    Class-map name: tc7(0x7A671)
+    Child cgid: 0x0
+    Null Bind: True
+      Action 0
+        Action Type: Queueing
+        Attributes: 0x7 (QPARAMS, SHAPE, PRIORITY)
+        Queue id: 7
+        Queue Parameters
+          Queue limit: 32256 Bytes
+        Shape Parameters
+          CIR: 100000000
+        Priority Parameters
+          Level: 1
+
+   TCCG 1:
+    Class-map name: tc6(0x7A661)
+    Child cgid: 0x0
+    Null Bind: True
+      Action 0
+        Action Type: Queueing
+        Attributes: 0x1 (QPARAMS)
+        Queue id: 6
+        Queue Parameters
+          Queue limit: 96000 Bytes
+          Bandwidth remaining ratio: 16
+
+   TCCG 2:
+    Class-map name: class-default(0x639)
+    Child cgid: 0x0
+    Null Bind: True
+      Action 0
+        Action Type: Queueing
+        Attributes: 0x9 (QPARAMS, WRED)
+        Queue id: 0
+        Default queue: True
+        Queue Parameters
+          Queue limit: 96000 Bytes
+          Bandwidth remaining ratio: 16
+        WRED Parameters
+          Mode: Discard Class, Threshold unit: Percent
+          Exponential weighting constant: 1, Configured discard classes: 2
+          Discard Class  Min Thresh  Max Thresh  Mark Prob Denom
+          -------------  ----------  ----------  ---------------
+          0              90          100         1              
+          1              80          100         1              

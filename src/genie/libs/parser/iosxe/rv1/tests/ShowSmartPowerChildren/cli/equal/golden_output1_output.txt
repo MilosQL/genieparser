@@ -1,0 +1,21 @@
+Module/
+Interface   Role              Name                  Usage      Category  Lvl   Imp  Type
+---------   ----              ----                  -----      --------  ---   ---  ----
+Gi1/0/3     IP Phone 9971     SEP08CC68E9DB8A       8.0   (W)  consumer  10    1    PoE
+Gi1/0/11    interface         Gi1.0.11              10.7  (W)  consumer  10    1    PoE
+Gi1/0/14    IP Phone 9971     SEP34BDC8C7431D       7.9   (W)  consumer  10    1    PoE
+Gi1/0/20    IP Phone 9971     SEP08CC6830C3B1       6.5   (W)  consumer  10    1    PoE
+Gi1/0/21    IP Phone 9971     SEP28C7CED6CE44       6.9   (W)  consumer  10    1    PoE
+Gi1/0/23    IP Phone 9951     SEPC40ACBE062FF       7.4   (W)  consumer  10    1    PoE
+            C9300-24P         Sust-PoE-3M-1         76.0  (W)  consumer  10    1    parent
+Tw2/0/15    IP Phone 9971     SEPD4A02A8955FC       7.6   (W)  consumer  10    1    PoE
+Tw2/0/24    IP Phone 9971     SEP6886A7C43524       7.6   (W)  consumer  10    1    PoE
+Tw2/0/32    IP Phone 9971     SEP5C5015452E47       6.6   (W)  consumer  10    1    PoE
+            C9300-48UXM       Sust-PoE-3M-2         96.0  (W)  consumer  10    1    parent
+Te3/0/2     AIR-AP1261N-A-K9  ap                    6.3   (W)  consumer  10    1    PoE
+Te3/0/9     IP Phone 9861     SEP845A3EC21871       4.0   (W)  consumer  10    1    PoE
+Te3/0/10    IP Phone 9841     SEP0CD5D39EA585       2.0   (W)  consumer  10    1    PoE
+            C9300X-24HX       Sust-PoE-3M-3         118.0 (W)  consumer  10    1    parent
+
+Subtotals: (Consumer: 371.5 (W), Meter: 0.0 (W),
+Total: 371.5 (W), Count: 15

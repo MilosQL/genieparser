@@ -482,6 +482,8 @@ class ShowRunInterfaceSchema(MetaParser):
                     Optional('action'): str,
                 },
                 Optional('min_links'): int,
+                Optional('ip_tcp_adjust_mss'): int,
+                Optional('ipv6_tcp_adjust_mss'): int,
             }
         }
     }
@@ -909,6 +911,12 @@ class ShowRunInterface(ShowRunInterfaceSchema):
 
         # ipv6 flow monitor monitor_ipv6_out output
         p124 = re.compile(r'^ipv6 +flow +monitor +(?P<flow_monitor_output_v6>[\S]+) +output$')
+
+        # ip tcp adjust-mss 9176
+        p125 = re.compile(r'^ip tcp adjust-mss (?P<ip_tcp_adjust_mss>\d+)$')
+
+        # ipv6 tcp adjust-mss 9156
+        p126 = re.compile(r'^ipv6 tcp adjust-mss (?P<ipv6_tcp_adjust_mss>\d+)$')
 
         for line in output.splitlines():
             line = line.strip()
@@ -1895,6 +1903,19 @@ class ShowRunInterface(ShowRunInterfaceSchema):
                 group = m.groupdict()
                 intf_dict.update({'flow_monitor_output_v6': group['flow_monitor_output_v6']})
                 continue
+
+            # ip tcp adjust-mss 9176
+            m = p125.match(line)
+            if m:
+                intf_dict['ip_tcp_adjust_mss'] = int(m.groupdict()['ip_tcp_adjust_mss'])
+                continue
+
+            # ipv6 tcp adjust-mss 9156
+            m = p126.match(line)
+            if m:
+                intf_dict['ipv6_tcp_adjust_mss'] = int(m.groupdict()['ipv6_tcp_adjust_mss'])
+                continue
+
 
         return config_dict
 

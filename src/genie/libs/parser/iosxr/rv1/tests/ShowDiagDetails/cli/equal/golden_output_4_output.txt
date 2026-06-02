@@ -1,0 +1,32 @@
+show diag details
+Wed May 13 17:01:21.359 IST
+
+Rack 0-Chassis IDPROM - Cisco 8011 Series Fixed 1RU Router 4x100G, 24x1/10/25G, 4xCu
+ Info
+    Controller Family          : 0045
+    Controller Type            : 118b
+    UDI Description            : Cisco 8011 Series Fixed 1RU Router 4x100G, 24x1/10/25G, 4xCu
+    PCB Serial Number          : FLM28420AAZ
+    Chassis Serial Number      : FLM28420AAZ
+    PID                        : 8011-4G24Y4H-I
+    Version Identifier         : V00
+
+0/SYNC0-GNSS_LC-IDPROM0 - Cisco GNSS 1PPS/10M MODULE
+ Info
+    Controller Family          : 0045
+    Controller Type            : 11a9
+    UDI Description            : Cisco GNSS 1PPS/10M MODULE
+    PCB Serial Number          : FLM2807010J
+    Chassis Serial Number      : FLM2807010J
+    PID                        : 8000-TIC-GNSS
+    Version Identifier         : V01
+
+0/RP0/CPU0-MB IDPROM - Cisco 8011 Series Fixed 1RU Router 4x100G, 24x1/10/25G, 4xCu
+ Info
+    Controller Family          : 0045
+    Controller Type            : 118b
+    UDI Description            : Cisco 8011 Series Fixed 1RU Router 4x100G, 24x1/10/25G, 4xCu
+    PCB Serial Number          : FLM28420AAZ
+    Chassis Serial Number      : FLM28420AAZ
+    PID                        : 8011-4G24Y4H-I
+    Version Identifier         : V00

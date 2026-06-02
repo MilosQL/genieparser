@@ -1840,6 +1840,11 @@ class ShowRedundancyStatesSchema(MetaParser):
         'client_count': int,
         'client_notification_tmr_msec': int,
         Optional('rf_debug_mask'): str,
+        Optional('current_client'): str,
+        Optional('current_client_id'): int,
+        Optional('time_since_progression_msec'): int,
+        Optional('history_progression'): str,
+        Optional('history_rc'): int,
     }
 
 
@@ -1906,6 +1911,18 @@ class ShowRedundancyStates(ShowRedundancyStatesSchema):
         # RF debug mask = 0x0
         p14 = re.compile(r'^RF +debug +mask += +(?P<rf_debug_mask>[\w]+)$')
 
+        # Current client in progression               = Igmp Snooping (506)
+        p15 = re.compile(r'^Current +client +in +progression += +'
+                        r'(?P<current_client>.+?)\s*\((?P<current_client_id>\d+)\)\s*$')
+        
+        # Time since client was sent progression (ms) = 3228
+        p16 = re.compile(r'^Time +since +client +was +sent +progression +\(ms\) += +'
+                        r'(?P<time_since_progression_msec>\d+)\s*$')
+        
+        # History for this client progression         = RF_PROG_STANDBY_BULK, rc 0
+        p17 = re.compile(r'^History +for +this +client +progression += +'
+                        r'(?P<history_progression>.+?)(?:,\s*rc\s+(?P<history_rc>\d+))?\s*$')
+        
         for line in out.splitlines():
             line = line.strip()
             if not line:
@@ -2012,6 +2029,27 @@ class ShowRedundancyStates(ShowRedundancyStatesSchema):
                 ret_dict['rf_debug_mask'] = m.groupdict()['rf_debug_mask']
                 continue
 
+            # Current client in progression = Igmp Snooping (506)
+            m = p15.match(line)
+            if m:
+                ret_dict['current_client'] = m.groupdict()['current_client'].strip()
+                ret_dict['current_client_id'] = int(m.groupdict()['current_client_id'])
+                continue
+        
+            # Time since client was sent progression (ms) = 3228
+            m = p16.match(line)
+            if m:
+                ret_dict['time_since_progression_msec'] = int(
+                    m.groupdict()['time_since_progression_msec'])
+                continue
+        
+            # History for this client progression = RF_PROG_STANDBY_BULK, rc 0
+            m = p17.match(line)
+            if m:
+                ret_dict['history_progression'] = m.groupdict()['history_progression'].strip()
+                if m.groupdict()['history_rc'] is not None:
+                    ret_dict['history_rc'] = int(m.groupdict()['history_rc'])
+                continue
         return ret_dict
 
 

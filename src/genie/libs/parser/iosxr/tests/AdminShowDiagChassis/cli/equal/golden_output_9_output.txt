@@ -1,0 +1,10 @@
+admin show diag chassis
+
+
+Diag Information For : 0
+  
+ Rack 0-IDPROM Info
+    PID                      : N/A
+    UDI Description          : UFISpace-S9700-53dx 2RU Chassis
+    Version Identifier       : N/A 
+    PCB Serial Number        : N/A

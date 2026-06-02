@@ -3402,31 +3402,63 @@ class ShowPlatformSoftwareFedIpsecCounterSchema(MetaParser):
 
     schema = {
         "if-id": str,
+        Optional("interface"): str,
+        Optional("sadb_id"): str,
+        Optional("flags"): str,
+        Optional("fvrf"): int,
+        Optional("ivrf"): int,
+        Optional("sec_switch"): int,
+        Optional("sec_asic"): int,
         Or("inbound_flow", "outbound_flow"): {
-            "flow_id": int,
-            "sa_index": int,
-            "asic_instance": str,
-            "packet_format_check_error": int,
-            "invalid_sa": int,
-            "auth_fail": int,
-            "sequence_number_overflows": int,
-            "anti_replay_fail": int,
-            "packet_count": int,
-            "byte_count": int,
+            "flow_id": Or(int, str),
+            Optional("sa_index"): int,
+            Optional("asic_instance"): str,
+            Optional("packet_format_check_error"): int,
+            Optional("invalid_sa"): int,
+            Optional("auth_fail"): int,
+            Optional("ivrf_id"): int,
+            Optional("fvrf_id"): int,
+            Optional("sequence_number_overflows"): int,
+            Optional("anti_replay_fail"): int,
+            Optional("packet_count"): int,
+            Optional("byte_count"): int,
+            Optional("sa_bytes"): int,
+            Optional("sa_packets"): int,
+            Optional("control_packets"): int,
+            Optional("error_packets"): int,
+            Optional("late_packets"): int,
+            Optional("spi"): int,
+            Optional("deleted_spi"): int,
+            Optional("deleted_flow_id"): int,
+            Optional("invalid_sa_packets"): int,
+            Optional("auth_error_packets"): int,
+            Optional("vrf"): str 
         },
     }
-
 
 class ShowPlatformSoftwareFedIpsecCounter(ShowPlatformSoftwareFedIpsecCounterSchema):
     """Parser for
     show platform software fed switch active ipsec counters if-id all
     """
 
-    cli_command = "show platform software fed switch active ipsec counters if-id all"
+    cli_command = ["show platform software fed {switch_var} {switch} ipsec counters if-id all",
+                   "show platform software fed {switch} ipsec counters if-id all",
+                   "show platform software fed {switch_var} {switch} ipsec counters if-id {if_id}",
+                   "show platform software fed {switch} ipsec counters if-id {if_id}"]
 
-    def cli(self, output=None):
+    def cli(self, switch_var=None, switch=None, if_id=None, output=None):
         if output is None:
-            output = self.device.execute(self.cli_command)
+            if switch_var:
+                if if_id:
+                    cmd = self.cli_command[2].format(switch_var=switch_var, switch=switch, if_id=if_id)
+                else:
+                    cmd = self.cli_command[0].format(switch_var=switch_var, switch=switch)
+            else:
+                if if_id:
+                    cmd = self.cli_command[3].format(switch=switch, if_id=if_id)
+                else:
+                    cmd = self.cli_command[1].format(switch=switch)
+            output = self.device.execute(cmd)
 
         ret_dict = {}
         inbound_flag = True
@@ -3434,47 +3466,134 @@ class ShowPlatformSoftwareFedIpsecCounter(ShowPlatformSoftwareFedIpsecCounterSch
         # Flow Stats for if-id 0x62
         p1 = re.compile(r"^[Ff]low +[Ss]tats +for +if-id +(?P<if_id>\w+)$")
 
+        # IPSec Stats for if-id 0x48b (Tunnel10)
+        p1_1 = re.compile(r"^[Ii][Pp][Ss]ec +[Ss]tats +for +if-id +(?P<if_id>\w+) +\((?P<interface>[\w\s\-]+)\)$")
+
         # Inbound Flow Info for flow id: 44
         p2 = re.compile(
-            r"^[Ii]nbound +[Ff]low +[Ii]nfo +for +flow +id+\: +(?P<flow_id>\d+)$"
+            r"^[Ii]nbound +[Ff]low +[Ii]nfo +for +flow +id+\:\s+(?P<flow_id>\d+)$"
         )
 
         # SA Index: 3
-        p3 = re.compile(r"^SA +Index+\: +(?P<sa_index>\d+)$")
+        p3 = re.compile(r"^SA +Index+\:\s+(?P<sa_index>\d+)$")
 
         # Asic Instance 0: SA Stats
-        p4 = re.compile(r"^[Aa]sic +Instance +0+\: +(?P<asic_instance>[\w\s]+)$")
+        p4 = re.compile(r"^[Aa]sic +Instance +0+\:\s+(?P<asic_instance>[\w\s]+)$")
 
         # Packet Format Check Error: 0
         p5 = re.compile(
-            r"^[Pp]acket +[Ff]ormat +[Cc]heck +[Ee]rror+\: +(?P<packet_format_check_error>\d+)$"
+            r"^[Pp]acket +[Ff]ormat +[Cc]heck +[Ee]rror+\:\s+(?P<packet_format_check_error>\d+)$"
         )
 
         # Invalid SA: 0
-        p6 = re.compile(r"^[Ii]nvalid +SA+\: +(?P<invalid_sa>\d+)$")
+        p6 = re.compile(r"^[Ii]nvalid +SA+\:\s+(?P<invalid_sa>\d+)$")
 
         # Auth Fail: 0
-        p7 = re.compile(r"^[Aa]uth +[Ff]ail+\: +(?P<auth_fail>\d+)$")
+        p7 = re.compile(r"^[Aa]uth +[Ff]ail+\:\s+(?P<auth_fail>\d+)$")
 
         # Sequence Number Overflows: 0
         p8 = re.compile(
-            r"^[Ss]equence +[Nn]umber +[Oo]verflows+\: +(?P<sequence_number_overflows>\d+)$"
+            r"^[Ss]equence +[Nn]umber +[Oo]verflows+\:\s+(?P<sequence_number_overflows>\d+)$"
         )
 
         # Anti-Replay Fail: 0
-        p9 = re.compile(r"^[Aa]nti\-+[Rr]eplay +[Ff]ail+\: +(?P<anti_replay_fail>\d+)$")
+        p9 = re.compile(r"^[Aa]nti\-+[Rr]eplay +[Ff]ail+\:\s+(?P<anti_replay_fail>\d+)$")
 
         # Packet Count: 2056
-        p10 = re.compile(r"^[Pp]acket +[Cc]ount+\: +(?P<packet_count>\d+)$")
+        p10 = re.compile(r"^[Pp]acket +[Cc]ount+\:\s+(?P<packet_count>\d+)$")
 
         # Byte Count: 177076
-        p11 = re.compile(r"^[Bb]yte +[Cc]ount+\: +(?P<byte_count>\d+)$")
+        p11 = re.compile(r"^[Bb]yte +[Cc]ount+\:\s+(?P<byte_count>\d+)$")
 
         # Outbound Flow Info for flow id: 43
         p12 = re.compile(
-            r"^[Oo]utbound +[Ff]low +[Ii]nfo +for +flow +id+\: +(?P<flow_id>\d+)$"
+            r"^[Oo]utbound +[Ff]low +[Ii]nfo +for +flow +id+\:\s+(?P<flow_id>\d+)$"
         )
 
+        # SADB ID: 0xf
+        p13 = re.compile(r"^[Ss]ADB +ID+\:\s+(?P<sadb_id>0x[\da-fA-F]+)$")
+
+        # Flags: 0x0
+        p14 = re.compile(r"^[Ff]lags+\:\s+(?P<flags>0x[\da-fA-F]+)$")
+
+        # FVRF: 0  IVRF: 4294967295
+        p15 = re.compile(
+            r"^[Ff]VRF+\: +(?P<fvrf>\d+) +IVRF+\:\s+(?P<ivrf>\d+)$"
+        )   
+
+        # Sec Switch: 2  Sec ASIC: 0
+        p16 = re.compile(
+            r"^[Ss]ec +[Ss]witch+\: +(?P<sec_switch>\d+) +Sec +[Aa]SIC+\:\s+(?P<sec_asic>\d+)$"
+        )
+
+        # Inbound Flow ID: 53  SPI: 1983646486
+        p17 = re.compile(
+            r"^[Ii]nbound +[Ff]low +[Ii]D+\: +(?P<flow_id>\d+) +SPI+\:\s+(?P<spi>\d+)$"
+        )   
+
+        # Outbound Flow ID: 52  SPI: 1983646486
+        p18 = re.compile(
+            r"^[Oo]utbound +[Ff]low +[Ii]D+\: +(?P<flow_id>\d+) +SPI+\:\s+(?P<spi>\d+)$"
+        )   
+    
+        # SA Bytes:            5666
+        p19 = re.compile(r"^[Ss]A +[Bb]ytes+\:\s+(?P<sa_bytes>\d+)$")
+
+        # SA Packets:          65
+        p20 = re.compile(r"^[Ss]A +[Pp]ackets+\:\s+(?P<sa_packets>\d+)$")
+
+        # Control Packets:     0
+        p21 = re.compile(r"^[Cc]ontrol +[Pp]ackets+\:\s+(?P<control_packets>\d+)$")
+
+        # Error Packets:       0
+        p22 = re.compile(r"^[Ee]rror +[Pp]ackets+\:\s+(?P<error_packets>\d+)$")
+
+        # Auth Error Packets:  0
+        p23 = re.compile(r"^[Aa]uth +[Ee]rror +[Pp]ackets+\:\s+(?P<auth_error_packets>\d+)$")
+
+        # Invalid SA Packets:  0
+        p24 = re.compile(r"^[Ii]nvalid +SA +[Pp]ackets+\:\s+(?P<invalid_sa_packets>\d+)$")
+
+        # Late Packets:        0
+        p25 = re.compile(r"^[Ll]ate +[Pp]ackets+\:\s+(?P<late_packets>\d+)$")
+
+        # Inbound Flow ID: 55  SPI: 2850041856 (deleted)
+        p26 = re.compile(
+            r"^[Ii]nbound +[Ff]low +[Ii]D+\: +(?P<deleted_flow_id>\d+) +SPI+\:\s+(?P<deleted_spi>\d+) +\(deleted\)$"
+        )
+
+        # Outbound Flow ID: 54  SPI: 2850041856 (deleted)
+        p27 = re.compile(
+            r"^[Oo]utbound +[Ff]low +[Ii]D+\: +(?P<deleted_flow_id>\d+) +SPI+\:\s+(?P<deleted_spi>\d+) +\(deleted\)$"
+        )   
+
+        # VRF: 0
+        p28 = re.compile(r"^[Vv][Rr][Ff]+\:\s+(?P<vrf>[\w\s\-]+)$")
+
+        # Current Inbound Flow:
+        p29 = re.compile(r"^[Cc]urrent +[Ii]nbound +[Ff]low+\:")
+
+        # Current Outbound Flow:
+        p30 = re.compile(r"^[Cc]urrent +[Oo]utbound +[Ff]low+\:")
+
+        # Inbound Flow Info for flow id: 5 in flow list
+        p31 = re.compile(r"^[Ii]nbound +[Ff]low +[Ii]nfo +for +flow +id+\:\s+(?P<flow_id>\d+) +in +flow +list$")
+
+        # Outbound Flow Info for flow id: 4 in flow list
+        p32 = re.compile(r"^[Oo]utbound +[Ff]low +[Ii]nfo +for +flow +id+\:\s+(?P<flow_id>\d+) +in +flow +list$")
+
+        # FVRF ID: 0  IVRF ID: 0
+        p33 = re.compile(r"^[Ff]VRF +[Ii][Dd]+\: +(?P<fvrf_id>\d+) +IVRF +[Ii][Dd]+\:\s+(?P<ivrf_id>\d+)$")
+
+        # No Inbound Flow Info for if-id
+        # No Inbound Flow Info
+        p34 = re.compile(r"^No +[Ii]nbound +[Ff]low +[Ii]nfo( +for +if-id)?$")
+
+        # No Outbound Flow Info for if-id
+        # No Outbound Flow Info
+        p35 = re.compile(r"^No +[Oo]utbound +[Ff]low +[Ii]nfo( +for +if-id)?$")
+
+        # Inbound Flow Stats for if-id 0x62 flow id: 44
         for line in output.splitlines():
             line = line.strip()
             inbound_dict = ret_dict.setdefault("inbound_flow", {})
@@ -3484,6 +3603,13 @@ class ShowPlatformSoftwareFedIpsecCounter(ShowPlatformSoftwareFedIpsecCounterSch
             m = p1.match(line)
             if m:
                 ret_dict["if-id"] = m.groupdict()["if_id"]
+
+            # IPSec Stats for if-id 0x48b (Tunnel10)
+            m = p1_1.match(line)
+            if m:
+                ret_dict["if-id"] = m.groupdict()["if_id"]
+                ret_dict["interface"] = m.groupdict()["interface"]
+                continue
 
             # Inbound Flow Info for flow id: 44
             m = p2.match(line)
@@ -3619,6 +3745,169 @@ class ShowPlatformSoftwareFedIpsecCounter(ShowPlatformSoftwareFedIpsecCounterSch
             m = p11.match(line)
             if m:
                 expected_dict["byte_count"] = int(m.groupdict()["byte_count"])
+                continue
+
+            # SADB ID: 0xf
+            m = p13.match(line)
+            if m:
+                ret_dict["sadb_id"] = m.groupdict()["sadb_id"]
+                continue
+
+            # Flags: 0x0
+            m = p14.match(line)
+            if m:
+                ret_dict["flags"] = m.groupdict()["flags"]
+                continue
+
+            # FVRF: 0  IVRF: 4294967295
+            m = p15.match(line)
+            if m:
+                ret_dict["fvrf"] = int(m.groupdict()["fvrf"])
+                ret_dict["ivrf"] = int(m.groupdict()["ivrf"])
+                continue
+
+            # Sec Switch: 2  Sec ASIC: 0
+            m = p16.match(line)
+            if m:
+                ret_dict["sec_switch"] = int(m.groupdict()["sec_switch"])
+                ret_dict["sec_asic"] = int(m.groupdict()["sec_asic"])
+                continue
+
+            # Inbound Flow ID: 53  SPI: 1983646486
+            m = p17.match(line)
+            if m:
+                inbound_flag = True
+                inbound_dict["flow_id"] = int(m.groupdict()["flow_id"])     
+                expected_dict = inbound_dict           
+                expected_dict["spi"] = int(m.groupdict()["spi"])
+                continue
+
+            # Outbound Flow ID: 52  SPI: 1983646486
+            m = p18.match(line)
+            if m:
+                inbound_flag = False
+                outbound_dict["flow_id"] = int(m.groupdict()["flow_id"])
+                expected_dict = outbound_dict
+                expected_dict["spi"] = int(m.groupdict()["spi"])
+                continue
+
+            # SA Bytes:            5666
+            m = p19.match(line)
+            if m:
+                expected_dict["sa_bytes"] = int(m.groupdict()["sa_bytes"])
+                continue
+
+            # SA Packets:          65
+            m = p20.match(line)
+            if m:
+                expected_dict["sa_packets"] = int(m.groupdict()["sa_packets"])
+                continue
+
+            # Control Packets:     0
+            m = p21.match(line)
+            if m:
+                expected_dict["control_packets"] = int(m.groupdict()["control_packets"])
+                continue
+
+            # Error Packets:       0
+            m = p22.match(line)
+            if m:
+                expected_dict["error_packets"] = int(m.groupdict()["error_packets"])
+                continue
+
+            # Auth Error Packets:  0
+            m = p23.match(line)
+            if m:
+                expected_dict["auth_error_packets"] = int(m.groupdict()["auth_error_packets"])
+                continue
+
+            # Invalid SA Packets:  0
+            m = p24.match(line)
+            if m:
+                expected_dict["invalid_sa_packets"] = int(m.groupdict()["invalid_sa_packets"])
+                continue
+
+            # Late Packets:        0
+            m = p25.match(line)
+            if m:
+                expected_dict["late_packets"] = int(m.groupdict()["late_packets"])
+                continue
+
+            # Inbound Flow ID: 55  SPI: 2850041856 (deleted)
+            m = p26.match(line)
+            if m:
+                inbound_flag = True
+                expected_dict = inbound_dict
+                expected_dict["deleted_flow_id"] = int(m.groupdict()["deleted_flow_id"])
+                expected_dict["deleted_spi"] = int(m.groupdict()["deleted_spi"])
+                continue
+
+            # Outbound Flow ID: 54  SPI: 2850041856 (deleted)
+            m = p27.match(line)
+            if m:
+                inbound_flag = False
+                expected_dict = outbound_dict
+                expected_dict["deleted_flow_id"] = int(m.groupdict()["deleted_flow_id"])
+                expected_dict["deleted_spi"] = int(m.groupdict()["deleted_spi"])
+                continue
+
+            # VRF: 0
+            m = p28.match(line)
+            if m:
+                expected_dict["vrf"] = m.groupdict()["vrf"]
+                continue
+
+            # Current Inbound Flow:
+            m = p29.match(line)
+            if m:
+                inbound_flag = True
+                expected_dict = inbound_dict
+                continue
+
+            # Current Outbound Flow:
+            m = p30.match(line)
+            if m:
+                inbound_flag = False
+                expected_dict = outbound_dict
+                continue
+
+            # Inbound Flow Info for flow id: 5 in flow list
+            m = p31.match(line)
+            if m:
+                inbound_flag = True
+                expected_dict = inbound_dict
+                expected_dict["flow_id"] = int(m.groupdict()["flow_id"])
+                continue
+
+            # Outbound Flow Info for flow id: 4 in flow list
+            m = p32.match(line)
+            if m:
+                inbound_flag = False
+                expected_dict = outbound_dict
+                expected_dict["flow_id"] = int(m.groupdict()["flow_id"])
+                continue
+
+            # FVRF ID: 0  IVRF ID: 0
+            m = p33.match(line)
+            if m:
+                expected_dict["fvrf_id"] = int(m.groupdict()["fvrf_id"])
+                expected_dict["ivrf_id"] = int(m.groupdict()["ivrf_id"])
+                continue
+
+            # No Inbound Flow Info for if-id
+            m = p34.match(line)
+            if m:
+                inbound_flag = True
+                expected_dict = inbound_dict
+                expected_dict["flow_id"] = "Not Present"
+                continue
+
+            # No Outbound Flow Info for if-id
+            m = p35.match(line)
+            if m:
+                inbound_flag = False
+                expected_dict = outbound_dict
+                expected_dict["flow_id"] = "Not Present"
                 continue
 
         return ret_dict
@@ -7012,7 +7301,7 @@ class ShowPlatformSoftwareFedActiveAclInfoDbDetailSchema(MetaParser):
                         Optional("ipv6_src_mask"): str,
                         Optional("ipv6_dst_value"): str,
                         Optional("ipv6_dst_mask"): str,
-                        "pro": {
+                        Optional("pro"): {
                             Any(): {
                                 "proto": str,
                                 "frag": str,
@@ -7022,7 +7311,7 @@ class ShowPlatformSoftwareFedActiveAclInfoDbDetailSchema(MetaParser):
                                 "dst_port": str,
                             },
                         },
-                        "tost": {
+                        Optional("tost"): {
                             Any(): {
                                 "tos": str,
                                 "ttl": str,
@@ -7083,6 +7372,8 @@ class ShowPlatformSoftwareFedActiveAclInfoDbDetail(
 
         proto_flag = False
         tos_flag = False
+        ipv6src_flag = 0
+        ipv6dst_flag = 0
 
         # [CG ID 13]    CG Name: acl-2    Feature: Racl
         p1 = re.compile(
@@ -19548,7 +19839,7 @@ class ShowPlatformSoftwareFedSwitchIfmInterfaceNameSchema(MetaParser):
             'ac_profile': str,
         },
         Optional('port_subblock'): {
-            'mac_port_oid': str,
+            Optional('mac_port_oid'): str,
             'system_port_oid': str,
             'system_port_gid': int,
             'ethernet_port_oid': str,
@@ -20806,3 +21097,60 @@ class ShowPlatformSoftwareFedSwitchActiveVpKeyDetail(
 
         return result
 
+class ShowPlatformSoftwareFedSwitchPuntAclStatisticsSchema(MetaParser):
+    """Schema for show platform software fed switch {switch} punt acl statistics"""
+    schema = {
+        'asic': {
+            Any(): {
+                'aclset': {
+                    Any():{
+                        'name':{
+                            Any():{
+                                'acl_oid': str,
+                                'counter_oid': str,
+                                'packets_hits': int
+                            }
+                        }
+                    }
+                },
+            }
+        }
+    }
+
+class ShowPlatformSoftwareFedSwitchPuntAclStatistics(ShowPlatformSoftwareFedSwitchPuntAclStatisticsSchema):
+    """Parser for show platform software fed switch {switch} punt acl statistics"""
+
+    cli_command = ['show platform software fed {switch} {switch_var} punt acl statistics',
+                   'show platform software fed {switch_var} punt acl statistics']
+
+    def cli(self, switch=None, switch_var=None, output=None):
+        if output is None:
+            if switch:
+                cmd = self.cli_command[0].format(switch=switch, switch_var=switch_var)
+            else:
+                cmd = self.cli_command[1].format(switch_var=switch_var)
+            output = self.device.execute(cmd)
+
+        ret_dict = {}
+
+        # 0    L3_TCPMSS           0x5CA             v4 TCP MSS Adjust       0x5CB                            0
+        p1 = re.compile(
+            r'^(?P<asic>\d+)\s+(?P<acl_set>\S+)\s+(?P<acl_oid>\S+)\s+(?P<name>[\w\s]+?)\s+(?P<counter_oid>\S+)\s+(?P<packets_hits>\d+)$'
+        )
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # 0    L3_TCPMSS           0x5CA             v4 TCP MSS Adjust       0x5CB                            0
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                asic_dict = ret_dict.setdefault('asic', {}).setdefault(int(group['asic']), {})
+                aclset_dict = asic_dict.setdefault('aclset', {}).setdefault(group['acl_set'], {})
+                name_dict = aclset_dict.setdefault('name', {}).setdefault(group['name'].strip(), {})
+                name_dict['acl_oid'] = group['acl_oid']
+                name_dict['counter_oid'] = group['counter_oid']
+                name_dict['packets_hits'] = int(group['packets_hits'])
+                continue
+
+        return ret_dict

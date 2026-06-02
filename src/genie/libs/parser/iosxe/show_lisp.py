@@ -1790,6 +1790,7 @@ class ShowLispDatabaseEid(ShowLispDatabaseEidSchema):
         #LISP ETR IPv4 Mapping Database for LISP 1 EID-table vrf red (IID 101), LSBs: 0x0
         #LISP ETR MAC Mapping Database for LISP 1 EID-table Vlan 111 (IID 102), LSBs: 0x1
         #LISP ETR IPv4 Mapping Database for LISP 0 EID-table default (IID 4098), LSBs: 0x1
+        #LISP ETR DN Mapping Database for LISP 0 EID-table N/A (IID 4), LSBs: 0x1
         p1 = re.compile(r"^LISP\sETR\s(?P<address_family>[A-Za-z0-9]+)\sMapping\sDatabase\sfor"
                         r"(\sLISP\s)?(?P<lisp_id>\d)?\sEID-table\s(?P<eid_table>\S+"
                         r"|(vrf\s\w+)|(Vlan\s\d+))\s\(IID\s(?P<instance_id>\d+)\),\sLSBs:\s"
@@ -1805,7 +1806,8 @@ class ShowLispDatabaseEid(ShowLispDatabaseEidSchema):
 
         #192.168.1.0/24, locator-set RLOC *** NO ROUTE TO EID PREFIX ***
         #00aa.00bb.00cc/48, locator-set RLOC
-        p4 = re.compile(r"^(?P<eid_prefix>(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\/\d{1,2})|([a-fA-F\d\:]+\/\d{1,3})|(([a-fA-F\d]{4}\.){2}[a-fA-F\d]{4}\/\d{1,2})),\s(?P<eid_info>.+)$")
+        #dual-stack, locator-set RLOC
+        p4 = re.compile(r"^(?P<eid_prefix>(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\/\d{1,2})|([a-fA-F\d\:]+\/\d{1,3})|(([a-fA-F\d]{4}\.){2}[a-fA-F\d]{4}\/\d{1,2})|([^\s\.:,]+)),\s(?P<eid_info>.+)$")
 
         #  Uptime: 00:00:56, Last-change: 00:00:56
         # Line not parsed, not interesting data for now
@@ -1853,6 +1855,7 @@ class ShowLispDatabaseEid(ShowLispDatabaseEidSchema):
             #LISP ETR MAC Mapping Database for EID-table Vlan 111 (IID 102), LSBs: 0x1
             #LISP ETR IPv4 Mapping Database for LISP 1 EID-table vrf red (IID 101), LSBs: 0x0
             #LISP ETR MAC Mapping Database for LISP 1 EID-table Vlan 111 (IID 102), LSBs: 0x1
+            #LISP ETR DN Mapping Database for LISP 0 EID-table N/A (IID 4), LSBs: 0x1
             m=p1.match(line)
             if m:
                 groups = m.groupdict()
@@ -1893,6 +1896,7 @@ class ShowLispDatabaseEid(ShowLispDatabaseEidSchema):
 
             #192.168.1.0/24, locator-set RLOC *** NO ROUTE TO EID PREFIX ***
             #00aa.00bb.00cc/48, locator-set RLOC
+            #dual-stack, locator-set RLOC
             m=p4.match(line)
             if m:
                 groups = m.groupdict()

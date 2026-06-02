@@ -1,0 +1,43 @@
+Router# show platform hardware qfp active infra bqs sch output default interface GigabitEthernet0/0/0
+
+Interface: GigabitEthernet0/0/0
+----------------------------------------
+
+Egress Scheduler: Default
+  Scheduler ID       : 0x1A
+  Scheduler Type     : Default
+  Parent Node        : Root
+  State              : Active
+
+  Bandwidth          : 1000000 kbps
+  Shaper Rate        : None
+  Priority           : None
+
+Queue Statistics:
+-----------------
+  Total Packets Enqueued : 154321
+  Total Packets Dequeued : 154300
+  Total Packets Dropped  : 21
+  Total Bytes Enqueued   : 123456789
+  Total Bytes Dequeued   : 123450000
+
+Per-Flow-Class Queues:
+----------------------
+
+  fc: 0  weight: 1  pkts: 50234  bytes: 42342342  drops: 0
+  fc: 1  weight: 2  pkts: 40321  bytes: 32342342  drops: 5
+  fc: 2  weight: 4  pkts: 30210  bytes: 22342342  drops: 10
+  fc: 3  weight: 8  pkts: 20000  bytes: 12342342  drops: 6
+  fc: 4  weight: 1  pkts: 10000  bytes: 8234234   drops: 0
+  fc: 5  weight: 1  pkts: 5000   bytes: 4234234   drops: 0
+  fc: 6  weight: 1  pkts: 3000   bytes: 2234234   drops: 0
+  fc: 7  weight: 1  pkts: 556    bytes: 123423    drops: 0
+
+Child Queue Details:
+--------------------
+  Queue-ID  Weight  Credits  Drops  State
+  --------  ------  -------  -----  -----
+  0         1       2048     0      Active
+  1         2       2048     5      Active
+  2         4       2048     10     Active
+  3         8       2048     6      Active

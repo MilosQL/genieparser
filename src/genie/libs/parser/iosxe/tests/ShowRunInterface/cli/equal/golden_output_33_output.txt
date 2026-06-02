@@ -1,0 +1,11 @@
+show running-config interface Vlan2
+Building configuration...
+
+Current configuration : 98 bytes
+!
+interface Vlan2
+ mtu 9216
+ no ip address
+ ip tcp adjust-mss 9176
+ ipv6 tcp adjust-mss 9156
+end

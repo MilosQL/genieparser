@@ -66,6 +66,8 @@
     * show platform software adjacency nexthop-ipfrr
     * show platform software adj fp active
     * 'show platform software selinux'
+    * show platform software access-list RP active statistics
+    * show platform software ess FP active drl
 """
 
 # Python
@@ -17326,6 +17328,435 @@ class ShowPlatformSoftwareAdjFpActive(ShowPlatformSoftwareAdjFpActiveSchema):
                 one_adj["aom_id"] = int(group["aom_id"])
                 one_adj["hw_handle"] = group["hw_handle"]
                 one_adj["hw_handle_state"] = group["hw_handle_state"]
+                continue
+
+        return ret_dict
+
+
+class ShowPlatformSoftwareAccessListRpActiveStatisticsSchema(MetaParser):
+    """Schema for show platform software access-list RP active statistics"""
+
+    schema = {
+        "location": str,
+        "set_log_threshold": int,
+        "interval": int,
+        "ipv4": {
+            "entry_add": int,
+            "entry_delete": int,
+            "bind": int,
+            "unbind": int,
+            "resequence": int,
+            "resequence_delete": int,
+        },
+        "ipv6": {
+            "entry_add": int,
+            "entry_delete": int,
+            "bind": int,
+            "unbind": int,
+            "resequence": int,
+            "resequence_delete": int,
+        },
+        "mac": {
+            "entry_add": int,
+            "entry_delete": int,
+            "bind": int,
+            "unbind": int,
+            "delete": int,
+        },
+        "sync": {
+            "start": int,
+            "end": int,
+        },
+        "qfp": {
+            "match": {
+                "add": int,
+                "replace": int,
+                "ack_success": int,
+                "ack_error": int,
+            },
+            "match_delete": {
+                "delete": int,
+                "ack_success": int,
+                "ack_error": int,
+            },
+            "action_edit": {
+                "edit": int,
+                "ack_success": int,
+                "ack_error": int,
+            },
+            "action_replace": {
+                "replace": int,
+                "ack_success": int,
+                "ack_error": int,
+            },
+            "bind": {
+                "count": int,
+                "ack_success": int,
+                "ack_error": int,
+            },
+            "unbind": {
+                "count": int,
+                "ack_success": int,
+                "ack_error": int,
+            },
+        },
+    }
+
+
+class ShowPlatformSoftwareAccessListRpActiveStatistics(ShowPlatformSoftwareAccessListRpActiveStatisticsSchema):
+    """Parser for show platform software access-list RP active statistics"""
+
+    cli_command = "show platform software access-list RP active statistics"
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        ret_dict = {}
+        if not output:
+            return ret_dict
+
+        ret_dict["location"] = "RP active"
+
+        # Set Log Threshold: 0, Interval: 0
+        p1 = re.compile(
+            r"^Set +Log +Threshold\s*:\s*(?P<set_log_threshold>\d+)\s*,\s*Interval\s*:\s*(?P<interval>\d+)$"
+        )
+        # IPv4 Access-list Entry Add: 0, Delete: 0
+        p2 = re.compile(
+            r"^IPv4 +Access-list +Entry +Add\s*:\s*(?P<entry_add>\d+)\s*,\s*Delete\s*:\s*(?P<entry_delete>\d+)$"
+        )
+        # IPv4 Access-list Bind: 0, Unbind: 0
+        p3 = re.compile(
+            r"^IPv4 +Access-list +Bind\s*:\s*(?P<bind>\d+)\s*,\s*Unbind\s*:\s*(?P<unbind>\d+)$"
+        )
+        # IPv4 Access-list Resequence: 0, Delete: 0
+        p4 = re.compile(
+            r"^IPv4 +Access-list +Resequence\s*:\s*(?P<resequence>\d+)\s*,\s*Delete\s*:\s*(?P<resequence_delete>\d+)$"
+        )
+        # IPv6 Access-list Entry Add: 2032, Delete: 0
+        p5 = re.compile(
+            r"^IPv6 +Access-list +Entry +Add\s*:\s*(?P<entry_add>\d+)\s*,\s*Delete\s*:\s*(?P<entry_delete>\d+)$"
+        )
+        # IPv6 Access-list Bind: 1016, Unbind: 916
+        p6 = re.compile(
+            r"^IPv6 +Access-list +Bind\s*:\s*(?P<bind>\d+)\s*,\s*Unbind\s*:\s*(?P<unbind>\d+)$"
+        )
+        # IPv6 Access-list Resequence: 0, Delete: 916
+        p7 = re.compile(
+            r"^IPv6 +Access-list +Resequence\s*:\s*(?P<resequence>\d+)\s*,\s*Delete\s*:\s*(?P<resequence_delete>\d+)$"
+        )
+        # MAC Access-list Entry Add: 0, Delete: 0
+        p8 = re.compile(
+            r"^MAC +Access-list +Entry +Add\s*:\s*(?P<entry_add>\d+)\s*,\s*Delete\s*:\s*(?P<entry_delete>\d+)$"
+        )
+        # MAC Access-list Bind: 0, Unbind: 0
+        p9 = re.compile(
+            r"^MAC +Access-list +Bind\s*:\s*(?P<bind>\d+)\s*,\s*Unbind\s*:\s*(?P<unbind>\d+)$"
+        )
+        # MAC Access-list Delete: 0
+        p10 = re.compile(r"^MAC +Access-list +Delete\s*:\s*(?P<delete>\d+)$")
+        # Access-list Sync Start: 0, End: 0
+        p11 = re.compile(
+            r"^Access-list +Sync +Start\s*:\s*(?P<start>\d+)\s*,\s*End\s*:\s*(?P<end>\d+)$"
+        )
+        # QFP Match Add: 0, Replace: 0, ACK Success: 0, ACK Error: 0
+        p12 = re.compile(
+            r"^QFP +Match +Add\s*:\s*(?P<add>\d+)\s*,\s*Replace\s*:\s*(?P<replace>\d+)\s*,\s*ACK +Success\s*:\s*(?P<ack_success>\d+)\s*,\s*ACK +Error\s*:\s*(?P<ack_error>\d+)$"
+        )
+        # QFP Match Delete: 0, ACK Success: 0, ACK Error: 0
+        p13 = re.compile(
+            r"^QFP +Match +Delete\s*:\s*(?P<delete>\d+)\s*,\s*ACK +Success\s*:\s*(?P<ack_success>\d+)\s*,\s*ACK +Error\s*:\s*(?P<ack_error>\d+)$"
+        )
+        # QFP Action Edit: 0, ACK Success: 0, ACK Error: 0
+        p14 = re.compile(
+            r"^QFP +Action +Edit\s*:\s*(?P<edit>\d+)\s*,\s*ACK +Success\s*:\s*(?P<ack_success>\d+)\s*,\s*ACK +Error\s*:\s*(?P<ack_error>\d+)$"
+        )
+        # QFP Action Replace: 0, ACK Success: 0, ACK Error: 0
+        p15 = re.compile(
+            r"^QFP +Action +Replace\s*:\s*(?P<replace>\d+)\s*,\s*ACK +Success\s*:\s*(?P<ack_success>\d+)\s*,\s*ACK +Error\s*:\s*(?P<ack_error>\d+)$"
+        )
+        # QFP Bind: 0, ACK Success: 0, ACK Error: 0
+        p16 = re.compile(
+            r"^QFP +Bind\s*:\s*(?P<count>\d+)\s*,\s*ACK +Success\s*:\s*(?P<ack_success>\d+)\s*,\s*ACK +Error\s*:\s*(?P<ack_error>\d+)$"
+        )
+        # QFP Unbind: 0, ACK Success: 0, ACK Error: 0
+        p17 = re.compile(
+            r"^QFP +Unbind\s*:\s*(?P<count>\d+)\s*,\s*ACK +Success\s*:\s*(?P<ack_success>\d+)\s*,\s*ACK +Error\s*:\s*(?P<ack_error>\d+)$"
+        )
+
+        for line in output.splitlines():
+            line = line.strip()
+            if not line:
+                continue
+
+            # Set Log Threshold: 0, Interval: 0
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict["set_log_threshold"] = int(group["set_log_threshold"])
+                ret_dict["interval"] = int(group["interval"])
+                continue
+
+            # IPv4 Access-list Entry Add: 0, Delete: 0
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                ipv4_dict = ret_dict.setdefault("ipv4", {})
+                ipv4_dict["entry_add"] = int(group["entry_add"])
+                ipv4_dict["entry_delete"] = int(group["entry_delete"])
+                continue
+
+            # IPv4 Access-list Bind: 0, Unbind: 0
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                ipv4_dict = ret_dict.setdefault("ipv4", {})
+                ipv4_dict["bind"] = int(group["bind"])
+                ipv4_dict["unbind"] = int(group["unbind"])
+                continue
+
+            # IPv4 Access-list Resequence: 0, Delete: 0
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                ipv4_dict = ret_dict.setdefault("ipv4", {})
+                ipv4_dict["resequence"] = int(group["resequence"])
+                ipv4_dict["resequence_delete"] = int(group["resequence_delete"])
+                continue
+
+            # IPv6 Access-list Entry Add: 2032, Delete: 0
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                ipv6_dict = ret_dict.setdefault("ipv6", {})
+                ipv6_dict["entry_add"] = int(group["entry_add"])
+                ipv6_dict["entry_delete"] = int(group["entry_delete"])
+                continue
+
+            # IPv6 Access-list Bind: 1016, Unbind: 916
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                ipv6_dict = ret_dict.setdefault("ipv6", {})
+                ipv6_dict["bind"] = int(group["bind"])
+                ipv6_dict["unbind"] = int(group["unbind"])
+                continue
+
+            # IPv6 Access-list Resequence: 0, Delete: 916
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                ipv6_dict = ret_dict.setdefault("ipv6", {})
+                ipv6_dict["resequence"] = int(group["resequence"])
+                ipv6_dict["resequence_delete"] = int(group["resequence_delete"])
+                continue
+
+            # MAC Access-list Entry Add: 0, Delete: 0
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                mac_dict = ret_dict.setdefault("mac", {})
+                mac_dict["entry_add"] = int(group["entry_add"])
+                mac_dict["entry_delete"] = int(group["entry_delete"])
+                continue
+
+            # MAC Access-list Bind: 0, Unbind: 0
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                mac_dict = ret_dict.setdefault("mac", {})
+                mac_dict["bind"] = int(group["bind"])
+                mac_dict["unbind"] = int(group["unbind"])
+                continue
+
+            # MAC Access-list Delete: 0
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()
+                mac_dict = ret_dict.setdefault("mac", {})
+                mac_dict["delete"] = int(group["delete"])
+                continue
+
+            # Access-list Sync Start: 0, End: 0
+            m = p11.match(line)
+            if m:
+                group = m.groupdict()
+                sync_dict = ret_dict.setdefault("sync", {})
+                sync_dict["start"] = int(group["start"])
+                sync_dict["end"] = int(group["end"])
+                continue
+
+            # QFP Match Add: 0, Replace: 0, ACK Success: 0, ACK Error: 0
+            m = p12.match(line)
+            if m:
+                group = m.groupdict()
+                qfp_dict = ret_dict.setdefault("qfp", {})
+                match_dict = qfp_dict.setdefault("match", {})
+                match_dict["add"] = int(group["add"])
+                match_dict["replace"] = int(group["replace"])
+                match_dict["ack_success"] = int(group["ack_success"])
+                match_dict["ack_error"] = int(group["ack_error"])
+                continue
+
+            # QFP Match Delete: 0, ACK Success: 0, ACK Error: 0
+            m = p13.match(line)
+            if m:
+                group = m.groupdict()
+                qfp_dict = ret_dict.setdefault("qfp", {})
+                match_del_dict = qfp_dict.setdefault("match_delete", {})
+                match_del_dict["delete"] = int(group["delete"])
+                match_del_dict["ack_success"] = int(group["ack_success"])
+                match_del_dict["ack_error"] = int(group["ack_error"])
+                continue
+
+            # QFP Action Edit: 0, ACK Success: 0, ACK Error: 0
+            m = p14.match(line)
+            if m:
+                group = m.groupdict()
+                qfp_dict = ret_dict.setdefault("qfp", {})
+                act_edit_dict = qfp_dict.setdefault("action_edit", {})
+                act_edit_dict["edit"] = int(group["edit"])
+                act_edit_dict["ack_success"] = int(group["ack_success"])
+                act_edit_dict["ack_error"] = int(group["ack_error"])
+                continue
+
+            # QFP Action Replace: 0, ACK Success: 0, ACK Error: 0
+            m = p15.match(line)
+            if m:
+                group = m.groupdict()
+                qfp_dict = ret_dict.setdefault("qfp", {})
+                act_replace_dict = qfp_dict.setdefault("action_replace", {})
+                act_replace_dict["replace"] = int(group["replace"])
+                act_replace_dict["ack_success"] = int(group["ack_success"])
+                act_replace_dict["ack_error"] = int(group["ack_error"])
+                continue
+
+            # QFP Bind: 0, ACK Success: 0, ACK Error: 0
+            m = p16.match(line)
+            if m:
+                group = m.groupdict()
+                qfp_dict = ret_dict.setdefault("qfp", {})
+                bind_dict = qfp_dict.setdefault("bind", {})
+                bind_dict["count"] = int(group["count"])
+                bind_dict["ack_success"] = int(group["ack_success"])
+                bind_dict["ack_error"] = int(group["ack_error"])
+                continue
+
+            # QFP Unbind: 0, ACK Success: 0, ACK Error: 0
+            m = p17.match(line)
+            if m:
+                group = m.groupdict()
+                qfp_dict = ret_dict.setdefault("qfp", {})
+                unbind_dict = qfp_dict.setdefault("unbind", {})
+                unbind_dict["count"] = int(group["count"])
+                unbind_dict["ack_success"] = int(group["ack_success"])
+                unbind_dict["ack_error"] = int(group["ack_error"])
+                continue
+
+        return ret_dict
+
+
+class ShowPlatformSoftwareEssFpActiveDrlSchema(MetaParser):
+    """Schema for show platform software ess FP active drl"""
+
+    schema = {
+        "subscriber_policing_records": {
+            "total": int,
+            Optional("records"): {
+                int: {
+                    "segment": str,
+                    "class_in": int,
+                    "class_out": int,
+                    "evsi": int,
+                    "qfp_hdl": int,
+                    "aom_state": str,
+                    "in_rate": int,
+                    "in_bc": int,
+                    "in_be": int,
+                    "out_rate": int,
+                    "out_bc": int,
+                    "out_be": int,
+                }
+            },
+        }
+    }
+
+
+class ShowPlatformSoftwareEssFpActiveDrl(ShowPlatformSoftwareEssFpActiveDrlSchema):
+    """Parser for show platform software ess FP active drl"""
+
+    cli_command = "show platform software ess FP active drl"
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        ret_dict = {}
+        if not out:
+            return ret_dict
+
+        record_index = 0
+        current_record = None
+
+        # Subscriber Policing records: Total  : 3
+        p1 = re.compile(r"^Subscriber +Policing +records:\s*Total\s*:\s*(?P<total>\d+)$")
+
+        # 0x004204de00000089  190         191         4326623     38          created
+        p2 = re.compile(
+            r"^(?P<segment>0x[0-9a-fA-F]+)\s+(?P<class_in>\d+)\s+(?P<class_out>\d+)\s+(?P<evsi>\d+)\s+(?P<qfp_hdl>\d+)\s+(?P<aom_state>\S+)$"
+        )
+
+        # 1                   1000        2000        1           1000        2000
+        p3 = re.compile(
+            r"^(?P<in_rate>\d+)\s+(?P<in_bc>\d+)\s+(?P<in_be>\d+)\s+(?P<out_rate>\d+)\s+(?P<out_bc>\d+)\s+(?P<out_be>\d+)$"
+        )
+
+        for line in out.splitlines():
+            line = line.strip()
+            if not line:
+                continue
+
+            # Subscriber Policing records: Total  : 3
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                spr_dict = ret_dict.setdefault("subscriber_policing_records", {})
+                spr_dict["total"] = int(group["total"])
+                continue
+
+            # 0x004204de00000089  190         191         4326623     38          created
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                current_record = {
+                    "segment": group["segment"],
+                    "class_in": int(group["class_in"]),
+                    "class_out": int(group["class_out"]),
+                    "evsi": int(group["evsi"]),
+                    "qfp_hdl": int(group["qfp_hdl"]),
+                    "aom_state": group["aom_state"],
+                }
+                continue
+
+            # 1                   1000        2000        1           1000        2000
+            m = p3.match(line)
+            if m and current_record is not None:
+                group = m.groupdict()
+                current_record["in_rate"] = int(group["in_rate"])
+                current_record["in_bc"] = int(group["in_bc"])
+                current_record["in_be"] = int(group["in_be"])
+                current_record["out_rate"] = int(group["out_rate"])
+                current_record["out_bc"] = int(group["out_bc"])
+                current_record["out_be"] = int(group["out_be"])
+
+                record_index += 1
+                spr_dict = ret_dict.setdefault("subscriber_policing_records", {})
+                records_dict = spr_dict.setdefault("records", {})
+                records_dict[record_index] = current_record
+                current_record = None
                 continue
 
         return ret_dict

@@ -834,3 +834,113 @@ class ShowPlatformSoftwareFedSwitchFnfFlowTableMonId(
                 continue
 
         return ret_dict 
+
+class ShowPlatformSoftwareFedSwitchActiveFnfAttachPointsDumpSchema(MetaParser):
+    """Schema for show platform software fed switch active fnf attach-points-dump"""
+
+    schema = {
+        'attach_points': {
+            Any(): {
+                'sampler_type': int,
+                'sampler_window_size': int,
+                'fnf_mon_id': int,
+                'direction': str,
+                'interface_id': str,
+                'traffic_type': str,
+                'status': str,
+                Optional('asic'): int,
+                Optional('fp_oid'): int,
+                Optional('acl_oid'): int,
+                Optional('rh_oid'): int,
+            }
+        }
+    }
+
+class ShowPlatformSoftwareFedSwitchActiveFnfAttachPointsDump(
+    ShowPlatformSoftwareFedSwitchActiveFnfAttachPointsDumpSchema
+):
+    """Parser for show platform software fed switch active fnf attach-points-dump"""
+
+    cli_command = [
+        'show platform software fed {switch} {switch_type} fnf attach-points-dump',
+        'show platform software fed {switch_type} fnf attach-points-dump',
+    ]
+
+    def cli(self, switch_type=None, switch=None, output=None):
+        if output is None:
+            if switch:
+                output = self.device.execute(
+                    self.cli_command[0].format(switch=switch, switch_type=switch_type)
+                )
+            else:
+                output = self.device.execute(
+                    self.cli_command[1].format(switch_type=switch_type)
+                )
+
+        ret_dict = {}
+        idx = 0
+        current_entry = None
+
+        # | 0 | 0 | 3208064872 | Input | Gi2/0/6 | IPV4 TRAFFIC | SUCCESS |
+        p1 = re.compile(
+            r'^\|\s*(?P<sampler_type>\d+)\s*\|\s*(?P<sampler_window_size>\d+)\s*\|'
+            r'\s*(?P<fnf_mon_id>\d+)\s*\|\s*(?P<direction>\S+)\s*\|'
+            r'\s*(?P<interface_id>\S+)\s*\|\s*(?P<traffic_type>IPV[46]\s+TRAFFIC)\s*\|'
+            r'\s*(?P<status>\S+)\s*\|$'
+        )
+
+        # Asic:    0
+        p2 = re.compile(r'^Asic:\s+(?P<asic>\d+)$')
+
+        # fp_oid:  0
+        p3 = re.compile(r'^fp_oid:\s+(?P<fp_oid>\d+)$')
+
+        # acl_oid: 0
+        p4 = re.compile(r'^acl_oid:\s+(?P<acl_oid>\d+)$')
+
+        # rh_oid:  0
+        p5 = re.compile(r'^rh_oid:\s+(?P<rh_oid>\d+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+           
+            # | 0 | 0 | 3208064872 | Input | Gi2/0/6 | IPV4 TRAFFIC | SUCCESS |
+            m = p1.match(line)
+            if m:
+                idx += 1
+                g = m.groupdict()
+                current_entry = ret_dict.setdefault('attach_points', {}).setdefault(idx, {})
+                current_entry['sampler_type'] = int(g['sampler_type'])
+                current_entry['sampler_window_size'] = int(g['sampler_window_size'])
+                current_entry['fnf_mon_id'] = int(g['fnf_mon_id'])
+                current_entry['direction'] = g['direction']
+                current_entry['interface_id'] = g['interface_id']
+                current_entry['traffic_type'] = g['traffic_type'].strip()
+                current_entry['status'] = g['status']
+                continue
+               
+            # Asic:    0
+            m = p2.match(line)
+            if m and current_entry is not None:
+                current_entry['asic'] = int(m.group('asic'))
+                continue
+
+           # fp_oid:  0
+            m = p3.match(line)
+            if m and current_entry is not None:
+                current_entry['fp_oid'] = int(m.group('fp_oid'))
+                continue
+
+            # acl_oid: 0
+            m = p4.match(line)
+            if m and current_entry is not None:
+                current_entry['acl_oid'] = int(m.group('acl_oid'))
+                continue
+
+            # rh_oid:  0
+            m = p5.match(line)
+            if m and current_entry is not None:
+                current_entry['rh_oid'] = int(m.group('rh_oid'))
+                continue
+
+        return ret_dict 

@@ -732,6 +732,9 @@ class ShowLispServiceMapCacheSchema(MetaParser):
                                                 Optional('ipv6_prefix'):
                                                     {'ipv6_prefix': str,
                                                     },
+                                                Optional('dn'):
+                                                    {'dn': str,
+                                                    },
                                                 },
                                             Optional('negative_mapping'):
                                                 {'map_reply_action': str,
@@ -792,13 +795,14 @@ class ShowLispServiceMapCache(ShowLispServiceMapCacheSchema):
     def cli(self, service, instance_id, output=None):
 
         if output is None:
-            assert service in ['ipv4', 'ipv6', 'ethernet']
+            assert service in ['ipv4', 'ipv6', 'ethernet', 'named-services']
             out = self.device.execute(self.cli_command.format(instance_id=instance_id,service=service))
         else:
             out = output
 
         # Init vars
         parsed_dict = {}
+        lisp_dict = None
 
         # State dict
         state_dict = {
@@ -814,9 +818,11 @@ class ShowLispServiceMapCache(ShowLispServiceMapCacheSchema):
         # LISP IPv6 Mapping Cache for EID-table vrf red (IID 101), 2 entries
         # LISP MAC Mapping Cache for EID-table Vlan 101 (IID 1), 4 entries
         # LISP IPv4 Mapping Cache for LISP 0 EID-table default (IID 4097), 2 entries
-        p2 = re.compile(r'LISP +(?P<type>(IPv4|IPv6|MAC)) +Mapping +Cache +for'
-                         r' ((LISP\s*[\d. ]+)|\s*)+EID\-table +(default|(vrf|Vlan)'
-                         r' +(?P<vrf>(\S+))) +\(IID +(?P<iid>(\d+))\), +(?P<entries>(\d+))'
+        # LISP DN Mapping Cache for LISP 0 EID-table N/A (IID 4), 3 entries
+        p2 = re.compile(r'LISP +(?P<type>(IPv4|IPv6|MAC|DN)) +Mapping +Cache +for'
+                         r' ((LISP\s*[\d. ]+)|\s*)+EID\-table +'
+                         r'(?P<eid_table>default|N/A|(?:vrf|Vlan) +(?P<vrf>\S+))'
+                         r' +\(IID +(?P<iid>(\d+))\), +(?P<entries>(\d+))'
                          r' +entries$')
 
         # 0.0.0.0/0, uptime: 15:23:50, expires: never, via static-send-map-request
@@ -863,11 +869,14 @@ class ShowLispServiceMapCache(ShowLispServiceMapCacheSchema):
             # LISP IPv4 Mapping Cache for EID-table default (IID 101), 2 entries
             # LISP IPv6 Mapping Cache for EID-table vrf red (IID 101), 2 entries
             # LISP MAC Mapping Cache for EID-table Vlan 101 (IID 1), 4 entries
+            # LISP DN Mapping Cache for LISP 0 EID-table N/A (IID 4), 3 entries
             m = p2.match(line)
             if m:
                 group = m.groupdict()
                 address_type = group['type']
                 vrf_name = group['vrf'] if group['vrf'] else 'default'
+                if address_type == 'DN':
+                    vrf_name = group['eid_table']
                 # Create dict
                 service_dict = lisp_dict.setdefault('service', {}).\
                                 setdefault(service, {})
@@ -896,7 +905,11 @@ class ShowLispServiceMapCache(ShowLispServiceMapCacheSchema):
                 mapping_dict['time_to_live'] = group['expires']
                 mapping_dict['via'] = group['via']
                 eid_dict = mapping_dict.setdefault('eid', {})
-                if ':' in group['map_id']:
+                if address_type == 'DN':
+                    dn_dict = eid_dict.setdefault('dn', {})
+                    dn_dict['dn'] = group['map_id']
+                    eid_dict['address_type'] = 'dn-afi'
+                elif ':' in group['map_id']:
                     ipv6_dict = eid_dict.setdefault('ipv6', {})
                     ipv6_dict['ipv6'] = group['map_id']
                     eid_dict['address_type'] = 'ipv6-afi'

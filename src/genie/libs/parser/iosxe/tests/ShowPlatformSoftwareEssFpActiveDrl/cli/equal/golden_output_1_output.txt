@@ -1,0 +1,12 @@
+show platform software ess FP active drl
+Subscriber Policing records: Total  : 3
+
+Segment             ClassIn     ClassOut    EVSI        QFP Hdl     AOM State
+InRate              InBc        InBe        OutRate     OutBc       OutBe
+-----------------------------------------------------------------------------
+0x004204de00000089  190         191         4326623     38          created
+1                   1000        2000        1           1000        2000
+0x004204de00000089  192         193         4326624     41          created
+1                   1000        2000        1           1000        2000
+0x004204e20000008a  0           1           4326626     46          created
+1                   1000        2000        1           1000        2000

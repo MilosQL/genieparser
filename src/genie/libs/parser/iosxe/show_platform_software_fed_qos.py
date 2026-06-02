@@ -1885,3 +1885,1154 @@ class ShowPlatformSoftwareFedQosInterfaceIngressSdkDetailedAsicAll(
 
     def cli(self, command=None, output=None, **kwargs):
         return super().cli(command=command, output=output, **kwargs)
+
+class ShowPlatformSoftwareFedQosInterfaceEgressTypeQueueNpiDetailedSchema(MetaParser):
+    """Schema for show platform software fed {switch} {mode} qos interface {interface} ingress npi detailed"""
+
+    schema = {
+        Optional("interface"): {
+            Any(): {
+                "cgid": str,
+                "no_of_classes": int,
+                "tcg_ref_count": int,
+                "filter_state": str,
+                "vmr_state": str,
+            }
+        },
+        "classmap": {
+            Any(): {
+                "cgid": str,
+                "clid": str,
+                "tccg_ref_count": int,
+                "null_bind_count": int,
+                "class_seq_number": str,
+                "child_classes": int,
+                Optional("filter"): {Any(): {"value": str}},
+            }
+        },
+        Optional("tcg"): {
+            "npi_tcg": {
+                "config_state": str,
+                "operational_state": str,
+                "parent_info": list,
+                "child_tcg": int,
+                "mark_action": int,
+                "police_action": int,
+                "queue_action": int,
+                "no_of_tccg": int,
+            },
+            Optional("tccg"): {
+                Any(): {
+                    "class_map_name": str,
+                    "clid": str,
+                    "child_cgid": str,
+                    "null_bind": bool,
+                    Optional("action"): {
+                        Any(): {
+                            Optional("action_type"): str,
+                            Optional("attributes"): str,
+                            Optional("queue_id"): int,
+                            Optional("default_queue"): int,
+                            Optional("shape_parameters"): {
+                                Optional("cir"): int
+                            },
+                            Optional("priority_parameters"): {
+                                Optional("level"): int
+                            },
+                            Optional("queue_parameters"): {
+                                Optional("queue_limit"): str,
+                                Optional("bandwidth_remaining_ratio"): int,
+                            },
+                            Optional("wred_parameters"): {
+                                Optional("mode"): str,
+                                Optional("threshold_unit"): str,
+                                Optional("exponential_weighting_constant"): int,
+                                Optional("discard_classes"): {
+                                    Any(): {
+                                        "min_thresh": int,
+                                        "max_thresh": int,
+                                        "mark_prob_denom": int,
+                                    },
+                                },
+                                Optional("configured_discard_classes"): int,
+                            },
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+class ShowPlatformSoftwareFedQosInterfaceEgressTypeQueueNpiDetailed(
+    ShowPlatformSoftwareFedQosInterfaceEgressTypeQueueNpiDetailedSchema
+):
+    """Parser for show platform software fed {switch_var} {switch} qos interface {interface} egress type-queue npi detailed"""
+
+    cli_command = [
+        "show platform software fed {switch_var} {switch} qos interface {interface} egress type-queue npi detailed",
+        "show platform software fed {switch} qos interface {interface} egress type-queue npi detailed",
+    ]
+
+    def cli(self, switch, interface, switch_var=None, output=None):
+        if output is None:
+            if switch_var:
+                cmd = self.cli_command[0].format(
+                    switch=switch, switch_var=switch_var, interface=interface
+                )
+            else:
+                cmd = self.cli_command[1].format(switch=switch, interface=interface)
+            output = self.device.execute(cmd)
+
+        # [GigabitEthernet2/0/2, 1p1q, Egress]: CGID = 0x383810
+        p1 = re.compile(r"^\[(?P<interface>[\w\/\.\-]+),.+$")
+
+        # cgid: 0x383810
+        p1_1 = re.compile(r"^cgid:\s+(?P<cgid>\w+)$")
+
+        # No of classes: 3
+        p1_2 = re.compile(r"^No of classes:\s+(?P<no_of_classes>\d+)$")
+
+        # TCG ref count: 3
+        p1_3 = re.compile(r"^TCG ref count:\s+(?P<tcg_ref_count>\d+)$")
+
+        # Filter state: UP TO DATE
+        p1_4 = re.compile(r"^Filter state:\s+(?P<filter_state>[\w\s]+)$")
+
+        # VMR state: DIRTY
+        p1_5 = re.compile(r"^VMR state:\s+(?P<vmr_state>[\w\s]+)$")
+
+        # Classmap Information
+        p2 = re.compile(r"^Classmap Information$")
+
+        # Class name: tc7(cgid: 0x383810, clid: 0x7A671)
+        p2_1 = re.compile(
+            r"^Class name: (?P<class_name>[\w\s\-]+)\(cgid: (?P<cgid>\w+)\, clid: (?P<clid>\w+)\)$"
+        )
+        # TCCG ref count: 3
+        p2_2 = re.compile(r"^TCCG ref count: (?P<tccg_ref_count>\d+)$")
+
+        # NULL Bind count: 3
+        p2_3 = re.compile(r"^NULL Bind count: (?P<null_bind_count>\d+)$")
+
+        # Class seq no.: 0x1FFFFF
+        p2_4 = re.compile(r"^Class seq no\.: (?P<class_seq_number>\w+)$")
+
+        # No of child classes: 0
+        p2_5 = re.compile(r"^No of child classes: (?P<child_classes>\d+)$")
+
+        # Filter: FILTER_MATCH_TRAFFIC_CLASS
+        p2_6 = re.compile(r"^Filter: (?P<filter_name>[\w\s]+)$")
+
+        # Value: 0x7
+        p2_7 = re.compile(r"^Value: (?P<value>\w+)$")
+
+        # TCG Information
+        p3 = re.compile(r"^TCG Information$")
+
+        # NPI TCG Values:
+        p3_1 = re.compile(r"^NPI TCG Values:$")
+
+        # Config state: VALID
+        p3_2 = re.compile(r"^Config state: (?P<config_state>[\w\s]+)$")
+
+        # Operational state: IN HARDWARE
+        p3_3 = re.compile(r"^Operational state: (?P<operational_state>[\w\s]+)$")
+
+        # Parent Info: [0x0, 0x0, 0]
+        p3_4 = re.compile(r"^Parent Info: \[(?P<parent_info>[\w\s\,]+)\]$")
+
+        # No of Child TCGs: 0
+        p3_5 = re.compile(r"^No of Child TCGs: (?P<child_tcg>\d+)$")
+
+        # Mark Action count: 0
+        p3_6 = re.compile(r"^Mark Action count: (?P<mark_action>\d+)$")
+
+        # Police Action count: 0
+        p3_7 = re.compile(r"^Police Action count: (?P<police_action>\d+)$")
+
+        # Queue Action count: 3
+        p3_8 = re.compile(r"^Queue Action count: (?P<queue_action>\d+)$")
+
+        # No of TCCGs: 3
+        p3_9 = re.compile(r"^No of TCCGs: (?P<no_of_tccg>\d+)$")
+
+        #  TCCG 0:
+        p4 = re.compile(r"^TCCG (?P<tccg>\d+):$")
+
+        # Class-map name: tc7(0x7A671)
+        p4_1 = re.compile(
+            r"^Class-map name: (?P<class_map_name>[\w\s\-]+)\((?P<clid>\w+)\)$"
+        )
+
+        # Child cgid: 0x0
+        p4_2 = re.compile(r"^Child cgid: (?P<child_cgid>\w+)$")
+
+        # Null Bind: True
+        p4_3 = re.compile(r"^Null Bind: (?P<null_bind>\w+)$")
+
+        # Action 0
+        p4_4 = re.compile(r"^Action (?P<action>\d+)$")
+
+        # Action Type: Queueing
+        p5_1 = re.compile(r"^Action Type: (?P<action_type>[\w\s]+)$")
+
+        # Attributes: 0x7 (QPARAMS, SHAPE, PRIORITY)
+        p5_2 = re.compile(r"^Attributes: (?P<attributes>[\w\s\(\)\,]+)$")
+
+        # Queue id: 7
+        p5_3 = re.compile(r"^Queue id: (?P<queue_id>\d+)$")
+
+        # Shape Parameters
+        p5_4 = re.compile(r"^Shape Parameters$")
+        
+        # CIR: 100000000
+        p5_5 = re.compile(r"^CIR: (?P<cir>\d+)$")
+
+        # Priority Parameters
+        p5_6 = re.compile(r"^Priority Parameters$")
+
+        # Level: 1
+        p5_7 = re.compile(r"^Level: (?P<level>\d+)$")
+
+        # Default queue: True
+        p5_8 = re.compile(r"^Default queue: (?P<default_queue>\w+)$")
+
+        # Queue Parameters
+        p5_9 = re.compile(r"^Queue Parameters$")
+
+        # Queue limit: 96000 Bytes
+        p5_10 = re.compile(r"^Queue limit: (?P<queue_limit>[\w\s]+)$")
+
+        # Bandwidth remaining ratio: 16
+        p5_11 = re.compile(r"^Bandwidth remaining ratio: (?P<bandwidth_remaining_ratio>\d+)$")
+
+        # WRED Parameters
+        p5_12 = re.compile(r"^WRED Parameters$")
+
+        # Mode: Discard Class, Threshold unit: Percent
+        p5_13 = re.compile(r"^Mode: (?P<mode>[\w\s]+), Threshold unit: (?P<threshold_unit>[\w\s]+)$")
+        
+        # Exponential weighting constant: 1, Configured discard classes: 2
+        p5_14 = re.compile(r"^Exponential weighting constant: (?P<exponential_weighting_constant>\d+), Configured discard classes: (?P<configured_discard_classes>\d+)$")
+        
+        # Discard Class  Min Thresh  Max Thresh  Mark Prob Denom
+        # -------------  ----------  ----------  ---------------
+        # 0              90          100         1              
+        # 1              80          100         1
+        p5_15 = re.compile(r"^(?P<discard_class>\d+)\s+(?P<min_thresh>\d+)\s+(?P<max_thresh>\d+)\s+(?P<mark_prob_denom>\d+)$")
+
+        ret_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # [GigabitEthernet2/0/2, 1p1q, Egress]: CGID = 0x383810
+            m = p1.match(line)
+            if m:
+                int_dict = ret_dict.setdefault("interface", {}).setdefault(
+                    Common.convert_intf_name(m.groupdict()["interface"]), {}
+                )
+                continue
+
+            # cgid: 0x383810
+            m = p1_1.match(line)
+            if m:
+                int_dict.setdefault("cgid", m.groupdict()["cgid"])
+                continue
+
+            # No of classes: 3
+            m = p1_2.match(line)
+            if m:
+                int_dict.setdefault(
+                    "no_of_classes", int(m.groupdict()["no_of_classes"])
+                )
+                continue
+
+            # TCG ref count: 3
+            m = p1_3.match(line)
+            if m:
+                int_dict.setdefault(
+                    "tcg_ref_count", int(m.groupdict()["tcg_ref_count"])
+                )
+                continue
+
+            # Filter state: UP TO DATE
+            m = p1_4.match(line)
+            if m:
+                int_dict.setdefault("filter_state", m.groupdict()["filter_state"])
+                continue
+
+            # VMR state: DIRTY
+            m = p1_5.match(line)
+            if m:
+                int_dict.setdefault("vmr_state", m.groupdict()["vmr_state"])
+                continue
+
+            # Classmap Information
+            m = p2.match(line)
+            if m:
+                classmap_dict = ret_dict.setdefault("classmap", {})
+                continue
+
+            # Class name: tc7(cgid: 0x383810, clid: 0x7A671)
+            m = p2_1.match(line)
+            if m:
+                class_dict = classmap_dict.setdefault(m.groupdict()["class_name"], {})
+                class_dict["cgid"] = m.groupdict()["cgid"]
+                class_dict["clid"] = m.groupdict()["clid"]
+                continue
+
+            # TCCG ref count: 3
+            m = p2_2.match(line)
+            if m:
+                class_dict["tccg_ref_count"] = int(m.groupdict()["tccg_ref_count"])
+                continue
+
+            # NULL Bind count: 3
+            m = p2_3.match(line)
+            if m:
+                class_dict["null_bind_count"] = int(m.groupdict()["null_bind_count"])
+                continue
+
+            # Class seq no.: 0x1FFFFF
+            m = p2_4.match(line)
+            if m:
+                class_dict["class_seq_number"] = m.groupdict()["class_seq_number"]
+                continue
+
+            # No of child classes: 0
+            m = p2_5.match(line)
+            if m:
+                class_dict["child_classes"] = int(m.groupdict()["child_classes"])
+                continue
+
+            # Filter: FILTER_MATCH_TRAFFIC_CLASS
+            m = p2_6.match(line)
+            if m:
+                filt_dict = class_dict.setdefault("filter", {}).setdefault(
+                    m.groupdict()["filter_name"].lower(), {}
+                )
+                continue
+
+            # Value: 0x7
+            m = p2_7.match(line)
+            if m:
+                filt_dict["value"] = m.groupdict()["value"]
+                continue
+
+            # TCG Information
+            m = p3.match(line)
+            if m:
+                tcg_dict = ret_dict.setdefault("tcg", {})
+                continue
+
+            # NPI TCG Values:
+            m = p3_1.match(line)
+            if m:
+                npi_tcg_dict = tcg_dict.setdefault("npi_tcg", {})
+                continue
+
+            # Config state: VALID
+            m = p3_2.match(line)
+            if m:
+                npi_tcg_dict["config_state"] = m.groupdict()["config_state"]
+                continue
+
+            # Operational state: IN HARDWARE
+            m = p3_3.match(line)
+            if m:
+                npi_tcg_dict["operational_state"] = m.groupdict()["operational_state"]
+                continue
+
+            # Parent Info: [0x0, 0x0, 0]
+            m = p3_4.match(line)
+            if m:
+                npi_tcg_dict["parent_info"] = m.groupdict()["parent_info"].split(", ")
+                continue
+
+            # No of Child TCGs: 0
+            m = p3_5.match(line)
+            if m:
+                npi_tcg_dict["child_tcg"] = int(m.groupdict()["child_tcg"])
+                continue
+
+            # Mark Action count: 0
+            m = p3_6.match(line)
+            if m:
+                npi_tcg_dict["mark_action"] = int(m.groupdict()["mark_action"])
+                continue
+
+            # Police Action count: 0
+            m = p3_7.match(line)
+            if m:
+                npi_tcg_dict["police_action"] = int(m.groupdict()["police_action"])
+                continue
+
+            # Queue Action count: 3
+            m = p3_8.match(line)
+            if m:
+                npi_tcg_dict["queue_action"] = int(m.groupdict()["queue_action"])
+                continue
+
+            # No of TCCGs: 3
+            m = p3_9.match(line)
+            if m:
+                npi_tcg_dict["no_of_tccg"] = int(m.groupdict()["no_of_tccg"])
+                continue
+
+            #  TCCG 0:
+            m = p4.match(line)
+            if m:
+                tccg_dict = tcg_dict.setdefault("tccg", {}).setdefault(
+                    m.groupdict()["tccg"], {}
+                )
+                continue
+
+            # Class-map name: tc7(0x7A671)
+            m = p4_1.match(line)
+            if m:
+                tccg_dict["class_map_name"] = m.groupdict()["class_map_name"]
+                tccg_dict["clid"] = m.groupdict()["clid"]
+                continue
+
+            # Child cgid: 0x0
+            m = p4_2.match(line)
+            if m:
+                tccg_dict["child_cgid"] = m.groupdict()["child_cgid"]
+                continue
+
+            # Null Bind: True
+            m = p4_3.match(line)
+            if m:
+                tccg_dict["null_bind"] = (
+                    True if m.groupdict()["null_bind"] == "True" else False
+                )
+                continue
+
+            # Action 0
+            m = p4_4.match(line)
+            if m:
+                action_dict = tccg_dict.setdefault("action", {}).setdefault(
+                    m.groupdict()["action"], {}
+                )
+                continue
+
+            # Action Type: Queueing
+            m = p5_1.match(line)
+            if m:
+                action_dict["action_type"] = m.groupdict()["action_type"]
+                continue
+
+            # Attributes: 0x7 (QPARAMS, SHAPE, PRIORITY)
+            m = p5_2.match(line)
+            if m:
+                action_dict["attributes"] = m.groupdict()["attributes"]
+                continue
+
+            # Queue id: 7
+            m = p5_3.match(line)
+            if m:
+                action_dict["queue_id"] = int(m.groupdict()["queue_id"])
+                continue
+
+            # Shape Parameters
+            m = p5_4.match(line)
+            if m:
+                shape_dict = action_dict.setdefault("shape_parameters", {})
+                continue
+
+            # CIR: 100000000
+            m = p5_5.match(line)
+            if m:
+                shape_dict["cir"] = int(m.groupdict()["cir"])
+                continue
+
+            # Priority Parameters
+            m = p5_6.match(line)
+            if m:
+                priority_dict = action_dict.setdefault("priority_parameters", {})
+                continue
+
+            # Level: 1
+            m = p5_7.match(line)
+            if m:
+                priority_dict["level"] = int(m.groupdict()["level"])
+                continue
+
+            # Default queue: True
+            m = p5_8.match(line)
+            if m:
+                action_dict["default_queue"] = (
+                    True if m.groupdict()["default_queue"] == "True" else False
+                )
+                continue
+
+            # Queue Parameters
+            m = p5_9.match(line)
+            if m:
+                queue_dict = action_dict.setdefault("queue_parameters", {})
+                continue
+
+            # Queue limit: 96000 Bytes
+            m = p5_10.match(line)
+            if m:
+                queue_dict["queue_limit"] = m.groupdict()["queue_limit"]
+                continue
+
+            # Bandwidth remaining ratio: 16
+            m = p5_11.match(line)
+            if m:
+                queue_dict["bandwidth_remaining_ratio"] = int(
+                    m.groupdict()["bandwidth_remaining_ratio"]
+                )
+                continue
+
+            # WRED Parameters
+            m = p5_12.match(line)
+            if m:
+                wred_dict = action_dict.setdefault("wred_parameters", {})
+                continue
+
+            # Mode: Discard Class, Threshold unit: Percent
+            m = p5_13.match(line)
+            if m:
+                wred_dict["mode"] = m.groupdict()["mode"]
+                wred_dict["threshold_unit"] = m.groupdict()["threshold_unit"]
+                continue
+
+            # Exponential weighting constant: 1, Configured discard classes: 2
+            m = p5_14.match(line)
+            if m:
+                wred_dict["exponential_weighting_constant"] = int(
+                    m.groupdict()["exponential_weighting_constant"]
+                )
+                wred_dict["configured_discard_classes"] = int(
+                    m.groupdict()["configured_discard_classes"]
+                )
+                continue
+
+            # Discard Class  Min Thresh  Max Thresh  Mark Prob Denom
+            # 0              90          100         1
+            # 1              80          100         1
+            m = p5_15.match(line)
+            if m:
+                discard_class_dict = wred_dict.setdefault("discard_classes", {}).setdefault(
+                    int(m.groupdict()["discard_class"]), {}
+                )
+                discard_class_dict["min_thresh"] = int(m.groupdict()["min_thresh"])
+                discard_class_dict["max_thresh"] = int(m.groupdict()["max_thresh"])
+                discard_class_dict["mark_prob_denom"] = int(
+                    m.groupdict()["mark_prob_denom"]
+                )
+                continue
+
+        return ret_dict
+
+class ShowPlatformSoftwareFedQosInterfaceEgressTypeQueueNpdDetailedSchema(MetaParser):
+    """Schema for show platform software fed {switch} {mode} qos interface {interface} egress type-queue npd detailed"""
+
+    schema = {
+        Optional("interface"): {
+            Any(): {
+                "cgid": str,
+                "no_of_classes": int,
+                "tcg_ref_count": int,
+                "filter_state": str,
+                "vmr_state": str,
+            }
+        },
+        "egress_queue_profile": {
+            "profile_id": str,
+            "oid": str,
+            "ref_count": int,
+            "device": int,
+            "total_queues": int,
+            "priority_queues": int,
+            Optional("traffic_class_to_queue_map"): {
+                Any(): int,
+            },
+        },
+        "interface_bind": {
+            "port_type": str,
+            "port_oid": str,
+            "system_port_oid": str,
+            "state": str,
+            "speed": int,
+            "scheduler": {
+                "oid": str,
+                "asic": str,
+                "programmable": bool,
+            },
+            "voq_set": {
+                "oid": str,
+                "device": int,
+                "base_voq_id": int,
+                "size": int,
+                "state": str,
+                "flush": str,
+                "empty": bool,
+            },
+        },
+    }
+
+class ShowPlatformSoftwareFedQosInterfaceEgressTypeQueueNpdDetailed(
+    ShowPlatformSoftwareFedQosInterfaceEgressTypeQueueNpdDetailedSchema
+):
+    """Parser for show platform software fed {switch} {switch} qos interface {interface} egress type-queue npd detailed"""
+
+    cli_command = [
+        "show platform software fed {switch_var} {switch} qos interface {interface} egress type-queue npd detailed",
+        "show platform software fed {switch} qos interface {interface} egress type-queue npd detailed",
+    ]
+
+    def cli(self, switch, interface, switch_var=None, output=None):
+        if output is None:
+            if switch_var:
+                cmd = self.cli_command[0].format(
+                    switch=switch, switch_var=switch_var, interface=interface
+                )
+            else:
+                cmd = self.cli_command[1].format(switch=switch, interface=interface)
+            output = self.device.execute(cmd)
+
+        # [GigabitEthernet2/0/2, 1p1q, Egress]: CGID = 0x383810
+        p1 = re.compile(r"^\[(?P<interface>[\w\/\.\-]+),.+$")
+
+        # cgid: 0x383810
+        p1_1 = re.compile(r"^cgid:\s+(?P<cgid>\w+)$")
+
+        # No of classes: 3
+        p1_2 = re.compile(r"^No of classes:\s+(?P<no_of_classes>\d+)$")
+
+        # TCG ref count: 3
+        p1_3 = re.compile(r"^TCG ref count:\s+(?P<tcg_ref_count>\d+)$")
+
+        # Filter state: UP TO DATE
+        p1_4 = re.compile(r"^Filter state:\s+(?P<filter_state>[\w\s]+)$")
+
+        # VMR state: DIRTY
+        p1_5 = re.compile(r"^VMR state:\s+(?P<vmr_state>[\w\s]+)$")
+
+        # NPD: Egress Queue Profile
+        p2 = re.compile(r"^NPD: Egress Queue Profile$")
+
+        # Profile: ID 0x5, OID 0x1EB, Ref Count 3
+        p2_1 = re.compile(
+            r"^Profile: ID (?P<profile_id>\w+), OID (?P<oid>\w+), Ref Count (?P<ref_count>\d+)$"
+        )
+
+        # Device: 0
+        p2_2 = re.compile(r"^Device: (?P<device>\d+)$")
+
+        # Queues: total 3, priority 1
+        p2_3 = re.compile(
+            r"^Queues: total (?P<total_queues>\d+), priority (?P<priority_queues>\d+)$"
+        )
+
+        # Traffic class to queue map
+        p2_4 = re.compile(r"^Traffic class to queue map$")
+
+        # 0   0
+        p2_5 = re.compile(r"^(?P<tc>\d+)\s+(?P<queue>\d+)$")
+
+        # NPD: Interface Bind
+        p3 = re.compile(r"^NPD: Interface Bind$")
+
+        # Port Type: L3
+        p3_1 = re.compile(r"^Port Type:\s+(?P<port_type>.+)$")
+
+        # Port: OID 0x792, system port OID 0x796
+        p3_2 = re.compile(
+            r"^Port: OID (?P<port_oid>\w+), system port OID (?P<system_port_oid>\w+)$"
+        )
+
+        # State: Active, Speed: 1000000000 bps
+        p3_3 = re.compile(
+            r"^State: (?P<state>\w+), Speed: (?P<speed>\d+)\s+bps$"
+        )
+
+        # Scheduler
+        p3_4 = re.compile(r"^Scheduler$")
+
+        # OID: 0x797, ASIC: Argon
+        p3_5 = re.compile(r"^OID: (?P<oid>\w+), ASIC: (?P<asic>[\w\s]+)$")
+
+        # Programmable: False
+        p3_6 = re.compile(r"^Programmable: (?P<programmable>\w+)$")
+
+        # VOQ Set
+        p3_7 = re.compile(r"^VOQ Set$")
+
+        # OID: 0x794, device 0, base VOQ ID 472, size 8
+        p3_8 = re.compile(
+            r"^OID: (?P<oid>\w+), device (?P<device>\d+), base VOQ ID (?P<base_voq_id>\d+), size (?P<size>\d+)$"
+        )
+
+        # State: Active, Flush: Flush not active, Empty: False
+        p3_9 = re.compile(
+            r"^State: (?P<state>\w+), Flush: (?P<flush>[\w\s]+), Empty: (?P<empty>\w+)$"
+        )
+
+        ret_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # [GigabitEthernet2/0/2, 1p1q, Egress]: CGID = 0x383810
+            m = p1.match(line)
+            if m:
+                int_dict = ret_dict.setdefault("interface", {}).setdefault(
+                    Common.convert_intf_name(m.groupdict()["interface"]), {}
+                )
+                continue
+
+            # cgid: 0x383810
+            m = p1_1.match(line)
+            if m:
+                int_dict.setdefault("cgid", m.groupdict()["cgid"])
+                continue
+
+            # No of classes: 3
+            m = p1_2.match(line)
+            if m:
+                int_dict.setdefault(
+                    "no_of_classes", int(m.groupdict()["no_of_classes"])
+                )
+                continue
+
+            # TCG ref count: 3
+            m = p1_3.match(line)
+            if m:
+                int_dict.setdefault(
+                    "tcg_ref_count", int(m.groupdict()["tcg_ref_count"])
+                )
+                continue
+
+            # Filter state: UP TO DATE
+            m = p1_4.match(line)
+            if m:
+                int_dict.setdefault("filter_state", m.groupdict()["filter_state"])
+                continue
+
+            # VMR state: DIRTY
+            m = p1_5.match(line)
+            if m:
+                int_dict.setdefault("vmr_state", m.groupdict()["vmr_state"])
+                continue
+
+            # NPD: Egress Queue Profile
+            m = p2.match(line)
+            if m:
+                queue_dict = ret_dict.setdefault("egress_queue_profile", {})
+                continue
+
+            # Profile: ID 0x5, OID 0x1EB, Ref Count 3
+            m = p2_1.match(line)
+            if m:
+                queue_dict["profile_id"] = m.groupdict()["profile_id"]
+                queue_dict["oid"] = m.groupdict()["oid"]
+                queue_dict["ref_count"] = int(m.groupdict()["ref_count"])
+                continue
+
+            # Device: 0
+            m = p2_2.match(line)
+            if m:
+                queue_dict["device"] = int(m.groupdict()["device"])
+                continue
+
+            # Queues: total 3, priority 1
+            m = p2_3.match(line)
+            if m:
+                queue_dict["total_queues"] = int(m.groupdict()["total_queues"])
+                queue_dict["priority_queues"] = int(m.groupdict()["priority_queues"])
+                continue
+
+            # Traffic class to queue map
+            m = p2_4.match(line)
+            if m:
+                tc_queue_map = queue_dict.setdefault("traffic_class_to_queue_map", {})
+                continue
+
+            # 0   0
+            m = p2_5.match(line)
+            if m:
+                tc_queue_map[int(m.groupdict()["tc"])] = int(m.groupdict()["queue"])
+                continue
+
+            # NPD: Interface Bind
+            m = p3.match(line)
+            if m:
+                bind_dict = ret_dict.setdefault("interface_bind", {})
+                continue
+
+            # Port Type: L3
+            m = p3_1.match(line)
+            if m:
+                bind_dict["port_type"] = m.groupdict()["port_type"]
+                continue
+
+            # Port: OID 0x792, system port OID 0x796
+            m = p3_2.match(line)
+            if m:
+                bind_dict["port_oid"] = m.groupdict()["port_oid"]
+                bind_dict["system_port_oid"] = m.groupdict()["system_port_oid"]
+                continue
+
+            # State: Active, Speed: 1000000000 bps
+            m = p3_3.match(line)
+            if m:
+                bind_dict["state"] = m.groupdict()["state"]
+                bind_dict["speed"] = int(m.groupdict()["speed"])
+                continue
+
+            # Scheduler
+            m = p3_4.match(line)
+            if m:
+                scheduler_dict = bind_dict.setdefault("scheduler", {})
+                continue
+
+            # OID: 0x797, ASIC: Argon
+            m = p3_5.match(line)
+            if m:
+                scheduler_dict["oid"] = m.groupdict()["oid"]
+                scheduler_dict["asic"] = m.groupdict()["asic"]
+                continue
+
+            # Programmable: False
+            m = p3_6.match(line)
+            if m:
+                scheduler_dict["programmable"] = (
+                    True if m.groupdict()["programmable"] == "True" else False
+                )
+                continue
+
+            # VOQ Set
+            m = p3_7.match(line)
+            if m:
+                voq_dict = bind_dict.setdefault("voq_set", {})
+                continue
+
+            # OID: 0x794, device 0, base VOQ ID 472, size 8
+            m = p3_8.match(line)
+            if m:
+                voq_dict["oid"] = m.groupdict()["oid"]
+                voq_dict["device"] = int(m.groupdict()["device"])
+                voq_dict["base_voq_id"] = int(m.groupdict()["base_voq_id"])
+                voq_dict["size"] = int(m.groupdict()["size"])
+                continue
+
+            # State: Active, Flush: Flush not active, Empty: False
+            m = p3_9.match(line)
+            if m:
+                voq_dict["state"] = m.groupdict()["state"]
+                voq_dict["flush"] = m.groupdict()["flush"]
+                voq_dict["empty"] = (
+                    True if m.groupdict()["empty"] == "True" else False
+                )
+                continue
+
+        return ret_dict
+
+class ShowPlatformSoftwareFedQosInterfaceEgressTypeQueueSdkDetailedSchema(MetaParser):
+    """Schema for show platform software fed {switch} {mode} qos interface {interface} egress type-queue sdk detailed"""
+
+    schema = {
+        Optional("interface"): {
+            Any(): {
+                "cgid": str,
+                "no_of_classes": int,
+                "tcg_ref_count": int,
+                "filter_state": str,
+                "vmr_state": str,
+            }
+        },
+        "egress_queue_profile": {
+            "profile_id": str,
+            "oid": str,
+            "ref_count": int,
+            "device": int,
+            "total_queues": int,
+            "priority_queues": int,
+            Optional("traffic_class_to_queue_map"): {
+                Any(): int,
+            },
+        },
+        "interface_bind": {
+            "port_type": str,
+            "port_oid": str,
+            "system_port_oid": str,
+            "state": str,
+            "speed": int,
+            "scheduler": {
+                "oid": str,
+                "asic": str,
+                "programmable": bool,
+            },
+            "voq_set": {
+                "oid": str,
+                "device": int,
+                "base_voq_id": int,
+                "size": int,
+                "state": str,
+                "flush": str,
+                "empty": bool,
+            },
+        },
+    }
+class ShowPlatformSoftwareFedQosInterfaceEgressTypeQueueSdkDetailed(
+    ShowPlatformSoftwareFedQosInterfaceEgressTypeQueueSdkDetailedSchema
+):
+    """Parser for show platform software fed {switch_var} {switch} qos interface {interface} egress type-queue sdk detailed"""
+
+    cli_command = [
+        "show platform software fed {switch_var} {switch} qos interface {interface} egress type-queue sdk detailed",
+        "show platform software fed {switch} qos interface {interface} egress type-queue sdk detailed",
+    ]
+
+    def cli(self, switch, interface, switch_var=None, output=None):
+        if output is None:
+            if switch_var:
+                cmd = self.cli_command[0].format(
+                    switch=switch, switch_var=switch_var, interface=interface
+                )
+            else:
+                cmd = self.cli_command[1].format(switch=switch, interface=interface)
+            output = self.device.execute(cmd)
+
+        # [GigabitEthernet2/0/2, 1p1q, Egress]: CGID = 0x383810
+        p1 = re.compile(r"^\[(?P<interface>[\w\/\.\-]+),.+$")
+
+        # cgid: 0x383810
+        p1_1 = re.compile(r"^cgid:\s+(?P<cgid>\w+)$")
+
+        # No of classes: 3
+        p1_2 = re.compile(r"^No of classes:\s+(?P<no_of_classes>\d+)$")
+
+        # TCG ref count: 3
+        p1_3 = re.compile(r"^TCG ref count:\s+(?P<tcg_ref_count>\d+)$")
+
+        # Filter state: UP TO DATE
+        p1_4 = re.compile(r"^Filter state:\s+(?P<filter_state>[\w\s]+)$")
+
+        # VMR state: DIRTY
+        p1_5 = re.compile(r"^VMR state:\s+(?P<vmr_state>[\w\s]+)$")
+
+        # SDK: Egress Queue Profile
+        p2 = re.compile(r"^SDK: Egress Queue Profile$")
+
+        # Profile: ID 0x5, OID 0x1EB, Ref Count 3
+        p2_1 = re.compile(
+            r"^Profile: ID (?P<profile_id>\w+), OID (?P<oid>\w+), Ref Count (?P<ref_count>\d+)$"
+        )
+
+        # Device: 0
+        p2_2 = re.compile(r"^Device: (?P<device>\d+)$")
+
+        # Queues: total 3, priority 1
+        p2_3 = re.compile(
+            r"^Queues: total (?P<total_queues>\d+), priority (?P<priority_queues>\d+)$"
+        )
+
+        # Traffic class to queue map
+        p2_4 = re.compile(r"^Traffic class to queue map$")
+
+        # 0   0
+        p2_5 = re.compile(r"^(?P<tc>\d+)\s+(?P<queue>\d+)$")
+
+        # SDK: Interface Bind (ASIC 0)
+        p3 = re.compile(r"^SDK: Interface Bind(\s*\(ASIC \d+\))?$")
+
+        # Port Type: L3
+        p3_1 = re.compile(r"^Port Type:\s+(?P<port_type>.+)$")
+
+        # Port: OID 0x792, system port OID 0x796
+        p3_2 = re.compile(
+            r"^Port: OID (?P<port_oid>\w+), system port OID (?P<system_port_oid>\w+)$"
+        )
+
+        # State: Active, Speed: 1000000000 bps
+        p3_3 = re.compile(
+            r"^State: (?P<state>\w+), Speed: (?P<speed>\d+)\s+bps$"
+        )
+
+        # Scheduler
+        p3_4 = re.compile(r"^Scheduler$")
+
+        # OID: 0x797, ASIC: Argon
+        p3_5 = re.compile(r"^OID: (?P<oid>\w+), ASIC: (?P<asic>[\w\s]+)$")
+
+        # Programmable: False
+        p3_6 = re.compile(r"^Programmable: (?P<programmable>\w+)$")
+
+        # VOQ Set
+        p3_7 = re.compile(r"^VOQ Set$")
+
+        # OID: 0x794, device 0, base VOQ ID 472, size 8
+        p3_8 = re.compile(
+            r"^OID: (?P<oid>\w+), device (?P<device>\d+), base VOQ ID (?P<base_voq_id>\d+), size (?P<size>\d+)$"
+        )
+
+        # State: Active, Flush: Flush not active, Empty: False
+        p3_9 = re.compile(
+            r"^State: (?P<state>\w+), Flush: (?P<flush>[\w\s]+), Empty: (?P<empty>\w+)$"
+        )
+
+        ret_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # [GigabitEthernet2/0/2, 1p1q, Egress]: CGID = 0x383810
+            m = p1.match(line)
+            if m:
+                int_dict = ret_dict.setdefault("interface", {}).setdefault(
+                    Common.convert_intf_name(m.groupdict()["interface"]), {}
+                )
+                continue
+
+            # cgid: 0x383810
+            m = p1_1.match(line)
+            if m:
+                int_dict.setdefault("cgid", m.groupdict()["cgid"])
+                continue
+
+            # No of classes: 3
+            m = p1_2.match(line)
+            if m:
+                int_dict.setdefault(
+                    "no_of_classes", int(m.groupdict()["no_of_classes"])
+                )
+                continue
+
+            # TCG ref count: 3
+            m = p1_3.match(line)
+            if m:
+                int_dict.setdefault(
+                    "tcg_ref_count", int(m.groupdict()["tcg_ref_count"])
+                )
+                continue
+
+            # Filter state: UP TO DATE
+            m = p1_4.match(line)
+            if m:
+                int_dict.setdefault("filter_state", m.groupdict()["filter_state"])
+                continue
+
+            # VMR state: DIRTY
+            m = p1_5.match(line)
+            if m:
+                int_dict.setdefault("vmr_state", m.groupdict()["vmr_state"])
+                continue
+
+            # SDK: Egress Queue Profile
+            m = p2.match(line)
+            if m:
+                queue_dict = ret_dict.setdefault("egress_queue_profile", {})
+                continue
+
+            # Profile: ID 0x5, OID 0x1EB, Ref Count 3
+            m = p2_1.match(line)
+            if m:
+                queue_dict["profile_id"] = m.groupdict()["profile_id"]
+                queue_dict["oid"] = m.groupdict()["oid"]
+                queue_dict["ref_count"] = int(m.groupdict()["ref_count"])
+                continue
+
+            # Device: 0
+            m = p2_2.match(line)
+            if m:
+                queue_dict["device"] = int(m.groupdict()["device"])
+                continue
+
+            # Queues: total 3, priority 1
+            m = p2_3.match(line)
+            if m:
+                queue_dict["total_queues"] = int(m.groupdict()["total_queues"])
+                queue_dict["priority_queues"] = int(m.groupdict()["priority_queues"])
+                continue
+
+            # Traffic class to queue map
+            m = p2_4.match(line)
+            if m:
+                tc_queue_map = queue_dict.setdefault("traffic_class_to_queue_map", {})
+                continue
+
+            # 0   0
+            m = p2_5.match(line)
+            if m:
+                tc_queue_map[int(m.groupdict()["tc"])] = int(m.groupdict()["queue"])
+                continue
+
+            # SDK: Interface Bind (ASIC 0)
+            m = p3.match(line)
+            if m:
+                bind_dict = ret_dict.setdefault("interface_bind", {})
+                continue
+
+            # Port Type: L3
+            m = p3_1.match(line)
+            if m:
+                bind_dict["port_type"] = m.groupdict()["port_type"]
+                continue
+
+            # Port: OID 0x792, system port OID 0x796
+            m = p3_2.match(line)
+            if m:
+                bind_dict["port_oid"] = m.groupdict()["port_oid"]
+                bind_dict["system_port_oid"] = m.groupdict()["system_port_oid"]
+                continue
+
+            # State: Active, Speed: 1000000000 bps
+            m = p3_3.match(line)
+            if m:
+                bind_dict["state"] = m.groupdict()["state"]
+                bind_dict["speed"] = int(m.groupdict()["speed"])
+                continue
+
+            # Scheduler
+            m = p3_4.match(line)
+            if m:
+                scheduler_dict = bind_dict.setdefault("scheduler", {})
+                continue
+
+            # OID: 0x797, ASIC: Argon
+            m = p3_5.match(line)
+            if m:
+                scheduler_dict["oid"] = m.groupdict()["oid"]
+                scheduler_dict["asic"] = m.groupdict()["asic"]
+                continue
+
+            # Programmable: False
+            m = p3_6.match(line)
+            if m:
+                scheduler_dict["programmable"] = (
+                    True if m.groupdict()["programmable"] == "True" else False
+                )
+                continue
+
+            # VOQ Set
+            m = p3_7.match(line)
+            if m:
+                voq_dict = bind_dict.setdefault("voq_set", {})
+                continue
+
+            # OID: 0x794, device 0, base VOQ ID 472, size 8
+            m = p3_8.match(line)
+            if m:
+                voq_dict["oid"] = m.groupdict()["oid"]
+                voq_dict["device"] = int(m.groupdict()["device"])
+                voq_dict["base_voq_id"] = int(m.groupdict()["base_voq_id"])
+                voq_dict["size"] = int(m.groupdict()["size"])
+                continue
+
+            # State: Active, Flush: Flush not active, Empty: False
+            m = p3_9.match(line)
+            if m:
+                voq_dict["state"] = m.groupdict()["state"]
+                voq_dict["flush"] = m.groupdict()["flush"]
+                voq_dict["empty"] = (
+                    True if m.groupdict()["empty"] == "True" else False
+                )
+                continue
+
+        return ret_dict

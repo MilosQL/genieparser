@@ -1,0 +1,16 @@
+show policy-firewall stats vrf global
+  Global table statistics
+       Total Session Count(estab + half-open): 502, Exceed: 0
+       Total Session Aggressive Aging Period Off, Event Count: 0
+
+               	Half Open
+       Protocol	Session Cnt	Exceed
+       --------	-----------	------
+       All	500		564280
+       UDP	0		0
+       ICMP	0		0
+       TCP 	500		53
+
+       TCP Syn Flood Half Open Count: 501, Exceed: 0
+       Half Open Aggressive Aging Period On, Event Count: 0
+

@@ -1,0 +1,43 @@
+xtr12#sh lisp 0 in * named-services map-cache firewall
+
+=================================================
+Output for router lisp 0 instance-id 4
+=================================================
+LISP DN Mapping Cache for LISP 0 EID-table N/A (IID 4), 1 entries
+
+firewall, uptime: 00:02:18, expires: 23:57:41, via transient-publication, complete
+  Sources: transient-publication
+  State: complete, last modified: 00:02:18, map-source: 100.55.55.55
+  Active, Packets out: 0(0 bytes)
+  Locator       Uptime    State  Pri/Wgt     Encap-IID
+  100.11.11.11  00:02:18  up      10/50        -
+    Last up-down state change:         00:02:18, state change count: 1
+    Last route reachability change:    00:02:18, state change count: 1
+    Last priority / weight change:     never/never
+    RLOC-probing loc-status algorithm:
+      Last RLOC-probe sent:            never
+
+=================================================
+Output for router lisp 0 instance-id 1023
+=================================================
+% EID table not enabled for DN.
+
+=================================================
+Output for router lisp 0 instance-id 1024
+=================================================
+% EID table not enabled for DN.
+
+=================================================
+Output for router lisp 0 instance-id 4100
+=================================================
+% EID table not enabled for DN.
+
+=================================================
+Output for router lisp 0 instance-id 4101
+=================================================
+% EID table not enabled for DN.
+
+=================================================
+Output for router lisp 0 instance-id 16777214
+=================================================
+% EID firewall not found in cache.

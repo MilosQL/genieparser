@@ -4210,15 +4210,21 @@ class ShowPlatformSoftwareFedSecurityStormControlIfIdSchema(MetaParser):
         'iif_id': str,
         'iif_name': str,
         'speed': str,
+        Optional('action'): str,
         'traffic_type': {
             Any(): {
-                'supp_type': str,
-                'level': int,
-                'low_level': int,
-                'storm_exists': str,
-                'bytes_drop': int,
-                'packets_drop': int,
-                'current_rate': int
+                Optional('supp_type'): str,
+                Optional('level'): int,
+                Optional('low_level'): int,
+                Optional('storm_exists'): str,
+                Optional('bytes_drop'): int,
+                Optional('packets_drop'): int,
+                Optional('current_rate'): int,
+                Optional('storm_control_not_configured'): bool,
+                Optional('bytes'): int,
+                Optional('packets'): int,
+                Optional('prev_bytes'): int,
+                Optional('prev_packets'): int,
             }
         }
     }
@@ -4271,6 +4277,24 @@ class ShowPlatformSoftwareFedSecurityStormControlIfId(ShowPlatformSoftwareFedSec
 
         # Current Rate : 0
         p10 = re.compile(r'^Current Rate\s+:\s+(?P<current_rate>\d+)$')
+
+        # Storm Control Not Configured
+        p11 = re.compile(r'^Storm Control Not Configured$')
+
+        # Action   : TRAP
+        p12 = re.compile(r'^Action\s+:\s+(?P<action>\w+)$')
+
+        # Bytes        : 0
+        p13 = re.compile(r'^Bytes\s+:\s+(?P<bytes>\d+)$')
+
+        # Packets      : 0
+        p14 = re.compile(r'^Packets\s+:\s+(?P<packets>\d+)$')
+
+        # Prev Bytes   : 0
+        p15 = re.compile(r'^Prev Bytes\s+:\s+(?P<prev_bytes>\d+)$')
+
+        # Prev Packets : 0
+        p16 = re.compile(r'^Prev Packets\s+:\s+(?P<prev_packets>\d+)$')
 
         current_traffic_type = None
 
@@ -4343,5 +4367,41 @@ class ShowPlatformSoftwareFedSecurityStormControlIfId(ShowPlatformSoftwareFedSec
             if m and current_traffic_type:
                 traffic_types_dict['current_rate'] = int(m.group('current_rate'))
                 continue
+            
+            # Storm Control Not Configured
+            m = p11.match(line)
+            if m and current_traffic_type:
+                traffic_types_dict['storm_control_not_configured'] = True
+                continue
 
+            # Action   : TRAP
+            m = p12.match(line)
+            if m:
+                ret_dict['action'] = m.group('action')
+                continue
+
+            # Bytes        : 0
+            m = p13.match(line)
+            if m and current_traffic_type:
+                traffic_types_dict['bytes'] = int(m.group('bytes'))
+                continue
+
+            # Packets      : 0
+            m = p14.match(line)
+            if m and current_traffic_type:
+                traffic_types_dict['packets'] = int(m.group('packets'))
+                continue
+
+            # Prev Bytes   : 0
+            m = p15.match(line)
+            if m and current_traffic_type:
+                traffic_types_dict['prev_bytes'] = int(m.group('prev_bytes'))
+                continue
+
+            # Prev Packets : 0
+            m = p16.match(line)
+            if m and current_traffic_type:
+                traffic_types_dict['prev_packets'] = int(m.group('prev_packets'))
+                continue
+            
         return ret_dict

@@ -12697,3 +12697,41 @@ class ShowCryptoAutovpnSessionPeerno(ShowCryptoAutovpnSessionPeernoSchema):
             return parsed_dict
         else:
             return {'0': ''}
+
+# =================================================
+#  Schema for 'test crypto master-key present'
+# =================================================
+class TestCryptoMasterKeyPresentSchema(MetaParser):
+    """Schema for 'test crypto master-key present'"""
+    schema = {
+        'master_key_present': int,
+    }
+
+# =================================================
+#  Parser for 'test crypto master-key present'
+# =================================================
+class TestCryptoMasterKeyPresent(TestCryptoMasterKeyPresentSchema):
+    """Parser for 'test crypto master-key present'"""
+
+    cli_command = 'test crypto master-key present'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # Initialize the parsed dictionary
+        ret_dict = {}
+
+        # test master key: Master key present: 1
+        p1 = re.compile(r'^test\s+master\s+key:\s+Master\s+key\s+present:\s+(?P<master_key_present>\d+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # test master key: Master key present: 1
+            m = p1.match(line)
+            if m:
+                ret_dict['master_key_present'] = int(m.group('master_key_present'))
+                continue
+
+        return ret_dict

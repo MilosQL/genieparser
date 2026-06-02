@@ -1,0 +1,32 @@
+sh lisp in * named-services map-cache
+
+=================================================
+Output for router lisp 0 instance-id 4
+=================================================
+LISP DN Mapping Cache for LISP 0 EID-table N/A (IID 4), 2 entries
+
+dual-stack, uptime: 1d07h, expires: never, via pub-sub, complete, local-to-site
+  Locator       Uptime    State  Pri/Wgt     Encap-IID
+  100.22.22.22  1d07h     up      10/50        -
+firewall, uptime: 1d07h, expires: never, via pub-sub, complete, local-to-site
+  Locator       Uptime    State  Pri/Wgt     Encap-IID
+  100.22.22.22  1d07h     up      10/50        -
+
+=================================================
+Output for router lisp 0 instance-id 4100
+=================================================
+% EID table not enabled for DN.
+
+=================================================
+Output for router lisp 0 instance-id 4101
+=================================================
+% EID table not enabled for DN.
+
+=================================================
+Output for router lisp 0 instance-id 5000
+=================================================
+% EID table not enabled for DN.
+
+=================================================
+Output for router lisp 0 instance-id 16777214
+=================================================

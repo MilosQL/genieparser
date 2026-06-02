@@ -1,0 +1,20 @@
+show lacp multi-chassis load-balance port-channel 1 {id}
+Interface Port-Channel 1
+	Local Configuration:
+		P-mLACP Enabled:      Yes
+		Redundancy Group:     4294967295
+		Revertive Mode:       Revertive
+		Primary VLANs:        20
+		Secondary VLANs:      40
+
+	Local Interface State:
+		Interface ID: 1
+		Port State:           Down
+		Fail Flags:           0x2
+		Primary VLAN State:   Down
+		Secondary VLAN State: Down
+
+	Peer Interface State:
+		Interface ID: 1
+		Primary VLAN State:   Active
+		Secondary VLAN State: Active
