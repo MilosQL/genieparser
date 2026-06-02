@@ -1,0 +1,7 @@
+Server:         64.104.128.236
+Address:        64.104.128.236#53
+
+www.cisco.com   canonical name = origin-www.cisco.com.
+origin-www.cisco.com    canonical name = origin-www.xgslb-v3.cisco.com.
+Name:   origin-www.xgslb-v3.cisco.com
+Address: 2001:420:1201:2::a

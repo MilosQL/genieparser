@@ -1475,8 +1475,8 @@ class ShowControllersOpticsObservableInfoSchema(MetaParser):
     schema = {
         'port': {
             Any(): {
-                Optional('not_available'): str,
                 Optional('observable_info'): {
+                    'cmd_status': str,
                     Any(): {
                         'unit': str,
                         'id': {
@@ -1541,7 +1541,7 @@ class ShowControllersOpticsObservableInfo(ShowControllersOpticsObservableInfoSch
                         r'(?P<tca_alarm_high>\S+)$')
 
         # Observable information is not available on the port
-        p5 = re.compile(r'^(?P<not_available>Observable\s+information\s+is\s+not\s+available\s+on\s+the\s+port)$',
+        p5 = re.compile(r'^(?P<cmd_status>Observable\s+information\s+is\s+not\s+available\s+on\s+the\s+port)$',
                         re.IGNORECASE)
 
         current_port = port
@@ -1560,22 +1560,29 @@ class ShowControllersOpticsObservableInfo(ShowControllersOpticsObservableInfoSch
                 result_dict.setdefault('port', {}).setdefault(current_port, {})
                 current_section = None
                 section_dict = None
+
+                # Mark cmd_status as 'Available' by default.
+                # It will be updated to 'Observable information is not available on the port' if the corresponding line is found.
+                result_dict['port'][current_port].setdefault('observable_info', {})['cmd_status'] = 'Available'
                 continue
 
             # Observable information is not available on the port
             m = p5.match(line)
             if m and current_port:
-                result_dict.setdefault('port', {}).setdefault(current_port, {})['not_available'] = m.groupdict()['not_available']
+                result_dict.setdefault('port', {}) \
+                           .setdefault(current_port, {}) \
+                           .setdefault('observable_info', {})['cmd_status'] = m.groupdict()['cmd_status']
                 continue
 
             # [Fault Cause Register]
             m = p2.match(line)
             if m and current_port:
                 current_section = m.groupdict()['section']
-                section_dict = result_dict.setdefault('port', {})\
-                                          .setdefault(current_port, {}) \
-                                          .setdefault('observable_info', {}) \
-                                          .setdefault(current_section, {})
+                obs_dict = result_dict.setdefault('port', {}) \
+                                      .setdefault(current_port, {}) \
+                                      .setdefault('observable_info', {})
+                obs_dict.setdefault('cmd_status', 'Available')
+                section_dict = obs_dict.setdefault(current_section, {})
                 continue
 
             # Unit: None

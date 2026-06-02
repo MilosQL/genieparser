@@ -141,7 +141,7 @@ class ShowLispDatabaseSuperParserSchema(MetaParser):
                             'eids': {
                                 str: {
                                     'eid': str,
-                                    'mask': int,
+                                    Optional('mask'): int,
                                     Optional('do_not_register'): bool,
                                     Optional('dynamic_eid'): str,
                                     Optional('locator_set'): str,
@@ -188,9 +188,10 @@ class ShowLispDatabaseSuperParser(ShowLispDatabaseSuperParserSchema):
         # LISP ETR IPv4 Mapping Database for EID-table default (IID 1), LSBs: 0x1
         # LISP ETR IPv4 Mapping Database for EID-table vrf INTERNAL (IID 4099), LSBs: 0x1
         # LISP ETR IPv6 Mapping Database for LISP 0 EID-table vrf red (IID 4100), LSBs: 0x1
-        p1 = re.compile(r'^LISP\s+ETR\s+(MAC|IPv6|IPv4)\s+Mapping\s+Database\s+for(\s+LISP\s+'
+        # LISP ETR DN Mapping Database for LISP 0 EID-table N/A (IID 4), LSBs: 0x1
+        p1 = re.compile(r'^LISP\s+ETR\s+(MAC|IPv6|IPv4|DN)\s+Mapping\s+Database\s+for(\s+LISP\s+'
                         r'(?P<lisp_id>\d+))?\s+EID-table\s+'
-                        r'(?P<eid_table>(vrf\s\w+)|(Vlan\s\d+)|default)\s+'
+                        r'(?P<eid_table>(vrf\s\w+)|(Vlan\s\d+)|default|N/A)\s+'
                         r'\(IID\s(?P<instance_id>\d+)\),\sLSBs:\s(?P<lsb>\S+)$')
 
         # Entries total 2, no-route 0, inactive 0, do-not-register 1
@@ -200,9 +201,12 @@ class ShowLispDatabaseSuperParser(ShowLispDatabaseSuperParserSchema):
 
         # aabb.cc00.c901/48, dynamic-eid Auto-L2-group-101, inherited from default locator-set RLOC *** NO ROUTE TO EID PREFIX ***
         # 21.2.1.0/24, import from publication, inherited from default locator-set set1, auto-discover-rlocs, proxy
+        # dual-stack, locator-set RLOC
+        # internet, inherited from default locator-set RLOC
+        # default-etr, import from publication, inherited from default locator-set RLOC, auto-discover-rlocs, proxy
         p3 = re.compile(r'^(?P<eid>([a-fA-F\d]{4}\.){2}[a-fA-F\d]{4}|'
-                        r'\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}|[a-fA-F\d\:]+)(\/)?'
-                        r'(?P<mask>\d{1,3})(,\s)?'
+                        r'\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}|[a-fA-F\d\:]+|[^\s\.:,]+)'
+                        r'(?:(\/)?(?P<mask>\d{1,3})|(?=,\s))(,\s)?'
                         r'(?P<dbmap_src>route-import|import from [\w\s]+)?'
                         r'(dynamic-eid\s+(?P<dynamic_eid>\S+))?'
                         r'(,\s(?P<do_not_register>do\snot\sregister))?(,\sinherited\sfrom\sdefault\s+)?'
@@ -243,6 +247,7 @@ class ShowLispDatabaseSuperParser(ShowLispDatabaseSuperParserSchema):
             line = line.strip()
 
             # LISP ETR IPv4 Mapping Database for EID-table default (IID 1), LSBs: 0x1
+            # LISP ETR DN Mapping Database for LISP 0 EID-table N/A (IID 4), LSBs: 0x1
             m = p1.match(line)
             if m:
                 group = m.groupdict()
@@ -276,16 +281,19 @@ class ShowLispDatabaseSuperParser(ShowLispDatabaseSuperParserSchema):
                 continue
 
             #  aabb.cc00.c901/48, dynamic-eid Auto-L2-group-101, inherited from default locator-set RLOC *** NO ROUTE TO EID PREFIX ***
+            # dual-stack, locator-set RLOC
+            # default-etr, import from publication, inherited from default locator-set RLOC, auto-discover-rlocs, proxy
             m = p3.match(line)
             if m:
                 group = m.groupdict()
                 eid = group['eid']
-                mask = int(group['mask'])
-                eids = "{}/{}".format(eid,mask)
+                mask = group.get('mask')
+                eids = "{}/{}".format(eid, mask) if mask else eid
                 eid_dict = entries_dict.setdefault('eids',{})\
                                        .setdefault(eids,{})
-                eid_dict.update({'eid':eid,
-                                 'mask':mask})
+                eid_dict.update({'eid':eid})
+                if mask:
+                    eid_dict.update({'mask':int(mask)})
                 if group['dynamic_eid']:
                     dynamic_eid = group['dynamic_eid']
                     eid_dict.update({'dynamic_eid':dynamic_eid})
@@ -2027,14 +2035,17 @@ class ShowLispIpMapCachePrefixSuperParser(ShowLispIpMapCachePrefixSchema):
         # LISP IPv4 Mapping Cache for LISP 0 EID-table vrf red (IID 100), 3 entries
         # LISP IPv6 Mapping Cache for LISP 0 EID-table vrf red (IID 100), 3 entries
         # LISP IPv4 Mapping Cache for LISP 0 EID-table default (IID 10), 2 entries
-        p1 = re.compile(r"^LISP\s+(IPv4|IPv6|MAC)\s+Mapping\s+Cache\s+for(\s+LISP\s+"
+        # LISP DN Mapping Cache for LISP 0 EID-table N/A (IID 4), 1 entries
+        p1 = re.compile(r"^LISP\s+(IPv4|IPv6|MAC|DN)\s+Mapping\s+Cache\s+for(\s+LISP\s+"
                         r"(?P<lisp_id>\d+))?\s+EID-table\s+(vrf\s+|Vlan\s+)?(?P<eid_table>\S+)\s+"
                         r"\(IID\s+(?P<instance_id>\d+)\),\s+(?P<entries>\d+)\s+entries$")
 
         # 191.168.1.11/32, uptime: 02:26:35, expires: 21:33:24, via map-reply, self, complete, remote-to-site
         # 2001:194:168:1::72/128, uptime: 00:44:35, expires: 23:15:25, via map-reply, complete
         # 2001:194:168:1::72/128, uptime: 00:44:35, expires: 1d11h, via map-reply, complete
-        p2 = re.compile(r"^(?P<eid>[a-fA-F\d\:\.]+)\/(?P<mask>\d{1,3}),\s+uptime:\s+"
+        # firewall, uptime: 00:00:16, expires: 23:59:44, via transient-publication, complete
+        p2 = re.compile(r"^((?P<eid>[a-fA-F\d\:\.]+)\/(?P<mask>\d{1,3})|"
+                        r"(?P<dn_eid_prefix>[^\s\.:,]+)),\s+uptime:\s+"
                          r"(?P<uptime>\S+),\s+expires:\s+(?P<expires>(\d{2}:?){3}|never|(\dw\dd)|(\dd\d{1,2}h)),"
                         r"\s+via\s+(?P<via>[-\w]+)(,\s+self)?(,\s+complete)?(,\s+unknown-eid-forward)?(,\s+"
                         r"(?P<site>remote-to-site|local-to-site))?(,\s+\S+)?$")
@@ -2113,6 +2124,7 @@ class ShowLispIpMapCachePrefixSuperParser(ShowLispIpMapCachePrefixSchema):
             # LISP IPv4 Mapping Cache for LISP 0 EID-table vrf red (IID 100), 3 entries
             # LISP IPv6 Mapping Cache for LISP 0 EID-table vrf red (IID 100), 3 entries
             # LISP IPv4 Mapping Cache for EID-table vrf red (IID 4100), 3 entries
+            # LISP DN Mapping Cache for LISP 0 EID-table N/A (IID 4), 1 entries
             m = p1.match(line)
             if m:
                 groups = m.groupdict()
@@ -2130,19 +2142,23 @@ class ShowLispIpMapCachePrefixSuperParser(ShowLispIpMapCachePrefixSchema):
             # 191.168.1.11/32, uptime: 02:26:35, expires: 21:33:24, via map-reply, self, complete, remote-to-site
             # 2001:194:168:1::72/128, uptime: 00:44:35, expires: 23:15:25, via map-reply, complete
             # 2001:194:168:1::72/128, uptime: 00:44:35, expires: 1d11h, via map-reply, complete
+            # firewall, uptime: 00:00:16, expires: 23:59:44, via transient-publication, complete
             m = p2.match(line)
             if m:
                 groups = m.groupdict()
-                eid = groups['eid']
-                mask = int(groups['mask'])
                 uptime = groups['uptime']
                 expires = groups['expires']
                 via = groups['via']
                 site = groups['site']
-                eid_prefix = "{}/{}".format(eid,mask)
+                if groups['dn_eid_prefix']:
+                    eid_prefix = groups['dn_eid_prefix']
+                else:
+                    eid = groups['eid']
+                    mask = int(groups['mask'])
+                    instance_id_dict.update({'eid':eid,
+                                             'mask':mask})
+                    eid_prefix = "{}/{}".format(eid,mask)
                 instance_id_dict.update({'eid_prefix':eid_prefix,
-                                         'eid':eid,
-                                         'mask':mask,
                                          'uptime':uptime,
                                          'expires':expires,
                                          'via':via})
@@ -2987,19 +3003,21 @@ class ShowLispMapCacheSuperParser(ShowLispMapCacheSuperParserSchema):
         # LISP IPv4 Mapping Cache for LISP 0 EID-table vrf red (IID 4100), 5 entries
         # LISP IPv4 Mapping Cache for LISP 0 EID-table vrf NEW_VN (IID 4099), 3 entries
         # LISP IPv6 Mapping Cache for EID-table vrf red (IID 4100), 3 entries
-        p1 = re.compile(r'^LISP (IPv4|IPv6|MAC) Mapping Cache for(\s+LISP (?P<lisp_id>\d+))?\s+'
-                        r'EID-table\s+(?P<eid_table>[a-zA-Z0-9\s_]+)(\s+)?'
+        # LISP DN Mapping Cache for LISP 0 EID-table N/A (IID 4), 3 entries
+        p1 = re.compile(r'^LISP (IPv4|IPv6|MAC|DN) Mapping Cache for(\s+LISP (?P<lisp_id>\d+))?\s+'
+                        r'EID-table\s+(?P<eid_table>N/A|[a-zA-Z0-9\s_]+)(\s+)?'
                         r'\(IID\s+(?P<instance_id>\d+)\),\s+(?P<entries>\d+)\s+entries$')
 
         # 50.1.1.0/24, uptime: 2d09h, expires: 20:10:07, via map-reply, complete, local-to-site
         # aabb.cc00.ca00/48, uptime: 00:00:23, expires: 00:59:36, via map-reply, complete, local-to-site
         # 193.168.0.0/16, uptime: 00:03:26, expires: never, via pub-sub, self, complete, local-to-site
         # 192.0.0.0/8, uptime: 00:21:36, expires: 6d23h, via transient-publication, complete
+        # firewall, uptime: 00:13:58, expires: 23:46:01, via transient-publication, complete
         p2 = re.compile(r'^(?P<eid_prefix>[a-fA-F\d\:]+\/\d{1,3}|\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\/'
-                        r'\d{1,2}|[a-fA-F\d\.]+\/\d{1,3}),\s+uptime:\s(?P<uptime>\S+),\sexpires:\s'
-                        r'(?P<expiry_time>\d{1,2}:\d{2}:\d{2}|\w+),\svia\s(?P<via>\S+(, self)?)(,'
-                        r'\s(?P<map_reply_state>(complete|unknown-eid-forward|forward-native'
-                        r'|send-map-request|drop|incomplete)))?'
+                        r'\d{1,2}|[a-fA-F\d\.]+\/\d{1,3}|[^\s\.:,]+),\s+uptime:\s(?P<uptime>\S+),'
+                        r'\sexpires:\s(?P<expiry_time>\d{1,2}:\d{2}:\d{2}|\w+),\svia\s'
+                        r'(?P<via>\S+(, self)?)(,\s(?P<map_reply_state>(complete|unknown-eid-forward|'
+                        r'forward-native|send-map-request|drop|incomplete)))?'
                         r'(,\s(?P<site>local-to-site|remote-to-site))?$')
 
         # SGT: 10, software only
@@ -3024,6 +3042,7 @@ class ShowLispMapCacheSuperParser(ShowLispMapCacheSuperParserSchema):
             line = line.strip()
 
             # LISP IPv4 Mapping Cache for LISP 0 EID-table vrf red (IID 4100), 5 entries
+            # LISP DN Mapping Cache for LISP 0 EID-table N/A (IID 4), 3 entries
             m = p1.match(line)
             if m:
                 group = m.groupdict()
@@ -3045,6 +3064,7 @@ class ShowLispMapCacheSuperParser(ShowLispMapCacheSuperParserSchema):
             # 0.0.0.0/0, uptime: 2d09h, expires: 00:12:57, via map-reply, unknown-eid-forward
             # 193.168.0.0/16, uptime: 00:03:26, expires: never, via pub-sub, self, complete, local-to-site
             # 192.0.0.0/8, uptime: 00:21:36, expires: 6d23h, via transient-publication, complete
+            # firewall, uptime: 00:13:58, expires: 23:46:01, via transient-publication, complete
             m = p2.match(line)
             if m:
                 group = m.groupdict()

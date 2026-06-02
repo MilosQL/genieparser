@@ -675,12 +675,17 @@ class ShowMonitorCaptureBufferSchema(MetaParser):
 
 class ShowMonitorCaptureBuffer(ShowMonitorCaptureBufferSchema):
 
-    cli_command = ['show monitor capture {capture_name} buffer', 'show monitor capture file {path}']
-
-    def cli(self, capture_name="", path="", output=None):
+    cli_command = ['show monitor capture {capture_name} buffer', 
+                   'show monitor capture file {path}',
+                   'show monitor capture {capture_name} buffer {brief}']
+    
+    def cli(self, capture_name="", path="", brief="", output=None):
         if output is None:
             if capture_name:
-                output = self.device.execute(self.cli_command[0].format(capture_name=capture_name),timeout=180)
+                if brief:
+                    output = self.device.execute(self.cli_command[2].format(capture_name=capture_name, brief=brief),timeout=180)
+                else:
+                    output = self.device.execute(self.cli_command[0].format(capture_name=capture_name),timeout=180)
             else:
                 output = self.device.execute(self.cli_command[1].format(path=path),timeout=180)
 

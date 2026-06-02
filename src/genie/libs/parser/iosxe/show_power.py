@@ -72,6 +72,7 @@ class ShowStackPowerSchema(MetaParser):
                     Any(): {
                         'power_supply_a': Or(int, float),
                         'power_supply_b' : Or(int, float),
+                        Optional('power_supply_c'): Or(int, float),
                         'power_budget': Or(int, float),
                         'allocated_power': Or(int, float),
                         'available_power': Or(int, float),
@@ -125,6 +126,7 @@ class ShowStackPower(ShowStackPowerSchema):
                         r'(?P<name>[\w-]+) *'
                         r'(?P<power_supply_a>\d+) +'
                         r'(?P<power_supply_b>\d+) +'
+                        r'(?:(?P<power_supply_c>\d+) +)?'
                         r'(?P<power_budget>\d+) +'
                         r'(?P<allocated_power>[\d.]+) +'
                         r'(?P<available_power>[\d.]+) +'
@@ -165,8 +167,8 @@ class ShowStackPower(ShowStackPowerSchema):
                                       .setdefault(stack_name, {})\
                                       .setdefault('switches', {})\
                                       .setdefault(int(switch_num), {})
-                switch_dict.update({k:int(v) if v.isdigit() else float(v) 
-                    for k, v in group.items()})
+                switch_dict.update({k:int(v) if v.isdigit() else float(v)
+                    for k, v in group.items() if v is not None})
                 continue
 
             # Totals:                               1150    1050      310/0

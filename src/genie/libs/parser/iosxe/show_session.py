@@ -57,12 +57,13 @@ class ShowLine(ShowLineSchema):
         # 0/0/0    2 TTY   9600/9600  -    -      -    -    -   746     61    0/0      -
         # 0/0/3    5 TTY 115200/115200-    -      -    -    -   606 197460 14906/0      -
         # *  322  322 VTY              -    -      -    -    -  1366      0    0/0      -
+        # 0/0/3    6 TTY 115200/115200-    -      -    -    -   547 1104886 -1524630269/0      -
         p1 = re.compile(r'^((?P<busy>\*) *)?(?P<tty>[\d\/]+)( +(?P<line>\d+))?'
                          r' +(?P<type>\w+)( +(?P<tx>\d+)\/(?P<rx>\d+))?'
                          r' *(?P<a>[\w\-]+) +(?P<modem>[\w\-]+)'
                          r' +(?P<roty>[\w\-]+) +(?P<acco>[\w\-]+)'
                          r' +(?P<acci>[\w\-]+) +(?P<uses>\d+)'
-                         r' +(?P<noise>\d+) +(?P<overruns>[\d\/]+)'
+                         r' +(?P<noise>\d+) +(?P<overruns>-?[\d\/]+)'
                          r' *(?P<int>[\w\-]+)?$')
 
         idx = 0

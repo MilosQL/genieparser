@@ -393,14 +393,14 @@ class ShowPlatform(ShowPlatformSchema):
             out = output
 
 
-        # 0/RSP0/CPU0     A9K-RSP440-TR(Active)     IOS XR RUN       PWR,NSHUT,MON
-        # 0/0/CPU0        RP(Active)      N/A             IOS XR RUN      PWR,NSHUT,MON
-        # 0/0/CPU0        RP(Active)      N/A             OPERATIONAL      PWR,NSHUT,MON
+        # 0/RSP0/CPU0       A9K-RSP440-TR(Active)     IOS XR RUN       PWR,NSHUT,MON
+        # 0/0/CPU0          RP(Active)      N/A             IOS XR RUN      PWR,NSHUT,MON
+        # 0/0/CPU0          RP(Active)      N/A             OPERATIONAL      PWR,NSHUT,MON
         # 0/0               NCS1K4-OTN-XP              POWERED_ON        NSHUT
         # 0/1               NCS1K4-1.2T-K9             OPERATIONAL       NSHUT
         # 0/0               NCS1K4-OTN-XP              POWERED_ON        NSHUT
-        # 1/3/3         MSC(SPA)          OC192RPR-XFP       DISABLED        NPWR,SHUT,MON
-        # 1/10/CPU0     FP-X              N/A                UNPOWERED       NPWR,NSHUT,MON
+        # 1/3/3             MSC(SPA)          OC192RPR-XFP       DISABLED        NPWR,SHUT,MON
+        # 1/10/CPU0         FP-X              N/A                UNPOWERED       NPWR,NSHUT,MON
         
         # 0/RP0/CPU0        A99-RP-F(Active)           IOS XR RUN        NSHUT
         # 0/RP1/CPU0        A99-RP-F(Standby)          IOS XR RUN        NSHUT
@@ -413,11 +413,17 @@ class ShowPlatform(ShowPlatformSchema):
         # 0/PT0             ASR-9900-DC-PEM            OPERATIONAL       NSHUT
         # 0/FB0             8202-32FH-M[FB]            OPERATIONAL       NSHUT
 
+        # 0/0/CPU0          UNKNOWN                    FPD UPGRADE              NSHUT
+        # 0/1/CPU0          UNKNOWN                    IMAGE INSTALLING         NSHUT
+        # 0/3/CPU0          UNKNOWN                    BOOTING                  NSHUT
+        # 0/4/CPU0          88-LC1-48Y8H-EM            DATA PATH POWERED ON     NSHUT
+        # 0/5/CPU0          88-LC1-52Y8H-EM            PLATFORM INITIALIZED     NSHUT
+
         p1 = re.compile(r'^\s*(?P<node>[a-zA-Z0-9\/]+)'
                             r'\s+(?P<name>[a-zA-Z0-9\-\.\[\]]+)'
                             r'(?:\((?P<redundancy_state>[a-zA-Z]+)\))?'
                             r'(?:\s+(?P<plim>[a-zA-Z0-9(\/|\-| )]+))?'
-                            r'\s+(?P<state>(SW_INACTIVE|IN-RESET|UNPOWERED|DISABLED|IOS XR RUN|OK|OPERATIONAL|POWERED_ON))'
+                            r'\s+(?P<state>(SW_INACTIVE|IN-RESET|UNPOWERED|DISABLED|IOS XR RUN|OK|OPERATIONAL|POWERED_ON|FPD UPGRADE|IMAGE INSTALLING|BOOTING|DATA PATH POWERED ON|PLATFORM INITIALIZED))'
                             r'(?:\s+(?P<config_state>[a-zA-Z\,]+))?$')
 
         # Init vars
@@ -1186,8 +1192,9 @@ class AdminShowDiagChassis(AdminShowDiagChassisSchema):
 
             # PID:   ASR-9006-AC-V2
             # Product ID      : NCS-5501
+            # PID                      : N/A
             p4 = re.compile(r'(PID|Product ID)(\s+)?\: '
-                            r'+(?P<pid>[a-zA-Z0-9\-]+)$')
+                            r'+(?P<pid>\S+)$')
             m = p4.match(line)
             if m:
                 admin_show_diag_dict['pid'] = \
@@ -1197,7 +1204,8 @@ class AdminShowDiagChassis(AdminShowDiagChassisSchema):
             # VID:   V02
             # VID             : V01
             # Version Identifier       : V01
-            p5 = re.compile(r'(?:VID|Version +Identifier)(\s+)?\: +(?P<vid>[a-zA-Z0-9\-]+)$')
+            # Version Identifier       : N/A
+            p5 = re.compile(r'(?:VID|Version +Identifier)(\s+)?\: +(?P<vid>\S+)$')
             m = p5.match(line)
             if m:
                 admin_show_diag_dict['vid'] = \

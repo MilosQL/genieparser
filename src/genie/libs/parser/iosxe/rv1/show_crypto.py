@@ -237,3 +237,191 @@ class ShowCryptoPkiCertificates(ShowCryptoPkiCertificatesSchema):
             certs.append(cer_dict)
 
         return ret_dict
+
+
+class ShowCryptoIkev2StatsExchangeSchema(MetaParser):
+    """Schema for show crypto ikev2 stats exchange"""
+    schema = {
+        "exchanges": {
+            Any(): {
+                "tx_req": int,
+                "tx_res": int,
+                "rx_req": int,
+                "rx_res": int,
+                Optional("rtx_req"): int,
+                Optional("rtx_res"): int,
+                Optional("rrx_req"): int,
+                Optional("rrx_res"): int,
+            }
+        },
+        Optional("error_notify"): {
+            Any(): {
+                "tx_req": int,
+                "tx_res": int,
+                "rx_req": int,
+                "rx_res": int,
+                Optional("rtx_req"): int,
+                Optional("rtx_res"): int,
+                Optional("rrx_req"): int,
+                Optional("rrx_res"): int,
+            }
+        },
+        Optional("other_notify"): {
+            Any(): {
+                "tx_req": int,
+                "tx_res": int,
+                "rx_req": int,
+                "rx_res": int,
+                Optional("rtx_req"): int,
+                Optional("rtx_res"): int,
+                Optional("rrx_req"): int,
+                Optional("rrx_res"): int,
+            }
+        },
+        Optional("config_payload_type"): {
+            Any(): {
+                "tx": int,
+                "rx": int,
+                Optional("rtx"): int,
+                Optional("rrx"): int,
+            }
+        },
+        Optional("other_counters"): {
+            Any(): {
+                "tx": int,
+                Optional("rtx"): int,
+            }
+        },
+    }
+
+
+class ShowCryptoIkev2StatsExchange(ShowCryptoIkev2StatsExchangeSchema):
+    """Parser for show crypto ikev2 stats exchange"""
+
+    cli_command = "show crypto ikev2 stats exchange"
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        ret_dict = {}
+        current_section = None
+
+        # EXCHANGES
+        p1 = re.compile(r'^EXCHANGES$')
+
+        # ERROR NOTIFY
+        p2 = re.compile(r'^ERROR NOTIFY$')
+
+        # OTHER NOTIFY
+        p3 = re.compile(r'^OTHER NOTIFY$')
+
+        # IKE_SA_INIT          8     11     11      8   [  0    0    0    0 ]
+        # New (8 cols) and old (4 cols) both supported.
+        p4 = re.compile(
+            r'^(?P<name>[A-Z0-9_]+)\s+'
+            r'(?P<tx_req>\d+)\s+(?P<tx_res>\d+)\s+'
+            r'(?P<rx_req>\d+)\s+(?P<rx_res>\d+)'
+            r'(?:\s+(?P<rtx_req>\d+)\s+(?P<rtx_res>\d+)'
+            r'\s+(?P<rrx_req>\d+)\s+(?P<rrx_res>\d+))?$'
+        )
+
+        # CONFIG PAYLOAD TYPE     TX     RX  [ RTX    RRX ]
+        p5 = re.compile(
+            r'^CONFIG PAYLOAD TYPE(?:\s+TX\s+RX(?:\s+RTX\s+RRX)?)?$'
+        )
+
+        # CFG_REQUEST   8   11  [ 0   0 ]    -> new (4 ints) or old (2 ints)
+        p6 = re.compile(
+            r'^(?P<name>[A-Z0-9_]+)\s+(?P<tx>\d+)\s+(?P<rx>\d+)'
+            r'(?:\s+(?P<rtx>\d+)\s+(?P<rrx>\d+))?$'
+        )
+
+        # OTHER COUNTERS  [ TX  [ RTX ] ]
+        p7 = re.compile(r'^OTHER COUNTERS(?:\s+TX(?:\s+RTX)?)?$')
+
+        # NO_NAT    19   [ 0 ]    -> new (2 ints) or old (1 int)
+        p8 = re.compile(
+            r'^(?P<name>[A-Z0-9_]+)\s+(?P<tx>\d+)(?:\s+(?P<rtx>\d+))?$'
+        )
+
+        for line in output.splitlines():
+            line = line.strip()
+            if not line:
+                continue
+
+            # EXCHANGES
+            if p1.match(line):
+                current_section = "exchanges"
+                ret_dict.setdefault("exchanges", {})
+                continue
+
+            # ERROR NOTIFY
+            if p2.match(line):
+                current_section = "error_notify"
+                ret_dict.setdefault("error_notify", {})
+                continue
+
+            # OTHER NOTIFY
+            if p3.match(line):
+                current_section = "other_notify"
+                ret_dict.setdefault("other_notify", {})
+                continue
+
+            # CONFIG PAYLOAD TYPE header (with or without RTX/RRX columns)
+            if p5.match(line):
+                current_section = "config_payload_type"
+                ret_dict.setdefault("config_payload_type", {})
+                continue
+
+            # OTHER COUNTERS header (with or without TX/RTX columns)
+            if p7.match(line):
+                current_section = "other_counters"
+                ret_dict.setdefault("other_counters", {})
+                continue
+
+            # Exchange / notify rows
+            if current_section in ("exchanges", "error_notify", "other_notify"):
+                m = p4.match(line)
+                if m:
+                    group = m.groupdict()
+                    name = group.pop("name")
+                    target = ret_dict.setdefault(current_section, {}).setdefault(name, {})
+                    target["tx_req"] = int(group["tx_req"])
+                    target["tx_res"] = int(group["tx_res"])
+                    target["rx_req"] = int(group["rx_req"])
+                    target["rx_res"] = int(group["rx_res"])
+                    if group.get("rtx_req") is not None:
+                        target["rtx_req"] = int(group["rtx_req"])
+                        target["rtx_res"] = int(group["rtx_res"])
+                        target["rrx_req"] = int(group["rrx_req"])
+                        target["rrx_res"] = int(group["rrx_res"])
+                    continue
+
+            # CONFIG PAYLOAD TYPE rows
+            if current_section == "config_payload_type":
+                m = p6.match(line)
+                if m:
+                    group = m.groupdict()
+                    name = group.pop("name")
+                    entry = ret_dict.setdefault("config_payload_type", {}).setdefault(name, {})
+                    entry["tx"] = int(group["tx"])
+                    entry["rx"] = int(group["rx"])
+                    if group.get("rtx") is not None:
+                        entry["rtx"] = int(group["rtx"])
+                        entry["rrx"] = int(group["rrx"])
+                    continue
+
+            # OTHER COUNTERS rows
+            if current_section == "other_counters":
+                m = p8.match(line)
+                if m:
+                    group = m.groupdict()
+                    name = group.pop("name")
+                    entry = ret_dict.setdefault("other_counters", {}).setdefault(name, {})
+                    entry["tx"] = int(group["tx"])
+                    if group.get("rtx") is not None:
+                        entry["rtx"] = int(group["rtx"])
+                    continue
+
+        return ret_dict

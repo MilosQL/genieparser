@@ -1,0 +1,22 @@
+show lacp multi-chassis load-balance group 4294967295 {group_id}
+Interchassis Redundancy Group 4294967295
+
+		RG State:       Synchronized
+		ICCP Version:   0
+	Backbone Uplink Status: Connected
+	Local Configuration:
+		Node-id:        1
+
+	Peer Information:
+		State:          Up
+		Node-id:        2
+		ICCP Version:   0
+
+States:      Active     - ACT		Standby    - SBY
+             Down       - DN 		AdminDown  - ADN
+             Unknown    - UN 		Reverting  - REV
+
+P-mLACP Interfaces
+Interface    Port State     Local VLAN State      Peer VLAN State
+   ID          Local       Primary/Secondary     Primary/Secondary
+   1             DN              DN/DN                ACT/ACT

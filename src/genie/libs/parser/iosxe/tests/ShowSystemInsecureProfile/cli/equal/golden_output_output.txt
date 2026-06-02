@@ -1,0 +1,1258 @@
+Mixed_stack#show system insecure profile
+=============================================================
+              INSECURE CLI SECURITY PROFILE
+=============================================================
+Generated: Hash Table Based Security Profile
+Total Patterns Loaded: 82
+Profile Type: Security Policy Database
+=============================================================
+Displaying all loaded insecure CLI patterns:
+=============================================================
+Displaying all loaded insecure CLI patterns grouped by module:
+=============================================================
+Dynamically discovered 25 modules in security database
+
++==============================================================
+| MODULE:                                            LOGGING |
++==============================================================
++-------------------------------------------------------------
+| ENTRY 1 FOR MODULE:                               LOGGING |
++-------------------------------------------------------------
+|              Submode: tls-profile
+|       Submode String: logging tls-profile
+|               Module: LOGGING
+|        Command Regex: ^tls-version[[:space:]]+TLSv1.1[[:space:]]*$
+|          Description: Logging TLS profile configured with TLS version 1.1 - deprecated and vulnerable to attacks
+|               Reason: Weak tls version
+|          Remediation: Use stronger tls version to enhance security
+|          Restriction: YES
+|             Execmode: NO
++-------------------------------------------------------------
++-------------------------------------------------------------
+| ENTRY 2 FOR MODULE:                               LOGGING |
++-------------------------------------------------------------
+|              Submode: tls-profile
+|       Submode String: logging tls-profile
+|               Module: LOGGING
+|        Command Regex: ^ciphersuite .*aes-(128|256)-cbc-sha.*
+|          Description: Logging TLS profile configured with weak cipher suite using CBC mode and SHA-1
+|               Reason: Weak cipher(s) are present in the command
+|          Remediation: Use stronger cipher(s) to enhance security
+|          Restriction: YES
+|             Execmode: NO
++-------------------------------------------------------------
++==============================================================
+
++==============================================================
+| MODULE:                                    DSPFARM_PROFILE |
++==============================================================
++-------------------------------------------------------------
+| ENTRY 1 FOR MODULE:                       DSPFARM_PROFILE |
++-------------------------------------------------------------
+|              Submode: dspfarmprofile
+|       Submode String: NULL
+|               Module: DSPFARM_PROFILE
+|        Command Regex: ^tls-version[[:space:]]+v1\.[0,1]
+|          Description: DSP farm profile configured with TLS version 1.0 or 1.1 - deprecated and vulnerable to attacks
+|               Reason: Weak tls version
+|          Remediation: Use stronger tls version to enhance security
+|          Restriction: NO
+|             Execmode: NO
++-------------------------------------------------------------
++==============================================================
+
++==============================================================
+| MODULE:                                              SANET |
++==============================================================
++-------------------------------------------------------------
+| ENTRY 1 FOR MODULE:                                 SANET |
++-------------------------------------------------------------
+|              Submode: configure
+|       Submode String: NULL
+|               Module: SANET
+|        Command Regex: ^access-session[[:space:]]+tls-version[[:space:]]+1.0[[:space:]]*$
+|          Description: Access session configured with TLS version 1.0 - deprecated and vulnerable to various attacks
+|               Reason: Weak tls version
+|          Remediation: Use stronger tls version to enhance security
+|          Restriction: YES
+|             Execmode: NO
++-------------------------------------------------------------
++-------------------------------------------------------------
+| ENTRY 2 FOR MODULE:                                 SANET |
++-------------------------------------------------------------
+|              Submode: configure
+|       Submode String: NULL
+|               Module: SANET
+|        Command Regex: ^access-session[[:space:]]+tls-version[[:space:]]+all[[:space:]]*$
+|          Description: Access session allowing all TLS versions - includes deprecated and vulnerable versions
+|               Reason: Weak tls version
+|          Remediation: Use stronger tls version to enhance security
+|          Restriction: NO
+|             Execmode: NO
++-------------------------------------------------------------
++-------------------------------------------------------------
+| ENTRY 3 FOR MODULE:                                 SANET |
++-------------------------------------------------------------
+|              Submode: eap-mprofile-mode
+|       Submode String: eap method fast profile
+|               Module: SANET
+|        Command Regex: ^pac-password[[:space:]]+[07][[:space:]]+.*$
+|          Description: EAP FAST profile PAC password configured with weak encryption instead of secure type 6 or 9
+|               Reason: Configuration employs an Insecure method for password storage
+|          Remediation: Please consider migrating to a secure alternative such as Type-6 or Type-9
+|          Restriction: NO
+|             Execmode: NO
++-------------------------------------------------------------
++-------------------------------------------------------------
+| ENTRY 4 FOR MODULE:                                 SANET |
++-------------------------------------------------------------
+|              Submode: dot1x-credential-mode
+|       Submode String: dot1x credentials
+|               Module: SANET
+|        Command Regex: ^password[[:space:]]+[07][[:space:]]+.*$
+|          Description: Dot1x credentials password configured with weak encryption instead of secure type 6 or 9
+|               Reason: Configuration employs an Insecure method for password storage
+|          Remediation: Please consider migrating to a secure alternative such as Type-6 or Type-9
+|          Restriction: NO
+|             Execmode: NO
++-------------------------------------------------------------
++-------------------------------------------------------------
+| ENTRY 5 FOR MODULE:                                 SANET |
++-------------------------------------------------------------
+|              Submode: eap-mprofile-mode
+|       Submode String: eap method fast profile
+|               Module: SANET
+|        Command Regex: ^local-key[[:space:]]+[07][[:space:]]+.*$
+|          Description: EAP FAST profile local key configured with weak encryption (type 0 or 7) instead of secure type 6 or 9
+|               Reason: Configuration employs an Insecure method for password storage
+|          Remediation: Please consider migrating to a secure alternative such as Type-6 or Type-9
+|          Restriction: NO
+|             Execmode: NO
++-------------------------------------------------------------
++-------------------------------------------------------------
+| ENTRY 6 FOR MODULE:                                 SANET |
++-------------------------------------------------------------
+|              Submode: eap-profile-mode
+|       Submode String: eap profile
+|               Module: SANET
+|        Command Regex: ^method[[:space:]]+(md5|leap)[[:space:]]*$
+|          Description: EAP profile configured with weak authentication method MD5 or LEAP - vulnerable to dictionary attacks
+|               Reason: A weak authentication method is being configured as part of EAP profile
+|          Remediation: Please consider configuring a stronger method such as EAP-FAST, EAP-PEAP or EAP-TLS
+|          Restriction: YES
+|             Execmode: NO
++-------------------------------------------------------------
++-------------------------------------------------------------
+| ENTRY 7 FOR MODULE:                                 SANET |
++-------------------------------------------------------------
+|              Submode: eap-profile-mode
+|       Submode String: eap profile
+|               Module: SANET
+|        Command Regex: ^ciphersuite[[:space:]]+(aes128-sha|aes256-sha|dhe-rsa-aes128-sha|dhe-rsa-aes256-sha|ecdhe-ecdsa-aes-sha|ecdhe-rsa-aes-sha)[[:space:]]*$
+|          Description: EAP profile configured with weak cipher suite using SHA-1 - vulnerable to collision attacks
+|               Reason: Weak cipher(s) are present in the command
+|          Remediation: Use stronger cipher(s) to enhance security
+|          Restriction: YES
+|             Execmode: NO
++-------------------------------------------------------------
++-------------------------------------------------------------
+| ENTRY 8 FOR MODULE:                                 SANET |
++-------------------------------------------------------------
+|              Submode: configure
+|       Submode String: NULL
+|               Module: SANET
+|        Command Regex: ^mab[[:space:]]+request[[:space:]]+format[[:space:]]+attribute[[:space:]]+2[[:space:]]+[07][[:space:]]+.*$
+|          Description: MAB request format password configured with weak encryption instead of secure type 6 or 9
+|               Reason: Configuration employs an Insecure method for password storage
+|          Remediation: Please consider migrating to a secure alternative such as Type-6 or Type-9
+|          Restriction: NO
+|             Execmode: NO
++-------------------------------------------------------------
++-------------------------------------------------------------
+| ENTRY 9 FOR MODULE:                                 SANET |
++-------------------------------------------------------------
+|              Submode: parameter-submode
+|       Submode String: parameter-map type webauth global
+|               Module: SANET
+|        Command Regex: ^secure-webauth-disable[[:space:]]*
+|          Description: Secure web authentication disabled - allows unencrypted HTTP authentication vulnerable to credential theft
+|               Reason: Secure web authentication is disabled, forcing insecure web-based authentication via HTTP
+|          Remediation: Remove secure-webauth-disable configuration to ensure secure web-based authentication via HTTPS
+|          Restriction: YES
+|             Execmode: NO
++-------------------------------------------------------------
++==============================================================
+
++==============================================================
+| MODULE:                                         HTTPCLIENT |
++==============================================================
++-------------------------------------------------------------
+| ENTRY 1 FOR MODULE:                            HTTPCLIENT |
++-------------------------------------------------------------
+|              Submode: configure
+|       Submode String: NULL
+|               Module: HTTPCLIENT
+|        Command Regex: ^http[[:space:]]+client[[:space:]]+secure-ciphersuite[[:space:]]+(3des-cbc-sha|aes-128-cbc-sha|des-cbc-sha|null-md5|rc4-128-(md5|sha))[[:space:]]*$
+|          Description: HTTP client secure ciphersuite configured with weak algorithms - vulnerable to cryptographic attacks
+|               Reason: Weak cipher(s) are present in the command
+|          Remediation: Use stronger cipher(s) to enhance security
+|          Restriction: NO
+|             Execmode: NO
++-------------------------------------------------------------
++-------------------------------------------------------------
+| ENTRY 2 FOR MODULE:                            HTTPCLIENT |
++-------------------------------------------------------------
+|              Submode: configure
+|       Submode String: NULL
+|               Module: HTTPCLIENT
+|        Command Regex: ^no[[:space:]]+http[[:space:]]+client[[:space:]]+secure-ciphersuite[[:space:]]*$
+|          Description: HTTP client secure ciphersuite disabled - allows weak cipher negotiations
+|               Reason: Weak cipher(s) are present in the command
+|          Remediation: Use stronger cipher(s) to enhance security
+|          Restriction: NO
+|             Execmode: NO
++-------------------------------------------------------------
++==============================================================
+
++==============================================================
+| MODULE:                                                CDP |
++==============================================================
++-------------------------------------------------------------
+| ENTRY 1 FOR MODULE:                                   CDP |
++-------------------------------------------------------------
+|              Submode: configure
+|       Submode String: NULL
+|               Module: CDP
+|        Command Regex: ^router odr
+|          Description: On-Demand Routing (ODR) enabled - obsolete routing protocol with security vulnerabilities
+|               Reason: On Demand Routing need to be disabled as in conjunction with cdp protocol static default routes will be added
+|          Remediation: This is a legacy feature, please consider disabling it
+|          Restriction: YES
+|             Execmode: NO
++-------------------------------------------------------------
++==============================================================
+
++==============================================================
+| MODULE:                                             PARSER |
++==============================================================
++-------------------------------------------------------------
+| ENTRY 1 FOR MODULE:                                PARSER |
++-------------------------------------------------------------
+|              Submode: configure
+|       Submode String: NULL
+|               Module: PARSER
+|        Command Regex: ^logging filter (ftp|tftp|rcp|http)://.*$
+|          Description: Command uses insecure transport protocol
+|               Reason: Usage of weak file transfer protocol like FTP/TFTP/RCP/HTTP
+|          Remediation: Use secure File Transfer protocol like SFTP/HTTPS/SCP
+|          Restriction: NO
+|             Execmode: NO
++-------------------------------------------------------------
++-------------------------------------------------------------
+| ENTRY 2 FOR MODULE:                                PARSER |
++-------------------------------------------------------------
+|              Submode: exec
+|       Submode String: NULL
+|               Module: PARSER
+|        Command Regex: ^configure replace (ftp|tftp|rcp|http)://.*$
+|          Description: Command uses insecure transport protocol
+|               Reason: Usage of weak file transfer protocol like FTP/TFTP/RCP/HTTP
+|          Remediation: Use secure File Transfer protocol like SFTP/HTTPS/SCP
+|          Restriction: NO
+|             Execmode: YES
++-------------------------------------------------------------
++-------------------------------------------------------------
+| ENTRY 3 FOR MODULE:                                PARSER |
++-------------------------------------------------------------
+|              Submode: exec
+|       Submode String: NULL
+|               Module: PARSER
+|        Command Regex: ^configure network (ftp|tftp|rcp|http)://.*$
+|          Description: Command uses insecure transport protocol
+|               Reason: Usage of weak file transfer protocol like FTP/TFTP/RCP/HTTP
+|          Remediation: Use secure File Transfer protocol like SFTP/HTTPS/SCP
+|          Restriction: NO
+|             Execmode: YES
++-------------------------------------------------------------
++-------------------------------------------------------------
+| ENTRY 4 FOR MODULE:                                PARSER |
++-------------------------------------------------------------
+|              Submode: sep-listen-config
+|       Submode String: wsma profile listener
+|               Module: PARSER
+|        Command Regex: ^transport http .*$
+|          Description: Command uses insecure transport protocol
+|               Reason: Usage of weak file transfer protocol like FTP/TFTP/RCP/HTTP
+|          Remediation: Use secure File Transfer protocol like SFTP/HTTPS/SCP
+|          Restriction: NO
+|             Execmode: NO
++-------------------------------------------------------------
++-------------------------------------------------------------
+| ENTRY 5 FOR MODULE:                                PARSER |
++-------------------------------------------------------------
+|              Submode: sep-init-config
+|       Submode String: wsma profile initiator
+|               Module: PARSER
+|        Command Regex: ^transport http .*$
+|          Description: Command uses insecure transport protocol
+|               Reason: Usage of weak file transfer protocol like FTP/TFTP/RCP/HTTP
+|          Remediation: Use secure File Transfer protocol like SFTP/HTTPS/SCP
+|          Restriction: NO
+|             Execmode: NO
++-------------------------------------------------------------
++-------------------------------------------------------------
+| ENTRY 6 FOR MODULE:                                PARSER |
++-------------------------------------------------------------
+|              Submode: exec
+|       Submode String: NULL
+|               Module: PARSER
+|        Command Regex: ^write network (ftp|tftp|rcp|http)://.*$
+|          Description: Command uses insecure transport protocol
+|               Reason: Usage of weak file transfer protocol like FTP/TFTP/RCP/HTTP
+|          Remediation: Use secure File Transfer protocol like SFTP/HTTPS/SCP
+|          Restriction: NO
+|             Execmode: YES
++-------------------------------------------------------------
++-------------------------------------------------------------
+| ENTRY 7 FOR MODULE:                                PARSER |
++-------------------------------------------------------------
+|              Submode: exec
+|       Submode String: NULL
+|               Module: PARSER
+|        Command Regex: ^acm replace (ftp|tftp|rcp|http)://.*$
+|          Description: Command uses insecure transport protocol
+|               Reason: Usage of weak file transfer protocol like FTP/TFTP/RCP/HTTP
+|          Remediation: Use secure File Transfer protocol like SFTP/HTTPS/SCP
+|          Restriction: NO
+|             Execmode: YES
++-------------------------------------------------------------
++-------------------------------------------------------------
+| ENTRY 8 FOR MODULE:                                PARSER |
++-------------------------------------------------------------
+|              Submode: exec
+|       Submode String: NULL
+|               Module: PARSER
+|        Command Regex: ^acm configlet create (ftp|tftp|rcp|http)://.*$
+|          Description: Command uses insecure transport protocol
+|               Reason: Usage of weak file transfer protocol like FTP/TFTP/RCP/HTTP
+|          Remediation: Use secure File Transfer protocol like SFTP/HTTPS/SCP
+|          Restriction: NO
+|             Execmode: YES
++-------------------------------------------------------------
++-------------------------------------------------------------
+| ENTRY 9 FOR MODULE:                                PARSER |
++-------------------------------------------------------------
+|              Submode: exec
+|       Submode String: NULL
+|               Module: PARSER
+|        Command Regex: ^acm merge (ftp|tftp|rcp|http)://.*$
+|          Description: Command uses insecure transport protocol
+|               Reason: Usage of weak file transfer protocol like FTP/TFTP/RCP/HTTP
+|          Remediation: Use secure File Transfer protocol like SFTP/HTTPS/SCP
+|          Restriction: NO
+|             Execmode: YES
++-------------------------------------------------------------
++-------------------------------------------------------------
+| ENTRY 10 FOR MODULE:                                PARSER |
++-------------------------------------------------------------
+|              Submode: exec
+|       Submode String: NULL
+|               Module: PARSER
+|        Command Regex: ^acm save (ftp|tftp|rcp|http)://.*$
+|          Description: Command uses insecure transport protocol
+|               Reason: Usage of weak file transfer protocol like FTP/TFTP/RCP/HTTP
+|          Remediation: Use secure File Transfer protocol like SFTP/HTTPS/SCP
+|          Restriction: NO
+|             Execmode: YES
++-------------------------------------------------------------
++-------------------------------------------------------------
+| ENTRY 11 FOR MODULE:                                PARSER |
++-------------------------------------------------------------
+|              Submode: exec
+|       Submode String: NULL
+|               Module: PARSER
+|        Command Regex: ^acm rules (ftp|tftp|rcp|http)://.*$
+|          Description: Command uses insecure transport protocol
+|               Reason: Usage of weak file transfer protocol like FTP/TFTP/RCP/HTTP
+|          Remediation: Use secure File Transfer protocol like SFTP/HTTPS/SCP
+|          Restriction: NO
+|             Execmode: YES
++-------------------------------------------------------------
++-------------------------------------------------------------
+| ENTRY 12 FOR MODULE:                                PARSER |
++-------------------------------------------------------------
+|              Submode: configure
+|       Submode String: NULL
+|               Module: PARSER
+|        Command Regex: ^scripting tcl init (ftp|tftp|rcp|http)://.*$
+|          Description: Command uses insecure transport protocol
+|               Reason: Usage of weak file transfer protocol like FTP/TFTP/RCP/HTTP
+|          Remediation: Use secure File Transfer protocol like SFTP/HTTPS/SCP
+|          Restriction: NO
+|             Execmode: NO
++-------------------------------------------------------------
++-------------------------------------------------------------
+| ENTRY 13 FOR MODULE:                                PARSER |
++-------------------------------------------------------------
+|              Submode: configure
+|       Submode String: NULL
+|               Module: PARSER
+|        Command Regex: ^scripting tcl encdir (ftp|tftp|rcp|http)://.*$
+|          Description: Command uses insecure transport protocol
+|               Reason: Usage of weak file transfer protocol like FTP/TFTP/RCP/HTTP
+|          Remediation: Use secure File Transfer protocol like SFTP/HTTPS/SCP
+|          Restriction: NO
+|             Execmode: NO
++-------------------------------------------------------------
++-------------------------------------------------------------
+| ENTRY 14 FOR MODULE:                                PARSER |
++-------------------------------------------------------------
+|              Submode: archive
+|       Submode String: archive
+|               Module: PARSER
+|        Command Regex: ^path (ftp|tftp|rcp|http)://.*$
+|          Description: Command uses insecure transport protocol
+|               Reason: Usage of weak file transfer protocol like FTP/TFTP/RCP/HTTP
+|          Remediation: Use secure File Transfer protocol like SFTP/HTTPS/SCP
+|          Restriction: NO
+|             Execmode: NO
++-------------------------------------------------------------
++-------------------------------------------------------------
+| ENTRY 15 FOR MODULE:                                PARSER |
++-------------------------------------------------------------
+|              Submode: configure
+|       Submode String: NULL
+|               Module: PARSER
+|        Command Regex: ^shell init file (ftp|tftp|rcp|http)://.*$
+|          Description: Command uses insecure transport protocol
+|               Reason: Usage of weak file transfer protocol like FTP/TFTP/RCP/HTTP
+|          Remediation: Use secure File Transfer protocol like SFTP/HTTPS/SCP
+|          Restriction: NO
+|             Execmode: NO
++-------------------------------------------------------------
++-------------------------------------------------------------
+| ENTRY 16 FOR MODULE:                                PARSER |
++-------------------------------------------------------------
+|              Submode: exec
+|       Submode String: NULL
+|               Module: PARSER
+|        Command Regex: ^shell environment save (ftp|tftp|rcp|http)://.*$
+|          Description: Command uses insecure transport protocol
+|               Reason: Usage of weak file transfer protocol like FTP/TFTP/RCP/HTTP
+|          Remediation: Use secure File Transfer protocol like SFTP/HTTPS/SCP
+|          Restriction: NO
+|             Execmode: YES
++-------------------------------------------------------------
++-------------------------------------------------------------
+| ENTRY 17 FOR MODULE:                                PARSER |
++-------------------------------------------------------------
+|              Submode: exec
+|       Submode String: NULL
+|               Module: PARSER
+|        Command Regex: ^shell environment load (ftp|tftp|rcp|http)://.*$
+|          Description: Command uses insecure transport protocol
+|               Reason: Usage of weak file transfer protocol like FTP/TFTP/RCP/HTTP
+|          Remediation: Use secure File Transfer protocol like SFTP/HTTPS/SCP
+|          Restriction: NO
+|             Execmode: YES
++-------------------------------------------------------------
++-------------------------------------------------------------
+| ENTRY 18 FOR MODULE:                                PARSER |
++-------------------------------------------------------------
+|              Submode: configure
+|       Submode String: NULL
+|               Module: PARSER
+|        Command Regex: ^shell map [^[:space:]]+ script-file (ftp|tftp|rcp|http)://.*$
+|          Description: Command uses insecure transport protocol
+|               Reason: Usage of weak file transfer protocol like FTP/TFTP/RCP/HTTP
+|          Remediation: Use secure File Transfer protocol like SFTP/HTTPS/SCP
+|          Restriction: NO
+|             Execmode: NO
++-------------------------------------------------------------
++==============================================================
+
++==============================================================
+| MODULE:                                             CAPWAP |
++==============================================================
++-------------------------------------------------------------
+| ENTRY 1 FOR MODULE:                                CAPWAP |
++-------------------------------------------------------------
+|              Submode: configure
+|       Submode String: NULL
+|               Module: CAPWAP
+|        Command Regex: ^ap[[:space:]]+dtls-version[[:space:]]+dtls_1_0[[:space:]]*$
+|          Description: Access Point DTLS version configured with DTLS 1.0 - deprecated and vulnerable to various attacks
+|               Reason: Weak tls version
+|          Remediation: Use stronger tls version to enhance security
+|          Restriction: YES
+|             Execmode: NO
++-------------------------------------------------------------
++-------------------------------------------------------------
+| ENTRY 2 FOR MODULE:                                CAPWAP |
++-------------------------------------------------------------
+|              Submode: configure
+|       Submode String: NULL
+|               Module: CAPWAP
+|        Command Regex: ^ap[[:space:]]+dtls-ciphersuite[[:space:]]+priority[[:space:]]+[0-9]+[[:space:]]+(AES128-SHA|DHE-RSA-AES128-SHA|DHE-RSA-AES256-SHA)[[:space:]]*$
+|          Description: Access Point DTLS cipher suite configured with weak ciphers using SHA-1 - vulnerable to collision attacks
+|               Reason: Weak cipher(s) are present in the command
+|          Remediation: Use stronger cipher(s) to enhance security
+|          Restriction: YES
+|             Execmode: NO
++-------------------------------------------------------------
++==============================================================
+
++==============================================================
+| MODULE:                                               LINE |
++==============================================================
++-------------------------------------------------------------
+| ENTRY 1 FOR MODULE:                                  LINE |
++-------------------------------------------------------------
+|              Submode: line
+|       Submode String: line
+|               Module: LINE
+|        Command Regex: ^transport[[:space:]]+(input|output|preferred)[[:space:]]+.*(telnet|rlogin|all|lat|mop|nasi|pad|udptn|acercon|v120|labp-ta).*$
+|          Description: Line transport configured with unencrypted protocols - allows plaintext transmission of sensitive data
+|               Reason: Legacy protocol poses data confidentiality and integrity risks due to lack of encryption and authentication
+|          Remediation: Migrate to secure SSH-based remote access
+|          Restriction: NO
+|             Execmode: NO
++-------------------------------------------------------------
++-------------------------------------------------------------
+| ENTRY 2 FOR MODULE:                                  LINE |
++-------------------------------------------------------------
+|              Submode: line
+|       Submode String: line
+|               Module: LINE
+|        Command Regex: ^telnet[[:space:]]+.*(break-on-ip|ip-on-break|refuse-negotiations|speed|sync-on-break|transparent).*$
+|          Description: Telnet line options configured - enables unencrypted remote access vulnerable to session hijacking
+|               Reason: No encryption is configured
+|          Remediation: Migrate to secure SSH-based remote access
+|          Restriction: NO
+|             Execmode: NO
++-------------------------------------------------------------
++==============================================================
+
++==============================================================
+| MODULE:                                              SIPUA |
++==============================================================
++-------------------------------------------------------------
+| ENTRY 1 FOR MODULE:                                 SIPUA |
++-------------------------------------------------------------
+|              Submode: sip-ua
+|       Submode String: sip-ua
+|               Module: SIPUA
+|        Command Regex: ^transport[[:space:]]+tcp[[:space:]]+tls[[:space:]]+v1\.[01][[:space:]]*$
+|          Description: SIP-UA transport configured with weak TLS version 1.0 or 1.1 - deprecated and vulnerable
+|               Reason: Weak tls version
+|          Remediation: Use stronger tls version to enhance security
+|          Restriction: YES
+|             Execmode: NO
++-------------------------------------------------------------
++==============================================================
+
++==============================================================
+| MODULE:                                         TLS_TUNNEL |
++==============================================================
++-------------------------------------------------------------
+| ENTRY 1 FOR MODULE:                            TLS_TUNNEL |
++-------------------------------------------------------------
+|              Submode: tls_tunnel
+|       Submode String: crypto tls-tunnel
+|               Module: TLS_TUNNEL
+|        Command Regex: ^protection[[:space:]]+dhe-rsa-aes256-cbc-sha1[[:space:]]$
+|          Description: tls-tunnel using weak cipher suite dhe-rsa-aes256-cbc-sha1
+|               Reason: Weak cipher(s) are present in the command
+|          Remediation: Use stronger cipher(s) to enhance security
+|          Restriction: YES
+|             Execmode: NO
++-------------------------------------------------------------
++==============================================================
+
++==============================================================
+| MODULE:                                          KEY_CHAIN |
++==============================================================
++-------------------------------------------------------------
+| ENTRY 1 FOR MODULE:                             KEY_CHAIN |
++-------------------------------------------------------------
+|              Submode: key-chain-key
+|       Submode String: key chain
+|               Module: KEY_CHAIN
+|        Command Regex: ^key-string[[:space:]]+([^6].*|[[:space:]]*$)[[:space:]]*$
+|          Description: key-string in key-chain configured with weak encryption (type 0, 7, or plaintext) instead of secure type 6 encryption
+|               Reason: Configuration employs an Insecure method for password storage
+|          Remediation: Please consider migrating to a secure alternative such as Type-6
+|          Restriction: NO
+|             Execmode: NO
++-------------------------------------------------------------
++==============================================================
+
++==============================================================
+| MODULE:                                   KEY_CHAIN_MACSEC |
++==============================================================
++-------------------------------------------------------------
+| ENTRY 1 FOR MODULE:                      KEY_CHAIN_MACSEC |
++-------------------------------------------------------------
+|              Submode: key-chain-macsec-key
+|       Submode String: key chain
+|               Module: KEY_CHAIN_MACSEC
+|        Command Regex: ^key-string[[:space:]]+([^6].*|[[:space:]]*$)[[:space:]]*$
+|          Description: key-string in macsec key-chain configured with weak encryption (type 0, 7, or plaintext) instead of secure type 6 encryption
+|               Reason: Configuration employs an Insecure method for password storage
+|          Remediation: Please consider migrating to a secure alternative such as Type-6
+|          Restriction: NO
+|             Execmode: NO
++-------------------------------------------------------------
++==============================================================
+
++==============================================================
+| MODULE:                                              BOOTP |
++==============================================================
++-------------------------------------------------------------
+| ENTRY 1 FOR MODULE:                                 BOOTP |
++-------------------------------------------------------------
+|              Submode: configure
+|       Submode String: NULL
+|               Module: BOOTP
+|        Command Regex: ^ip[[:space:]]+bootp[[:space:]]+server[[:space:]]*$
+|          Description: BOOTP server enabled - legacy protocol vulnerable to man-in-the-middle attacks and lacks security features
+|               Reason: Legacy protocol poses data confidentiality and integrity risks due to lack of encryption and authentication
+|          Remediation: Use DHCP to automatically configure network settings
+|          Restriction: YES
+|             Execmode: NO
++-------------------------------------------------------------
++==============================================================
+
++==============================================================
+| MODULE:                                               HTTP |
++==============================================================
++-------------------------------------------------------------
+| ENTRY 1 FOR MODULE:                                  HTTP |
++-------------------------------------------------------------
+|              Submode: configure
+|       Submode String: NULL
+|               Module: HTTP
+|        Command Regex: ^ip[[:space:]]+http[[:space:]]+server[[:space:]]*$
+|          Description: HTTP server enabled - unencrypted protocol vulnerable to eavesdropping and man-in-the-middle attacks
+|               Reason: Legacy protocol poses data confidentiality and integrity risks due to lack of encryption and authentication
+|          Remediation: Use http secure server to ensure secure web access
+|          Restriction: NO
+|             Execmode: NO
++-------------------------------------------------------------
++-------------------------------------------------------------
+| ENTRY 2 FOR MODULE:                                  HTTP |
++-------------------------------------------------------------
+|              Submode: configure
+|       Submode String: NULL
+|               Module: HTTP
+|        Command Regex: ip[[:space:]]+http([[:space:]]+client)?[[:space:]]+tls-version[[:space:]]+TLSv1.(0|1)
+|          Description: HTTP client configured with weak TLS version 1.0 or 1.1 - vulnerable to various cryptographic attacks
+|               Reason: Weak tls version
+|          Remediation: Use stronger tls version to enhance security
+|          Restriction: NO
+|             Execmode: NO
++-------------------------------------------------------------
++-------------------------------------------------------------
+| ENTRY 3 FOR MODULE:                                  HTTP |
++-------------------------------------------------------------
+|              Submode: configure
+|       Submode String: NULL
+|               Module: HTTP
+|        Command Regex: ^ip[[:space:]]+http([[:space:]]+client)?[[:space:]]+secure-ciphersuite[[:space:]]+.*aes-(128|256)-cbc-sha.*$
+|          Description: HTTP client using weak cipher suite with CBC mode and SHA-1 - vulnerable to padding oracle and collision attacks
+|               Reason: Weak cipher(s) are present in the command
+|          Remediation: Use stronger cipher(s) to enhance security
+|          Restriction: NO
+|             Execmode: NO
++-------------------------------------------------------------
++==============================================================
+
++==============================================================
+| MODULE:                                                 IP |
++==============================================================
++-------------------------------------------------------------
+| ENTRY 1 FOR MODULE:                                    IP |
++-------------------------------------------------------------
+|              Submode: configure
+|       Submode String: NULL
+|               Module: IP
+|        Command Regex: ^ip[[:space:]]+finger([[:space:]]+.*)?[[:space:]]*$
+|          Description: IP finger service enabled - provides system information that can be used for reconnaissance attacks
+|               Reason: IP Finger service can potentially expose system information to unauthorized users
+|          Remediation: Disable finger service and use secure SSH-based show commands for system information retrieval
+|          Restriction: NO
+|             Execmode: NO
++-------------------------------------------------------------
++-------------------------------------------------------------
+| ENTRY 2 FOR MODULE:                                    IP |
++-------------------------------------------------------------
+|              Submode: configure
+|       Submode String: NULL
+|               Module: IP
+|        Command Regex: ^ip[[:space:]]+source-route([[:space:]]+.*)?[[:space:]]*$
+|          Description: IP source routing enabled - allows attackers to specify packet routing and bypass security controls
+|               Reason: IP source routing allows attackers to bypass network security controls and routing policies
+|          Remediation: This is a legacy feature, please consider disabling it
+|          Restriction: NO
+|             Execmode: NO
++-------------------------------------------------------------
++-------------------------------------------------------------
+| ENTRY 3 FOR MODULE:                                    IP |
++-------------------------------------------------------------
+|              Submode: configure
+|       Submode String: NULL
+|               Module: IP
+|        Command Regex: ^service[[:space:]]+finger([[:space:]]+.*)?[[:space:]]*$
+|          Description: Finger service enabled - provides detailed user information that can be exploited for social engineering
+|               Reason: IP Finger service can potentially expose system information to unauthorized users
+|          Remediation: Disable finger service and use secure SSH-based show commands for system information retrieval
+|          Restriction: NO
+|             Execmode: NO
++-------------------------------------------------------------
++==============================================================
+
++==============================================================
+| MODULE:                                               TFTP |
++==============================================================
++-------------------------------------------------------------
+| ENTRY 1 FOR MODULE:                                  TFTP |
++-------------------------------------------------------------
+|              Submode: configure
+|       Submode String: NULL
+|               Module: TFTP
+|        Command Regex: ^ip[[:space:]]+tftp([[:space:]]+.*)?[[:space:]]*$
+|          Description: TFTP service enabled - unencrypted file transfer protocol vulnerable to eavesdropping and tampering
+|               Reason: Legacy protocol poses data confidentiality and integrity risks due to lack of encryption and authentication
+|          Remediation: Transition to secure file transfer methods using SCP, SFTP, HTTPS protocols
+|          Restriction: NO
+|             Execmode: NO
++-------------------------------------------------------------
++==============================================================
+
++==============================================================
+| MODULE:                                             TELNET |
++==============================================================
++-------------------------------------------------------------
+| ENTRY 1 FOR MODULE:                                TELNET |
++-------------------------------------------------------------
+|              Submode: configure
+|       Submode String: NULL
+|               Module: TELNET
+|        Command Regex: ^ip[[:space:]]+telnet([[:space:]]+.*)?[[:space:]]*$
+|          Description: IP telnet service enabled - transmits credentials and data in plaintext over the network
+|               Reason: IP traffic is not encrypted
+|          Remediation: Migrate to secure SSH-based remote access
+|          Restriction: NO
+|             Execmode: NO
++-------------------------------------------------------------
++-------------------------------------------------------------
+| ENTRY 2 FOR MODULE:                                TELNET |
++-------------------------------------------------------------
+|              Submode: configure
+|       Submode String: NULL
+|               Module: TELNET
+|        Command Regex: ^service[[:space:]]+telnet-zeroidle([[:space:]]+.*)?[[:space:]]*$
+|          Description: Telnet zero-idle service enabled - unencrypted remote access protocol vulnerable to credential theft
+|               Reason: Telnet sessions are not configured with an idle timeout
+|          Remediation: Migrate to secure SSH-based remote access
+|          Restriction: NO
+|             Execmode: NO
++-------------------------------------------------------------
++==============================================================
+
++==============================================================
+| MODULE:                                               RCMD |
++==============================================================
++-------------------------------------------------------------
+| ENTRY 1 FOR MODULE:                                  RCMD |
++-------------------------------------------------------------
+|              Submode: configure
+|       Submode String: NULL
+|               Module: RCMD
+|        Command Regex: ^ip[[:space:]]+rcmd([[:space:]]+.*)?[[:space:]]*$
+|          Description: Remote command (rcmd) service enabled - allows unencrypted remote command execution without proper authentication
+|               Reason: No encryption is configured
+|          Remediation: This is a legacy feature, please consider disabling it
+|          Restriction: NO
+|             Execmode: NO
++-------------------------------------------------------------
++==============================================================
+
++==============================================================
+| MODULE:                                                FTP |
++==============================================================
++-------------------------------------------------------------
+| ENTRY 1 FOR MODULE:                                   FTP |
++-------------------------------------------------------------
+|              Submode: configure
+|       Submode String: NULL
+|               Module: FTP
+|        Command Regex: ^ip[[:space:]]+ftp([[:space:]]+.*)?[[:space:]]*$
+|          Description: FTP service enabled - transmits credentials and data in plaintext, vulnerable to interception
+|               Reason: No encryption is configured
+|          Remediation: Transition to secure file transfer methods using SCP, SFTP, HTTPS protocols
+|          Restriction: NO
+|             Execmode: NO
++-------------------------------------------------------------
++==============================================================
+
++==============================================================
+| MODULE:                                             STCAPP |
++==============================================================
++-------------------------------------------------------------
+| ENTRY 1 FOR MODULE:                                STCAPP |
++-------------------------------------------------------------
+|              Submode: configure
+|       Submode String: NULL
+|               Module: STCAPP
+|        Command Regex: ^stcapp[[:space:]]+security[[:space:]]+tls-version[[:space:]]+v1\.[0,1]
+|          Description: STCAPP security configured with TLS version 1.0 or 1.1 - deprecated and vulnerable to attacks
+|               Reason: Weak tls version
+|          Remediation: Use stronger tls version to enhance security
+|          Restriction: NO
+|             Execmode: NO
++-------------------------------------------------------------
++==============================================================
+
++==============================================================
+| MODULE:                                               SNMP |
++==============================================================
++-------------------------------------------------------------
+| ENTRY 1 FOR MODULE:                                  SNMP |
++-------------------------------------------------------------
+|              Submode: configure
+|       Submode String: NULL
+|               Module: SNMP
+|        Command Regex: ^snmp-server community [^[:space:]]+.*$
+|          Description: SNMP community string configured - uses insecure SNMPv1/v2c protocol vulnerable to eavesdropping
+|               Reason: Legacy protocol poses data confidentiality and integrity risks due to lack of encryption and authentication
+|          Remediation: Configure snmp v3 user
+|          Restriction: YES
+|             Execmode: NO
++-------------------------------------------------------------
++-------------------------------------------------------------
+| ENTRY 2 FOR MODULE:                                  SNMP |
++-------------------------------------------------------------
+|              Submode: configure
+|       Submode String: NULL
+|               Module: SNMP
+|        Command Regex: ^snmp mib community-map [^[:space:]]+.*$
+|          Description: SNMP MIB community map configured - exposes community strings in insecure SNMPv1/v2c
+|               Reason: Legacy protocol poses data confidentiality and integrity risks due to lack of encryption and authentication
+|          Remediation: Configure snmp v3 user
+|          Restriction: YES
+|             Execmode: NO
++-------------------------------------------------------------
++-------------------------------------------------------------
+| ENTRY 3 FOR MODULE:                                  SNMP |
++-------------------------------------------------------------
+|              Submode: configure
+|       Submode String: NULL
+|               Module: SNMP
+|        Command Regex: ^snmp-server group [^[:space:]]+ v(1|2c).*$
+|          Description: SNMP group configured with insecure version 1 or 2c - lacks encryption and authentication
+|               Reason: Legacy protocol poses data confidentiality and integrity risks due to lack of encryption and authentication
+|          Remediation: Configure snmp v3 user
+|          Restriction: YES
+|             Execmode: NO
++-------------------------------------------------------------
++-------------------------------------------------------------
+| ENTRY 4 FOR MODULE:                                  SNMP |
++-------------------------------------------------------------
+|              Submode: configure
+|       Submode String: NULL
+|               Module: SNMP
+|        Command Regex: ^snmp-server host [^[:space:]]+.* version (1|2c).*$
+|          Description: SNMP host configured with insecure version 1 or 2c - transmits data without encryption
+|               Reason: Legacy protocol poses data confidentiality and integrity risks due to lack of encryption and authentication
+|          Remediation: Configure snmp v3 user
+|          Restriction: YES
+|             Execmode: NO
++-------------------------------------------------------------
++-------------------------------------------------------------
+| ENTRY 5 FOR MODULE:                                  SNMP |
++-------------------------------------------------------------
+|              Submode: configure
+|       Submode String: NULL
+|               Module: SNMP
+|        Command Regex: ^snmp-server host [^[:space:]]+.* version 3 (auth|noauth).*$
+|          Description: SNMP host configured with insufficient authentication - missing privacy encryption
+|               Reason: SNMP host with Auth/Noauth security level
+|          Remediation: Use SNMP host with Priv security level
+|          Restriction: YES
+|             Execmode: NO
++-------------------------------------------------------------
++-------------------------------------------------------------
+| ENTRY 6 FOR MODULE:                                  SNMP |
++-------------------------------------------------------------
+|              Submode: configure
+|       Submode String: NULL
+|               Module: SNMP
+|        Command Regex: ^snmp-server host [^[:space:]]+( vrf [^[:space:]]+)?( (informs|traps))?( [067])?( [^[:space:]]+)?[[:space:]]*$
+|          Description: SNMP host configured without explicit version - defaults to insecure SNMPv1/v2c
+|               Reason: Legacy protocol poses data confidentiality and integrity risks due to lack of encryption and authentication
+|          Remediation: Configure snmp v3 user
+|          Restriction: YES
+|             Execmode: NO
++-------------------------------------------------------------
++-------------------------------------------------------------
+| ENTRY 7 FOR MODULE:                                  SNMP |
++-------------------------------------------------------------
+|              Submode: configure
+|       Submode String: NULL
+|               Module: SNMP
+|        Command Regex: ^snmp-server user [^[:space:]]+ [^[:space:]]+.* v(1|2c).*$
+|          Description: SNMP user configured with insecure version 1 or 2c - uses plaintext community strings
+|               Reason: Legacy protocol poses data confidentiality and integrity risks due to lack of encryption and authentication
+|          Remediation: Configure snmp v3 user
+|          Restriction: YES
+|             Execmode: NO
++-------------------------------------------------------------
++-------------------------------------------------------------
+| ENTRY 8 FOR MODULE:                                  SNMP |
++-------------------------------------------------------------
+|              Submode: router
+|       Submode String: router
+|               Module: SNMP
+|        Command Regex: ^snmp context [^[:space:]]+ community.*$
+|          Description: SNMP context using community string - vulnerable to packet sniffing and replay attacks
+|               Reason: Legacy protocol poses data confidentiality and integrity risks due to lack of encryption and authentication
+|          Remediation: Configure snmp v3 user
+|          Restriction: YES
+|             Execmode: NO
++-------------------------------------------------------------
++-------------------------------------------------------------
+| ENTRY 9 FOR MODULE:                                  SNMP |
++-------------------------------------------------------------
+|              Submode: configure
+|       Submode String: NULL
+|               Module: SNMP
+|        Command Regex: ^snmp-server user [^[:space:]]+ [^[:space:]]+ v3 (encrypted )?auth md5 .+$
+|          Description: SNMP user configured with MD5 authentication - vulnerable to collision attacks
+|               Reason: Insecure hash digest
+|          Remediation: Use secure hash digest such as sha and sha-2
+|          Restriction: YES
+|             Execmode: NO
++-------------------------------------------------------------
++-------------------------------------------------------------
+| ENTRY 10 FOR MODULE:                                  SNMP |
++-------------------------------------------------------------
+|              Submode: configure
+|       Submode String: NULL
+|               Module: SNMP
+|        Command Regex: ^snmp-server user [^[:space:]]+ [^[:space:]]+ v3 (encrypted )?auth sha ([067] )?[^[:space:]]+ priv (3des|des) .+$
+|          Description: SNMP user configured with weak privacy encryption DES/3DES - vulnerable to cryptographic attacks
+|               Reason: Configuration employs an Insecure method for password storage
+|          Remediation: Use secure cipher such as aes
+|          Restriction: YES
+|             Execmode: NO
++-------------------------------------------------------------
++-------------------------------------------------------------
+| ENTRY 11 FOR MODULE:                                  SNMP |
++-------------------------------------------------------------
+|              Submode: configure
+|       Submode String: NULL
+|               Module: SNMP
+|        Command Regex: ^snmp-server user [^[:space:]]+ [^[:space:]]+ v3 (encrypted )?auth sha-2 (256|384|512) ([067] )?[^[:space:]]+ priv (3des|des) .+$
+|          Description: SNMP user configured with SHA-2 authentication but weak DES/3DES privacy encryption - vulnerable to cryptographic attacks
+|               Reason: Configuration employs an Insecure method for password storage
+|          Remediation: Use secure cipher such as aes
+|          Restriction: YES
+|             Execmode: NO
++-------------------------------------------------------------
++-------------------------------------------------------------
+| ENTRY 12 FOR MODULE:                                  SNMP |
++-------------------------------------------------------------
+|              Submode: router
+|       Submode String: router
+|               Module: SNMP
+|        Command Regex: ^snmp context [^[:space:]]+ user [^[:space:]]+ (encrypted )?auth sha [^[:space:]]+ priv (3des|des|des56) .+$
+|          Description: SNMP context user configured with weak DES/3DES/DES56 privacy encryption - vulnerable to cryptographic attacks
+|               Reason: Configuration employs an Insecure method for password storage
+|          Remediation: Use secure cipher such as aes
+|          Restriction: YES
+|             Execmode: NO
++-------------------------------------------------------------
++-------------------------------------------------------------
+| ENTRY 13 FOR MODULE:                                  SNMP |
++-------------------------------------------------------------
+|              Submode: router
+|       Submode String: router
+|               Module: SNMP
+|        Command Regex: ^snmp context [^[:space:]]+ user [^[:space:]]+ (encrypted )?auth md5 .+$
+|          Description: SNMP context user configured with MD5 authentication - vulnerable to collision attacks
+|               Reason: Insecure hash digest
+|          Remediation: Use secure hash digest such as sha and sha-2
+|          Restriction: YES
+|             Execmode: NO
++-------------------------------------------------------------
++-------------------------------------------------------------
+| ENTRY 14 FOR MODULE:                                  SNMP |
++-------------------------------------------------------------
+|              Submode: configure
+|       Submode String: NULL
+|               Module: SNMP
+|        Command Regex: ^snmp-server group [^[:space:]]+ v3 (auth|noauth).*
+|          Description: SNMP group configured with insufficient authentication level - missing privacy encryption
+|               Reason: SNMP group with Auth/Noauth security level
+|          Remediation: Use SNMP group with Priv security level
+|          Restriction: YES
+|             Execmode: NO
++-------------------------------------------------------------
++-------------------------------------------------------------
+| ENTRY 15 FOR MODULE:                                  SNMP |
++-------------------------------------------------------------
+|              Submode: configure
+|       Submode String: NULL
+|               Module: SNMP
+|        Command Regex: ^snmp-server user [^[:space:]]+ [^[:space:]]+ v3 (encrypted )?auth sha ([067] )?[^[:space:]]+( access.*)?[[:space:]]*$
+|          Description: SNMP user configured with SHA authentication but no privacy encryption - data transmitted in plaintext
+|               Reason: SNMP user with Auth/Noauth security level
+|          Remediation: Use SNMP user with Priv security level
+|          Restriction: YES
+|             Execmode: NO
++-------------------------------------------------------------
++-------------------------------------------------------------
+| ENTRY 16 FOR MODULE:                                  SNMP |
++-------------------------------------------------------------
+|              Submode: configure
+|       Submode String: NULL
+|               Module: SNMP
+|        Command Regex: ^snmp-server user [^[:space:]]+ [^[:space:]]+ v3 (encrypted )?auth sha-2 (256|384|512) ([067] )?[^[:space:]]+( access.*)?[[:space:]]*$
+|          Description: SNMP user configured with SHA-2 authentication but no privacy encryption - data transmitted in plaintext
+|               Reason: SNMP user with Auth/Noauth security level
+|          Remediation: Use SNMP user with Priv security level
+|          Restriction: YES
+|             Execmode: NO
++-------------------------------------------------------------
++-------------------------------------------------------------
+| ENTRY 17 FOR MODULE:                                  SNMP |
++-------------------------------------------------------------
+|              Submode: router
+|       Submode String: router
+|               Module: SNMP
+|        Command Regex: ^snmp context [^[:space:]]+ user [^[:space:]]+ (encrypted )?auth sha [^[:space:]]+( access.*)?[[:space:]]*$
+|          Description: SNMP context user configured with SHA authentication but no privacy encryption - data transmitted in plaintext
+|               Reason: SNMP user with Auth/Noauth security level
+|          Remediation: Use SNMP user with Priv security level
+|          Restriction: YES
+|             Execmode: NO
++-------------------------------------------------------------
++-------------------------------------------------------------
+| ENTRY 18 FOR MODULE:                                  SNMP |
++-------------------------------------------------------------
+|              Submode: router
+|       Submode String: router
+|               Module: SNMP
+|        Command Regex: snmp context [^[:space:]]+ user [^[:space:]]+( (credential|encrypted))?( access.*)?[[:space:]]*$
+|          Description: SNMP context user configured with minimal security settings - missing proper authentication and privacy
+|               Reason: SNMP user with Auth/Noauth security level
+|          Remediation: Use SNMP user with Priv security level
+|          Restriction: YES
+|             Execmode: NO
++-------------------------------------------------------------
++-------------------------------------------------------------
+| ENTRY 19 FOR MODULE:                                  SNMP |
++-------------------------------------------------------------
+|              Submode: configure
+|       Submode String: NULL
+|               Module: SNMP
+|        Command Regex: ^snmp-server user [^[:space:]]+ [^[:space:]]+ v3( access.*)?[[:space:]]*$
+|          Description: SNMP user configured with no auth and no privacy encryption - data transmitted in plaintext
+|               Reason: SNMP user with Auth/Noauth security level
+|          Remediation: Use SNMP user with Priv security level
+|          Restriction: YES
+|             Execmode: NO
++-------------------------------------------------------------
++-------------------------------------------------------------
+| ENTRY 20 FOR MODULE:                                  SNMP |
++-------------------------------------------------------------
+|              Submode: configure
+|       Submode String: NULL
+|               Module: SNMP
+|        Command Regex: ^snmp-server user [^[:space:]]+ [^[:space:]]+ v3 (encrypted )?auth sha ([067] )?[^[:space:]]+ priv aes (128|192|256) ([067] )?[^[:space:]]+[[:space:]]*$
+|          Description: SNMP user configured with AES privacy encryption but without access control lists - allows unrestricted SNMP access
+|               Reason: SNMP user without ACL
+|          Remediation: Use SNMP user with AccessList
+|          Restriction: YES
+|             Execmode: NO
++-------------------------------------------------------------
++-------------------------------------------------------------
+| ENTRY 21 FOR MODULE:                                  SNMP |
++-------------------------------------------------------------
+|              Submode: configure
+|       Submode String: NULL
+|               Module: SNMP
+|        Command Regex: ^snmp-server user [^[:space:]]+ [^[:space:]]+ v3 (encrypted )?auth sha-2 (256|384|512) ([067] )?[^[:space:]]+ priv aes (128|192|256) ([067] )?[^[:space:]]+[[:space:]]*$
+|          Description: SNMP user configured with SHA-2 authentication and AES privacy but without access control lists - allows unrestricted SNMP access
+|               Reason: SNMP user without ACL
+|          Remediation: Use SNMP user with AccessList
+|          Restriction: YES
+|             Execmode: NO
++-------------------------------------------------------------
++-------------------------------------------------------------
+| ENTRY 22 FOR MODULE:                                  SNMP |
++-------------------------------------------------------------
+|              Submode: router
+|       Submode String: router
+|               Module: SNMP
+|        Command Regex: snmp context [^[:space:]]+ user [^[:space:]]+ (encrypted )?auth sha [^[:space:]]+ priv aes (128|192|256) [^[:space:]]+[[:space:]]*$
+|          Description: SNMP context user configured with AES privacy encryption but without access control lists - allows unrestricted SNMP access
+|               Reason: SNMP user without ACL
+|          Remediation: Use SNMP user with AccessList
+|          Restriction: YES
+|             Execmode: NO
++-------------------------------------------------------------
++-------------------------------------------------------------
+| ENTRY 23 FOR MODULE:                                  SNMP |
++-------------------------------------------------------------
+|              Submode: configure
+|       Submode String: NULL
+|               Module: SNMP
+|        Command Regex: ^snmp-server file-transfer access-group ([1-9][0-9]?|[^ ]+)( protocol (tftp|ftp|rcp).*)?$
+|          Description: SNMP file transfer using TFTP/FTP/RCP protocol
+|               Reason: Usage of weak file transfer protocol like FTP/TFTP/RCP/HTTP
+|          Remediation: Use secure File Transfer protocol like SFTP/HTTPS/SCP
+|          Restriction: YES
+|             Execmode: NO
++-------------------------------------------------------------
++==============================================================
+
++==============================================================
+| MODULE:                                              VOICE |
++==============================================================
++-------------------------------------------------------------
+| ENTRY 1 FOR MODULE:                                 VOICE |
++-------------------------------------------------------------
+|              Submode: voiceclass
+|       Submode String: voice class
+|               Module: VOICE
+|        Command Regex: ^cipher[[:space:]]+[0-9]+[[:space:]]+(DHE_RSA_WITH_AES_(128|256)_CBC_SHA|RSA_WITH_AES_(128|256)_CBC_SHA)[[:space:]]*$
+|          Description: Voice class configured with weak cipher suite - vulnerable to cryptographic attacks
+|               Reason: Weak cipher(s) are present in the command
+|          Remediation: Use stronger cipher(s) to enhance security
+|          Restriction: YES
+|             Execmode: NO
++-------------------------------------------------------------
++==============================================================
+
++==============================================================
+| MODULE:                                        CALLMANAGER |
++==============================================================
++-------------------------------------------------------------
+| ENTRY 1 FOR MODULE:                           CALLMANAGER |
++-------------------------------------------------------------
+|              Submode: cm-fallback
+|       Submode String: call-manager-fallback
+|               Module: CALLMANAGER
+|        Command Regex: ^transport-tcp-tls[[:space:]]+v1\.[01][[:space:]]*$
+|          Description: Call manager fallback configured with weak TLS version 1.0 or 1.1 - deprecated and vulnerable
+|               Reason: Weak tls version
+|          Remediation: Use stronger tls version to enhance security
+|          Restriction: YES
+|             Execmode: NO
++-------------------------------------------------------------
++==============================================================
+
++==============================================================
+| MODULE:                                                NTP |
++==============================================================
++-------------------------------------------------------------
+| ENTRY 1 FOR MODULE:                                   NTP |
++-------------------------------------------------------------
+|              Submode: configure
+|       Submode String: NULL
+|               Module: NTP
+|        Command Regex: ^ntp[[:space:]]+authentication-key([[:space:]]+.*)+md5([[:space:]]+.*)?[[:space:]]*$
+|          Description: NTP authentication using MD5 - vulnerable to collision attacks and should use stronger algorithms
+|               Reason: Weak cipher(s) are present in the command
+|          Remediation: Transition to more secure algorithms like SHA and AES
+|          Restriction: NO
+|             Execmode: NO
++-------------------------------------------------------------
++==============================================================
+
++==============================================================
+| MODULE:                                          TRANSPORT |
++==============================================================
++-------------------------------------------------------------
+| ENTRY 1 FOR MODULE:                             TRANSPORT |
++-------------------------------------------------------------
+|              Submode: configure
+|       Submode String: NULL
+|               Module: TRANSPORT
+|        Command Regex: ^service[[:space:]]+tcp-small-servers([[:space:]]+.*)?[[:space:]]*$
+|          Description: TCP small servers enabled - provides unnecessary services like echo, discard, and daytime that can be exploited
+|               Reason: TCP small servers expose unnecessary network services and potential attack vectors
+|          Remediation: Disable small servers and use modern network diagnostic tools like ping, traceroute, or SSH-based commands
+|          Restriction: NO
+|             Execmode: NO
++-------------------------------------------------------------
++-------------------------------------------------------------
+| ENTRY 2 FOR MODULE:                             TRANSPORT |
++-------------------------------------------------------------
+|              Submode: configure
+|       Submode String: NULL
+|               Module: TRANSPORT
+|        Command Regex: ^service[[:space:]]+udp-small-servers([[:space:]]+.*)?[[:space:]]*$
+|          Description: UDP small servers enabled - provides unnecessary services that can be used for DDoS amplification attacks
+|               Reason: UDP small servers expose unnecessary network services and potential attack vectors
+|          Remediation: Disable small servers and use modern network diagnostic tools like ping, traceroute, or SSH-based commands
+|          Restriction: NO
+|             Execmode: NO
++-------------------------------------------------------------
++==============================================================
+
+=============================================================
+                    PROFILE SUMMARY
+=============================================================
+Total Security Patterns: 82
+Profile Status: Active and Loaded
+Hash Table Status: Operational
+Bloom Filter Status: Active
+=============================================================
+NOTE: These patterns are used to validate CLI commands
+against known security vulnerabilities.
+=============================================================
+=============================================================
+              INSECURE CLI SUBMODE DATABASE
+=============================================================
+Generated: Hash Table Based Submode List
+Submode Type: Configuration Mode Database
+=============================================================
+Displaying all loaded insecure CLI submodes:
+=============================================================
+| No. |                              Configuration Submode |
+|-----|------------------------------------------------------|
+|   1 |                                  sep-listen-config |
+|   2 |                                     dspfarmprofile |
+|   3 |                              dot1x-credential-mode |
+|   4 |                                             router |
+|   5 |                                          configure |
+|   6 |                                         tls_tunnel |
+|   7 |                                               line |
+|   8 |                                  eap-mprofile-mode |
+|   9 |                                  parameter-submode |
+|  10 |                                             sip-ua |
+|  11 |                                            archive |
+|  12 |                                   eap-profile-mode |
+|  13 |                                         voiceclass |
+|  14 |                                               exec |
+|  15 |                                        tls-profile |
+|  16 |                                      key-chain-key |
+|  17 |                               key-chain-macsec-key |
+|  18 |                                    sep-init-config |
+|  19 |                                        cm-fallback |
+|-----|------------------------------------------------------|
+
+=============================================================
+                    SUBMODE SUMMARY
+=============================================================
+Total Configuration Submodes: 19
+Submode Database Status: Active and Loaded
+Submode Hash Table Status: Operational
+=============================================================
+NOTE: These submodes contain insecure CLI patterns that are
+validated during configuration commands execution.
+=============================================================
+Mixed_stack#

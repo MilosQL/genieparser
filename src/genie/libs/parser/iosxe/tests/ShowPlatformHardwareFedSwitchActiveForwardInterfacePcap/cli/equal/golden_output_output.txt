@@ -1,0 +1,9 @@
+============= Flow ID:        FL1 ===========
+   Current Packet trace should meet below Criteria 
+   Remote interface detected - TX trace only on all devices:
+TX (Egress) for device 1:
+   Source System Port : 00
+   Packet offset : 00
+   
+   Packet filter : 08 F4 F0 60 6D 02 00 A7 42 D7 21 DF 81 00 0F FA 08 00 45 00 00 64 00 66 00 00 FE 01 A6 2E 0A 01 01 02 0A 01 01 01 08 00 BB 12 00 09 00 00 00 00 00 00 91 85 31 A9 AB CD AB CD AB CD AB CD AB CD AB CD AB CD AB CD AB CD AB CD AB CD AB CD AB CD AB CD AB CD AB CD AB CD AB CD AB CD AB CD AB CD AB CD AB CD AB CD AB CD AB CD AB CD AB CD AB CD AB CD AB CD AB CD AB CD AB CD
+   Packet mask   : FF FF FF FF FF FF FF FF FF FF FF FF 00 00 0F FF 00 00 00 00 00 00 00 00 00 00 00 00 00 00 FF FF FF FF FF FF FF FF 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00

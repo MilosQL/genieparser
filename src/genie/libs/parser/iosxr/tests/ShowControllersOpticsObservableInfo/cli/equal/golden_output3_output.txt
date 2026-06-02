@@ -1,48 +1,195 @@
 show controller optics * observable-info
-Mon Mar 16 23:13:45.402 UTC
- Port:    Optics0/0/0/28
+Tue Jan 14 21:04:24.295 UTC
+ Port:    Optics0/0/0/22
 
 Observable Information
+
+[Laser Age]
+ Unit: %
+ Id       Value               LowThreshWarn       HighThresWarn       LowThreshAlarm      HighThreshAlarm     TCAWarn   TCAAlarm
+                                                                                                              Low High  Low High
+ Lane0    0                   0                   80                  0                   90                  n   n     n   n
+ Lane1    0                   0                   80                  0                   90                  n   n     n   n
+ Lane2    0                   0                   80                  0                   90                  n   n     n   n
+ Lane3    0                   0                   80                  0                   90                  n   n     n   n
 
 [eSNR Media Input]
  Unit: dB
  Id       Value               LowThreshWarn       HighThresWarn       LowThreshAlarm      HighThreshAlarm     TCAWarn   TCAAlarm
                                                                                                               Low High  Low High
- Lane0    0.00                0.00                256.00              0.00                256.00              n   n     n   n
- Lane1    0.00                0.00                256.00              0.00                256.00              n   n     n   n
- Lane2    0.00                0.00                256.00              0.00                256.00              n   n     n   n
- Lane3    0.00                0.00                256.00              0.00                256.00              n   n     n   n
+ Lane0    22.79               0.00                0.00                0.00                0.00                n   n     n   n
+ Lane1    22.32               0.00                0.00                0.00                0.00                n   n     n   n
+ Lane2    22.79               0.00                0.00                0.00                0.00                n   n     n   n
+ Lane3    21.19               0.00                0.00                0.00                0.00                n   n     n   n
 
 [PAM4 Level Transition Parameter Media Input]
  Unit: dB
  Id       Value               LowThreshWarn       HighThresWarn       LowThreshAlarm      HighThreshAlarm     TCAWarn   TCAAlarm
                                                                                                               Low High  Low High
- Lane0    0.00                0.00                256.00              0.00                256.00              n   n     n   n
- Lane1    0.00                0.00                256.00              0.00                256.00              n   n     n   n
- Lane2    0.00                0.00                256.00              0.00                256.00              n   n     n   n
- Lane3    0.00                0.00                256.00              0.00                256.00              n   n     n   n
+ Lane0    61.25               0.00                0.00                0.00                0.00                n   n     n   n
+ Lane1    58.22               0.00                0.00                0.00                0.00                n   n     n   n
+ Lane2    64.55               0.00                0.00                0.00                0.00                n   n     n   n
+ Lane3    51.32               0.00                0.00                0.00                0.00                n   n     n   n
+
+[Pre-FEC BER Minimum Media Input]
+ Unit: n/a
+ Id       Value               LowThreshWarn       HighThresWarn       LowThreshAlarm      HighThreshAlarm     TCAWarn   TCAAlarm
+                                                                                                              Low High  Low High
+ Module   1.828E-09           0.000E+00           0.000E+00           0.000E+00           0.000E+00           n   n     n   n
+
+[Pre-FEC BER Minimum Host Input]
+ Unit: n/a
+ Id       Value               LowThreshWarn       HighThresWarn       LowThreshAlarm      HighThreshAlarm     TCAWarn   TCAAlarm
+                                                                                                              Low High  Low High
+ Module   0.000E+00           0.000E+00           0.000E+00           0.000E+00           0.000E+00           n   n     n   n
+
+[Pre-FEC BER Maximum Media Input]
+ Unit: n/a
+ Id       Value               LowThreshWarn       HighThresWarn       LowThreshAlarm      HighThreshAlarm     TCAWarn   TCAAlarm
+                                                                                                              Low High  Low High
+ Module   1.056E-08           0.000E+00           0.000E+00           0.000E+00           0.000E+00           n   n     n   n
+
+[Pre-FEC BER Maximum Host Input]
+ Unit: n/a
+ Id       Value               LowThreshWarn       HighThresWarn       LowThreshAlarm      HighThreshAlarm     TCAWarn   TCAAlarm
+                                                                                                              Low High  Low High
+ Module   0.000E+00           0.000E+00           0.000E+00           0.000E+00           0.000E+00           n   n     n   n
+
+[Pre-FEC BER Average Media Input]
+ Unit: n/a
+ Id       Value               LowThreshWarn       HighThresWarn       LowThreshAlarm      HighThreshAlarm     TCAWarn   TCAAlarm
+                                                                                                              Low High  Low High
+ Module   5.100E-09           0.000E+00           0.000E+00           0.000E+00           0.000E+00           n   n     n   n
+
+[Pre-FEC BER Average Host Input]
+ Unit: n/a
+ Id       Value               LowThreshWarn       HighThresWarn       LowThreshAlarm      HighThreshAlarm     TCAWarn   TCAAlarm
+                                                                                                              Low High  Low High
+ Module   0.000E+00           0.000E+00           0.000E+00           0.000E+00           0.000E+00           n   n     n   n
+
+[Pre-FEC BER Current Media Input]
+ Unit: n/a
+ Id       Value               LowThreshWarn       HighThresWarn       LowThreshAlarm      HighThreshAlarm     TCAWarn   TCAAlarm
+                                                                                                              Low High  Low High
+ Module   6.050E-09           0.000E+00           0.000E+00           0.000E+00           0.000E+00           n   n     n   n
+
+[Pre-FEC BER Current Host Input]
+ Unit: n/a
+ Id       Value               LowThreshWarn       HighThresWarn       LowThreshAlarm      HighThreshAlarm     TCAWarn   TCAAlarm
+                                                                                                              Low High  Low High
+ Module   0.000E+00           0.000E+00           0.000E+00           0.000E+00           0.000E+00           n   n     n   n
+
+[FERC Minimum Media Input]
+ Unit: n/a
+ Id       Value               LowThreshWarn       HighThresWarn       LowThreshAlarm      HighThreshAlarm     TCAWarn   TCAAlarm
+                                                                                                              Low High  Low High
+ Module   0.000E+00           0.000E+00           0.000E+00           0.000E+00           0.000E+00           n   n     n   n
+
+[FERC Minimum Host Input]
+ Unit: n/a
+ Id       Value               LowThreshWarn       HighThresWarn       LowThreshAlarm      HighThreshAlarm     TCAWarn   TCAAlarm
+                                                                                                              Low High  Low High
+ Module   0.000E+00           0.000E+00           0.000E+00           0.000E+00           0.000E+00           n   n     n   n
+
+[FERC Maximum Media Input]
+ Unit: n/a
+ Id       Value               LowThreshWarn       HighThresWarn       LowThreshAlarm      HighThreshAlarm     TCAWarn   TCAAlarm
+                                                                                                              Low High  Low High
+ Module   0.000E+00           0.000E+00           0.000E+00           0.000E+00           0.000E+00           n   n     n   n
+
+[FERC Maximum Host Input]
+ Unit: n/a
+ Id       Value               LowThreshWarn       HighThresWarn       LowThreshAlarm      HighThreshAlarm     TCAWarn   TCAAlarm
+                                                                                                              Low High  Low High
+ Module   0.000E+00           0.000E+00           0.000E+00           0.000E+00           0.000E+00           n   n     n   n
+
+[FERC Average Media Input]
+ Unit: n/a
+ Id       Value               LowThreshWarn       HighThresWarn       LowThreshAlarm      HighThreshAlarm     TCAWarn   TCAAlarm
+                                                                                                              Low High  Low High
+ Module   0.000E+00           0.000E+00           0.000E+00           0.000E+00           0.000E+00           n   n     n   n
+
+[FERC Average Host Input]
+ Unit: n/a
+ Id       Value               LowThreshWarn       HighThresWarn       LowThreshAlarm      HighThreshAlarm     TCAWarn   TCAAlarm
+                                                                                                              Low High  Low High
+ Module   0.000E+00           0.000E+00           0.000E+00           0.000E+00           0.000E+00           n   n     n   n
+
+[FERC Current Media Input]
+ Unit: n/a
+ Id       Value               LowThreshWarn       HighThresWarn       LowThreshAlarm      HighThreshAlarm     TCAWarn   TCAAlarm
+                                                                                                              Low High  Low High
+ Module   0.000E+00           0.000E+00           0.000E+00           0.000E+00           0.000E+00           n   n     n   n
+
+[FERC Current Host Input]
+ Unit: n/a
+ Id       Value               LowThreshWarn       HighThresWarn       LowThreshAlarm      HighThreshAlarm     TCAWarn   TCAAlarm
+                                                                                                              Low High  Low High
+ Module   0.000E+00           0.000E+00           0.000E+00           0.000E+00           0.000E+00           n   n     n   n
 
 -----------------------------------------------
- Port:    Optics0/0/0/29
+ Port:    Optics0/0/0/25
 
 Observable Information
 
-[eSNR Media Input]
- Unit: dB
+[Fault Cause Register]
+ Unit: None
  Id       Value               LowThreshWarn       HighThresWarn       LowThreshAlarm      HighThreshAlarm     TCAWarn   TCAAlarm
                                                                                                               Low High  Low High
- Lane0    0.00                0.00                256.00              0.00                256.00              n   n     n   n
- Lane1    0.00                0.00                256.00              0.00                256.00              n   n     n   n
- Lane2    0.00                0.00                256.00              0.00                256.00              n   n     n   n
- Lane3    0.00                0.00                256.00              0.00                256.00              n   n     n   n
+ Module   0                   n/a                 n/a                 n/a                 n/a                 n/a n/a   n/a n/a
 
-[PAM4 Level Transition Parameter Media Input]
- Unit: dB
+[Stepped Config Only]
+ Unit: None
  Id       Value               LowThreshWarn       HighThresWarn       LowThreshAlarm      HighThreshAlarm     TCAWarn   TCAAlarm
                                                                                                               Low High  Low High
- Lane0    0.00                0.00                256.00              0.00                256.00              n   n     n   n
- Lane1    0.00                0.00                256.00              0.00                256.00              n   n     n   n
- Lane2    0.00                0.00                256.00              0.00                256.00              n   n     n   n
- Lane3    0.00                0.00                256.00              0.00                256.00              n   n     n   n
+ Module   0                   n/a                 n/a                 n/a                 n/a                 n/a n/a   n/a n/a
+
+[Rx Output Status Changed Mask]
+ Unit: None
+ Id       Value               LowThreshWarn       HighThresWarn       LowThreshAlarm      HighThreshAlarm     TCAWarn   TCAAlarm
+                                                                                                              Low High  Low High
+ Lane1    1                   n/a                 n/a                 n/a                 n/a                 n/a n/a   n/a n/a
+
+[DP Init Pending]
+ Unit: None
+ Id       Value               LowThreshWarn       HighThresWarn       LowThreshAlarm      HighThreshAlarm     TCAWarn   TCAAlarm
+                                                                                                              Low High  Low High
+ Lane1    1                   n/a                 n/a                 n/a                 n/a                 n/a n/a   n/a n/a
+
+[Config Command Result Status]
+ Unit: None
+ Id       Value               LowThreshWarn       HighThresWarn       LowThreshAlarm      HighThreshAlarm     TCAWarn   TCAAlarm
+                                                                                                              Low High  Low High
+ Lane1    1                   n/a                 n/a                 n/a                 n/a                 n/a n/a   n/a n/a
+
+[Rx Output Signal Valid]
+ Unit: None
+ Id       Value               LowThreshWarn       HighThresWarn       LowThreshAlarm      HighThreshAlarm     TCAWarn   TCAAlarm
+                                                                                                              Low High  Low High
+ Lane1    0                   n/a                 n/a                 n/a                 n/a                 n/a n/a   n/a n/a
+
+[Tx Output Signal Valid]
+ Unit: None
+ Id       Value               LowThreshWarn       HighThresWarn       LowThreshAlarm      HighThreshAlarm     TCAWarn   TCAAlarm
+                                                                                                              Low High  Low High
+ Lane1    0                   n/a                 n/a                 n/a                 n/a                 n/a n/a   n/a n/a
+
+[Latched Rx Output Status Changed Flag]
+ Unit: None
+ Id       Value               LowThreshWarn       HighThresWarn       LowThreshAlarm      HighThreshAlarm     TCAWarn   TCAAlarm
+                                                                                                              Low High  Low High
+ Lane1    0                   n/a                 n/a                 n/a                 n/a                 n/a n/a   n/a n/a
+
+[Datapath Tx Latency Host]
+ Unit: ns
+ Id       Value               LowThreshWarn       HighThresWarn       LowThreshAlarm      HighThreshAlarm     TCAWarn   TCAAlarm
+                                                                                                              Low High  Low High
+ Lane1    0                   n/a                 n/a                 n/a                 n/a                 n/a n/a   n/a n/a
+
+[Datapath Rx Latency Host]
+ Unit: ns
+ Id       Value               LowThreshWarn       HighThresWarn       LowThreshAlarm      HighThreshAlarm     TCAWarn   TCAAlarm
+                                                                                                              Low High  Low High
+ Lane1    0                   n/a                 n/a                 n/a                 n/a                 n/a n/a   n/a n/a
 
 -----------------------------------------------

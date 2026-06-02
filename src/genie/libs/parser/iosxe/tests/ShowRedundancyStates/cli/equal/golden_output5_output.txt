@@ -1,0 +1,21 @@
+show redundancy states
+       my state = 13 -ACTIVE
+     peer state = in progress to standby cold-bulk
+           Mode = Duplex
+           Unit = Primary
+        Unit ID = 1
+
+Redundancy Mode (Operational) = sso
+Redundancy Mode (Configured)  = sso
+Redundancy State              = sso
+     Maintenance Mode = Disabled
+    Manual Swact = disabled (peer unit not yet in terminal standby state)
+ Communications = Up
+
+   client count = 120
+ client_notification_TMR = 30000 milliseconds
+           RF debug mask = 0x0
+
+Current client in progression               = Igmp Snooping (506)
+Time since client was sent progression (ms) = 91
+History for this client progression         = RF_PROG_STANDBY_BULK, rc 0

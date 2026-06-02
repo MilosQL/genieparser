@@ -1,0 +1,7 @@
+Rack 0-Chassis IDPROM - UFISpace-S9700-53dx 2RU Chassis
+  Controller Family          : 0000
+  Controller Type            : 0000
+  PID                        : N/A
+  Version Identifier         : N/A
+  UDI Description            : UFISpace-S9700-53dx 2RU Chassis
+  Chassis Serial Number      : ABCD1234

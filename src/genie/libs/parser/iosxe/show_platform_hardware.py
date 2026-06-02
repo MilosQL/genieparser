@@ -94,6 +94,7 @@
     * show platform hardware qfp active feature nat64 datapath statistics
     * show platform hardware slot {slot} sensor producer all
     * show platform hardware slot {slot} sensor consumer all
+    * show platform hardware qfp active infra bqs sch output default interface GigabitEthernet0/0/0
 """
 import re
 import logging
@@ -20390,6 +20391,294 @@ class ShowPlatformHardwareSlotSlotSensorConsumerAll(ShowPlatformHardwareSlotSlot
                     "unit": unit_val,
                     "last_poll": group["last_poll"],
                 }
+                continue
+
+        return ret_dict
+
+
+class ShowPlatformHardwareQfpActiveInfrastructureBqsScheduleOutputDefaultInterfaceSchema(MetaParser):
+    """Schema for show platform hardware qfp active infrastructure bqs schedule output default interface {interface}"""
+
+    schema = {
+        "interface": {
+            Any(): {
+                "egress_scheduler": {
+                    "name": str,
+                    "scheduler_id": str,
+                    "scheduler_type": str,
+                    "parent_node": str,
+                    "state": str,
+                    "bandwidth_kbps": int,
+                    "shaper_rate": Or(str, None),
+                    "priority": Or(str, None),
+                },
+                "queue_statistics": {
+                    "total_packets_enqueued": int,
+                    "total_packets_dequeued": int,
+                    "total_packets_dropped": int,
+                    "total_bytes_enqueued": int,
+                    "total_bytes_dequeued": int,
+                },
+                "per_flow_class_queues": {
+                    Any(): {
+                        "weight": int,
+                        "packets": int,
+                        "bytes": int,
+                        "drops": int,
+                    }
+                },
+                "child_queue_details": {
+                    Any(): {
+                        "weight": int,
+                        "credits": int,
+                        "drops": int,
+                        "state": str,
+                    }
+                },
+            }
+        }
+    }
+
+
+class ShowPlatformHardwareQfpActiveInfrastructureBqsScheduleOutputDefaultInterface(ShowPlatformHardwareQfpActiveInfrastructureBqsScheduleOutputDefaultInterfaceSchema):
+    """Parser for show platform hardware qfp active infrastructure bqs schedule output default interface {interface}"""
+
+    cli_command = "show platform hardware qfp active infrastructure bqs schedule output default interface {interface}"
+
+    def cli(self, interface="", output=None):
+        if output is None:
+            cmd = self.cli_command.format(interface=interface)
+            output = self.device.execute(cmd)
+
+        ret_dict = {}
+        if not output:
+            return ret_dict
+
+        # Interface: GigabitEthernet0/0/0
+        p1 = re.compile(r"^\s*Interface\s*:\s*(?P<intf>[\w\/\.\-]+)\s*$")
+
+        # Egress Scheduler: Default
+        p2 = re.compile(r"^\s*Egress\s+Scheduler\s*:\s*(?P<name>\S+)\s*$")
+
+        #   Scheduler ID       : 0x1A
+        p3 = re.compile(r"^\s*Scheduler\s+ID\s*:\s*(?P<scheduler_id>\S+)\s*$")
+
+        #   Scheduler Type     : Default
+        p4 = re.compile(r"^\s*Scheduler\s+Type\s*:\s*(?P<scheduler_type>\S+)\s*$")
+
+        #   Parent Node        : Root
+        p5 = re.compile(r"^\s*Parent\s+Node\s*:\s*(?P<parent_node>\S+)\s*$")
+
+        #   State              : Active
+        p6 = re.compile(r"^\s*State\s*:\s*(?P<state>\S+)\s*$")
+
+        #   Bandwidth          : 1000000 kbps
+        p7 = re.compile(r"^\s*Bandwidth\s*:\s*(?P<bandwidth>\d+)\s+kbps\s*$")
+
+        #   Shaper Rate        : None
+        p8 = re.compile(r"^\s*Shaper\s+Rate\s*:\s*(?P<shaper_rate>\S+)\s*$")
+
+        #   Priority           : None
+        p9 = re.compile(r"^\s*Priority\s*:\s*(?P<priority>\S+)\s*$")
+
+        # Queue Statistics:
+        p10 = re.compile(r"^\s*Queue\s+Statistics:\s*$")
+
+        #   Total Packets Enqueued : 154321
+        p11 = re.compile(r"^\s*Total\s+Packets\s+Enqueued\s*:\s*(?P<val>\d+)\s*$")
+
+        #   Total Packets Dequeued : 154300
+        p12 = re.compile(r"^\s*Total\s+Packets\s+Dequeued\s*:\s*(?P<val>\d+)\s*$")
+
+        #   Total Packets Dropped  : 21
+        p13 = re.compile(r"^\s*Total\s+Packets\s+Dropped\s*:\s*(?P<val>\d+)\s*$")
+
+        #   Total Bytes Enqueued   : 123456789
+        p14 = re.compile(r"^\s*Total\s+Bytes\s+Enqueued\s*:\s*(?P<val>\d+)\s*$")
+
+        #   Total Bytes Dequeued   : 123450000
+        p15 = re.compile(r"^\s*Total\s+Bytes\s+Dequeued\s*:\s*(?P<val>\d+)\s*$")
+
+        # Per-Flow-Class Queues:
+        p16 = re.compile(r"^\s*Per-Flow-Class\s+Queues:\s*$")
+
+        #   fc: 0  weight: 1  pkts: 50234  bytes: 42342342  drops: 0
+        p17 = re.compile(
+            r"^\s*fc\s*:\s*(?P<fc>\d+)\s+weight\s*:\s*(?P<weight>\d+)\s+pkts\s*:\s*(?P<pkts>\d+)\s+bytes\s*:\s*(?P<bytes>\d+)\s+drops\s*:\s*(?P<drops>\d+)\s*$"
+        )
+
+        # Child Queue Details:
+        p18 = re.compile(r"^\s*Child\s+Queue\s+Details:\s*$")
+
+        #   0         1       2048     0      Active
+        p19 = re.compile(
+            r"^\s*(?P<qid>\d+)\s+(?P<weight>\d+)\s+(?P<credits>\d+)\s+(?P<drops>\d+)\s+(?P<state>\S+)\s*$"
+        )
+
+        interface_name = None
+        in_queue_stats = False
+        in_fc_section = False
+        in_child_queue_section = False
+
+        for line in output.splitlines():
+            line = line.rstrip()
+            if not line:
+                continue
+
+            # Interface: GigabitEthernet0/0/0
+            m = p1.match(line)
+            if m:
+                interface_name = m.group("intf")
+                intf_dict = ret_dict.setdefault("interface", {}).setdefault(interface_name, {})
+                in_queue_stats = False
+                in_fc_section = False
+                in_child_queue_section = False
+                continue
+
+            # Egress Scheduler: Default
+            m = p2.match(line)
+            if m and interface_name:
+                eg_dict = ret_dict["interface"][interface_name].setdefault("egress_scheduler", {})
+                eg_dict["name"] = m.group("name")
+                continue
+
+            #   Scheduler ID       : 0x1A
+            m = p3.match(line)
+            if m and interface_name:
+                eg_dict = ret_dict["interface"][interface_name].setdefault("egress_scheduler", {})
+                eg_dict["scheduler_id"] = m.group("scheduler_id")
+                continue
+
+            #   Scheduler Type     : Default
+            m = p4.match(line)
+            if m and interface_name:
+                eg_dict = ret_dict["interface"][interface_name].setdefault("egress_scheduler", {})
+                eg_dict["scheduler_type"] = m.group("scheduler_type")
+                continue
+
+            #   Parent Node        : Root
+            m = p5.match(line)
+            if m and interface_name:
+                eg_dict = ret_dict["interface"][interface_name].setdefault("egress_scheduler", {})
+                eg_dict["parent_node"] = m.group("parent_node")
+                continue
+
+            #   State              : Active
+            m = p6.match(line)
+            if m and interface_name:
+                eg_dict = ret_dict["interface"][interface_name].setdefault("egress_scheduler", {})
+                eg_dict["state"] = m.group("state")
+                continue
+
+            #   Bandwidth          : 1000000 kbps
+            m = p7.match(line)
+            if m and interface_name:
+                eg_dict = ret_dict["interface"][interface_name].setdefault("egress_scheduler", {})
+                eg_dict["bandwidth_kbps"] = int(m.group("bandwidth"))
+                continue
+
+            #   Shaper Rate        : None
+            m = p8.match(line)
+            if m and interface_name:
+                val = m.group("shaper_rate")
+                eg_dict = ret_dict["interface"][interface_name].setdefault("egress_scheduler", {})
+                eg_dict["shaper_rate"] = None if val.lower() == "none" else val
+                continue
+
+            #   Priority           : None
+            m = p9.match(line)
+            if m and interface_name:
+                val = m.group("priority")
+                eg_dict = ret_dict["interface"][interface_name].setdefault("egress_scheduler", {})
+                eg_dict["priority"] = None if val.lower() == "none" else val
+                continue
+
+            # Queue Statistics:
+            m = p10.match(line)
+            if m and interface_name:
+                ret_dict["interface"][interface_name].setdefault("queue_statistics", {})
+                in_queue_stats = True
+                in_fc_section = False
+                in_child_queue_section = False
+                continue
+
+            #   Total Packets Enqueued : 154321
+            m = p11.match(line)
+            if m and interface_name and in_queue_stats:
+                qd = ret_dict["interface"][interface_name].setdefault("queue_statistics", {})
+                qd["total_packets_enqueued"] = int(m.group("val"))
+                continue
+
+            #   Total Packets Dequeued : 154300
+            m = p12.match(line)
+            if m and interface_name and in_queue_stats:
+                qd = ret_dict["interface"][interface_name].setdefault("queue_statistics", {})
+                qd["total_packets_dequeued"] = int(m.group("val"))
+                continue
+
+            #   Total Packets Dropped  : 21
+            m = p13.match(line)
+            if m and interface_name and in_queue_stats:
+                qd = ret_dict["interface"][interface_name].setdefault("queue_statistics", {})
+                qd["total_packets_dropped"] = int(m.group("val"))
+                continue
+
+            #   Total Bytes Enqueued   : 123456789
+            m = p14.match(line)
+            if m and interface_name and in_queue_stats:
+                qd = ret_dict["interface"][interface_name].setdefault("queue_statistics", {})
+                qd["total_bytes_enqueued"] = int(m.group("val"))
+                continue
+
+            #   Total Bytes Dequeued   : 123450000
+            m = p15.match(line)
+            if m and interface_name and in_queue_stats:
+                qd = ret_dict["interface"][interface_name].setdefault("queue_statistics", {})
+                qd["total_bytes_dequeued"] = int(m.group("val"))
+                continue
+
+            # Per-Flow-Class Queues:
+            m = p16.match(line)
+            if m and interface_name:
+                ret_dict["interface"][interface_name].setdefault("per_flow_class_queues", {})
+                in_queue_stats = False
+                in_fc_section = True
+                in_child_queue_section = False
+                continue
+
+            #   fc: 0  weight: 1  pkts: 50234  bytes: 42342342  drops: 0
+            m = p17.match(line)
+            if m and interface_name and in_fc_section:
+                group = m.groupdict()
+                fc = int(group["fc"])
+                fc_dicts = ret_dict["interface"][interface_name].setdefault("per_flow_class_queues", {})
+                entry = fc_dicts.setdefault(fc, {})
+                entry["weight"] = int(group["weight"])
+                entry["packets"] = int(group["pkts"])
+                entry["bytes"] = int(group["bytes"])
+                entry["drops"] = int(group["drops"])
+                continue
+
+            # Child Queue Details:
+            m = p18.match(line)
+            if m and interface_name:
+                ret_dict["interface"][interface_name].setdefault("child_queue_details", {})
+                in_queue_stats = False
+                in_fc_section = False
+                in_child_queue_section = True
+                continue
+
+            #   0         1       2048     0      Active
+            m = p19.match(line)
+            if m and interface_name and in_child_queue_section:
+                group = m.groupdict()
+                qid = int(group["qid"])
+                child_dicts = ret_dict["interface"][interface_name].setdefault("child_queue_details", {})
+                entry = child_dicts.setdefault(qid, {})
+                entry["weight"] = int(group["weight"])
+                entry["credits"] = int(group["credits"])
+                entry["drops"] = int(group["drops"])
+                entry["state"] = group["state"]
                 continue
 
         return ret_dict

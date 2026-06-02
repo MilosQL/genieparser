@@ -1,0 +1,30 @@
+########################################
+IPSec Stats for if-id 0x48b (Tunnel10)
+########################################
+  SADB ID: 0xf
+  Flags: 0x0
+  FVRF: 0  IVRF: 4294967295
+  Sec Switch: 2  Sec ASIC: 0
+-----------------------------------
+Current Inbound Flow:
+  VRF: 0
+  Inbound Flow ID: 53  SPI: 1983646486
+    SA Bytes:            5666
+    SA Packets:          65
+    Control Packets:     0
+    Error Packets:       0
+    Auth Error Packets:  0
+    Invalid SA Packets:  0
+    Late Packets:        0
+-----------------------------------
+Current Outbound Flow:
+  VRF: 0
+  Outbound Flow ID: 54  SPI: 3559173000
+    SA Bytes:            176405428
+    SA Packets:          360062
+    Control Packets:     0
+    Error Packets:       0
+    Auth Error Packets:  0
+    Invalid SA Packets:  0
+    Late Packets:        0
+	

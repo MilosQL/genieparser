@@ -18,6 +18,8 @@
      *  show etherchannel load-balancing
      *  show lacp neighbor detail
      *  show etherchannel <channel_group> detail
+     *  show lacp multi-chassis load-balance group {group_id}
+     *  show lacp multi-chassis load-balance port-channel {id}
 """
 # Python
 import re
@@ -1671,6 +1673,399 @@ class ShowEtherchannelProtocol(ShowEtherchannelProtocolSchema):
             if match:
                 dict_val = match.groupdict()
                 group_dict['protocol'] = dict_val['protocol']
+                continue
+
+        return ret_dict
+
+
+class ShowLacpMultiChassisLoadBalanceGroupGroupIdSchema(MetaParser):
+    """Schema for:
+        show lacp multi-chassis load-balance group {group_id}"""
+
+    schema = {
+        "interchassis_redundancy_group": {
+            Any(): {
+                "rg_state": str,
+                "iccp_version": int,
+                "backbone_uplink_status": str,
+                "local_configuration": {
+                    "node_id": int
+                },
+                "peer_information": {
+                    "state": str,
+                    "node_id": int,
+                    "iccp_version": int
+                },
+                "states_legend": {
+                    Any(): str
+                },
+                "p_mlacp_interfaces": {
+                    Any(): {
+                        "port_state_local": str,
+                        "local_vlan_state": {
+                            "primary": str,
+                            "secondary": str
+                        },
+                        "peer_vlan_state": {
+                            "primary": str,
+                            "secondary": str
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
+class ShowLacpMultiChassisLoadBalancePortChannelIdSchema(MetaParser):
+    """Schema for:
+        show lacp multi-chassis load-balance port-channel {id}"""
+
+    schema = {
+        "port_channel": {
+            Any(): {
+                "local_configuration": {
+                    "p_mlacp_enabled": str,
+                    "redundancy_group": int,
+                    "revertive_mode": str,
+                    "primary_vlans": int,
+                    "secondary_vlans": int,
+                },
+                "local_interface_state": {
+                    "interface_id": int,
+                    "port_state": str,
+                    "fail_flags": Or(str, None),
+                    "primary_vlan_state": str,
+                    "secondary_vlan_state": str,
+                },
+                "peer_interface_state": {
+                    "interface_id": int,
+                    "primary_vlan_state": str,
+                    "secondary_vlan_state": str,
+                },
+            }
+        }
+    }
+
+
+class ShowLacpMultiChassisLoadBalanceGroupGroupId(
+        ShowLacpMultiChassisLoadBalanceGroupGroupIdSchema):
+    """Parser for:
+        show lacp multi-chassis load-balance group {group_id}"""
+
+    cli_command = "show lacp multi-chassis load-balance group {group_id}"
+
+    def cli(self, group_id=None, output=None):
+        if output is None:
+            cmd = self.cli_command.format(group_id=group_id)
+            output = self.device.execute(cmd)
+
+        ret_dict = {}
+        if not output:
+            return ret_dict
+
+        group_dict = {}
+        info_dict = {}
+
+        # Interchassis Redundancy Group 4294967295
+        p1 = re.compile(
+            r"^\s*Interchassis\s+Redundancy\s+Group\s+(?P<grp>\d+)\s*$")
+        # RG State:       Synchronized
+        p2 = re.compile(r"^\s*RG\s+State\s*:\s*(?P<rg_state>\S+)\s*$")
+        # ICCP Version:   0
+        p3 = re.compile(r"^\s*ICCP\s+Version\s*:\s*(?P<iccp_version>\d+)\s*$")
+        # Backbone Uplink Status: Connected
+        p4 = re.compile(
+            r"^\s*Backbone\s+Uplink\s+Status\s*:\s*(?P<status>\S+)\s*$")
+        # Local Configuration:
+        p5 = re.compile(r"^\s*Local\s+Configuration\s*:\s*$")
+        # Node-id:        1
+        p6 = re.compile(r"^\s*Node-id\s*:\s*(?P<node_id>\d+)\s*$")
+        # Peer Information:
+        p7 = re.compile(r"^\s*Peer\s+Information\s*:\s*$")
+        # State:          Up
+        p8 = re.compile(r"^\s*State\s*:\s*(?P<state>\S+)\s*$")
+        # States:      Active     - ACT		Standby    - SBY
+        #              Down       - DN 		AdminDown  - ADN
+        p9 = re.compile(
+            r"^\s*(?:States:\s+)?(?P<k1>\w+)\s+-\s+(?P<v1>\w+)\s+(?P<k2>\w+)\s+-\s+(?P<v2>\w+)\s*$")
+        # P-mLACP Interfaces
+        p10 = re.compile(r"^\s*P\-mLACP\s+Interfaces\s*$")
+        #    1             DN              DN/DN                ACT/ACT
+        p11 = re.compile(
+            r"^\s*(?P<id>\d+)\s+(?P<port_state_local>\S+)\s+(?P<local_vlan>\S+/\S+)\s+(?P<peer_vlan>\S+/\S+)\s*$")
+
+        for line in output.splitlines():
+            if not line.strip():
+                continue
+
+            # Interchassis Redundancy Group 4294967295
+            m = p1.match(line)
+            if m:
+                icrg_dict = ret_dict.setdefault(
+                    "interchassis_redundancy_group", {})
+                group_dict = icrg_dict.setdefault(m.group("grp"), {})
+                info_dict = group_dict
+                continue
+
+            # RG State:       Synchronized
+            m = p2.match(line)
+            if m:
+                group_dict["rg_state"] = m.group("rg_state")
+                continue
+
+            # Backbone Uplink Status: Connected
+            m = p4.match(line)
+            if m:
+                group_dict["backbone_uplink_status"] = m.group("status")
+                continue
+
+            # Local Configuration:
+            m = p5.match(line)
+            if m:
+                info_dict = group_dict.setdefault("local_configuration", {})
+                continue
+
+            # Peer Information:
+            m = p7.match(line)
+            if m:
+                info_dict = group_dict.setdefault("peer_information", {})
+                continue
+
+            # ICCP Version:   0
+            m = p3.match(line)
+            if m:
+                info_dict["iccp_version"] = int(m.group("iccp_version"))
+                continue
+
+            # Node-id:        1
+            m = p6.match(line)
+            if m:
+                info_dict["node_id"] = int(m.group("node_id"))
+                continue
+
+            # State:          Up
+            m = p8.match(line)
+            if m:
+                info_dict["state"] = m.group("state")
+                continue
+
+            # States legend (header + continuation lines)
+            m = p9.match(line)
+            if m:
+                states_dict = group_dict.setdefault("states_legend", {})
+                states_dict[m.group("k1")] = m.group("v1")
+                states_dict[m.group("k2")] = m.group("v2")
+                continue
+
+            # P-mLACP Interfaces
+            m = p10.match(line)
+            if m:
+                group_dict.setdefault("p_mlacp_interfaces", {})
+                continue
+
+            #    1             DN              DN/DN                ACT/ACT
+            m = p11.match(line)
+            if m:
+                pmlacp_dict = group_dict.setdefault("p_mlacp_interfaces", {})
+                l_primary, l_secondary = m.group("local_vlan").split("/", 1)
+                p_primary, p_secondary = m.group("peer_vlan").split("/", 1)
+
+                pmlacp_dict[m.group("id")] = {
+                    "port_state_local": m.group("port_state_local"),
+                    "local_vlan_state": {
+                        "primary": l_primary,
+                        "secondary": l_secondary
+                    },
+                    "peer_vlan_state": {
+                        "primary": p_primary,
+                        "secondary": p_secondary
+                    }
+                }
+                continue
+
+        return ret_dict
+
+
+class ShowLacpMultiChassisLoadBalancePortChannelId(ShowLacpMultiChassisLoadBalancePortChannelIdSchema):
+    """Parser for:
+        show lacp multi-chassis load-balance port-channel {id}"""
+
+    cli_command = "show lacp multi-chassis load-balance port-channel {id}"
+
+    def cli(self, id=None, output=None):
+        if output is None:
+            cmd = self.cli_command.format(id=id)
+            output = self.device.execute(cmd)
+
+        ret_dict = {}
+        if not output:
+            return ret_dict
+
+        pc_key = None
+        pc_dict = None
+        local_cfg_dict = None
+        local_if_dict = None
+        peer_if_dict = None
+
+        # Interface Port-Channel 1
+        p1 = re.compile(r"^\s*Interface\s+Port-Channel\s+(?P<pc_num>\S+)$")
+
+        # Local Configuration:
+        p2 = re.compile(r"^\s*Local\s+Configuration:\s*$")
+
+        # P-mLACP Enabled: Yes
+        p3 = re.compile(r"^\s*P-mLACP\s+Enabled:\s*(?P<enabled>\S+)\s*$")
+
+        # Redundancy Group: 4294967295
+        p4 = re.compile(r"^\s*Redundancy\s+Group:\s*(?P<group>\d+)\s*$")
+
+        # Revertive Mode: Revertive
+        p5 = re.compile(r"^\s*Revertive\s+Mode:\s*(?P<mode>.+)$")
+
+        # Primary VLANs: 20
+        p6 = re.compile(r"^\s*Primary\s+VLANs:\s*(?P<pri>\d+)\s*$")
+
+        # Secondary VLANs: 40
+        p7 = re.compile(r"^\s*Secondary\s+VLANs:\s*(?P<sec>\d+)\s*$")
+
+        # Local Interface State:
+        p8 = re.compile(r"^\s*Local\s+Interface\s+State:\s*$")
+
+        # Interface ID: 1
+        p9 = re.compile(r"^\s*Interface\s+ID:\s*(?P<iid>\d+)\s*$")
+
+        # Port State: Down
+        # Port State: Reverting (19 seconds)
+        # Port State: Admin Down
+        p10 = re.compile(r"^\s*Port\s+State:\s*(?P<pstate>.+)$")
+
+        # Fail Flags: 0x2
+        p11 = re.compile(r"^\s*Fail\s+Flags:\s*(?P<fflags>\S+)\s*$")
+
+        # Primary VLAN State: Down
+        # Primary VLAN State: Standby
+        # Primary VLAN State: Admin Down
+        p12 = re.compile(r"^\s*Primary\s+VLAN\s+State:\s*(?P<pvstate>.+)$")
+
+        # Secondary VLAN State: Down
+        # Secondary VLAN State: Standby
+        # Secondary VLAN State: Admin Down
+        p13 = re.compile(r"^\s*Secondary\s+VLAN\s+State:\s*(?P<svstate>.+)$")
+
+        # Peer Interface State:
+        p14 = re.compile(r"^\s*Peer\s+Interface\s+State:\s*$")
+
+        for line in output.splitlines():
+            line = line.rstrip()
+            if not line:
+                continue
+
+            # Interface Port-Channel 1
+            m = p1.match(line)
+            if m:
+                pc_key = "Port-Channel {}".format(m.group("pc_num"))
+                pc_dict = ret_dict.setdefault("port_channel", {}).setdefault(pc_key, {})
+                continue
+
+            # Local Configuration:
+            m = p2.match(line)
+            if m:
+                if pc_dict is None:
+                    pc_dict = ret_dict.setdefault("port_channel", {}).setdefault(pc_key, {})
+                local_cfg_dict = pc_dict.setdefault("local_configuration", {})
+                local_if_dict = None
+                peer_if_dict = None
+                continue
+
+            # P-mLACP Enabled: Yes
+            m = p3.match(line)
+            if m and local_cfg_dict is not None:
+                local_cfg_dict["p_mlacp_enabled"] = m.group("enabled")
+                continue
+
+            # Redundancy Group: 4294967295
+            m = p4.match(line)
+            if m and local_cfg_dict is not None:
+                local_cfg_dict["redundancy_group"] = int(m.group("group"))
+                continue
+
+            # Revertive Mode: Revertive
+            m = p5.match(line)
+            if m and local_cfg_dict is not None:
+                local_cfg_dict["revertive_mode"] = m.group("mode").strip()
+                continue
+
+            # Primary VLANs: 20
+            m = p6.match(line)
+            if m and local_cfg_dict is not None:
+                local_cfg_dict["primary_vlans"] = int(m.group("pri"))
+                continue
+
+            # Secondary VLANs: 40
+            m = p7.match(line)
+            if m and local_cfg_dict is not None:
+                local_cfg_dict["secondary_vlans"] = int(m.group("sec"))
+                continue
+
+            # Local Interface State:
+            m = p8.match(line)
+            if m:
+                if pc_dict is None:
+                    pc_dict = ret_dict.setdefault("port_channel", {}).setdefault(pc_key, {})
+                local_if_dict = pc_dict.setdefault("local_interface_state", {})
+                local_if_dict["fail_flags"] = None
+                local_cfg_dict = None
+                peer_if_dict = None
+                continue
+
+            # Peer Interface State:
+            m = p14.match(line)
+            if m:
+                if pc_dict is None:
+                    pc_dict = ret_dict.setdefault("port_channel", {}).setdefault(pc_key, {})
+                peer_if_dict = pc_dict.setdefault("peer_interface_state", {})
+                local_if_dict = None
+                local_cfg_dict = None
+                continue
+
+            # Interface ID: 1
+            m = p9.match(line)
+            if m:
+                if local_if_dict is not None:
+                    local_if_dict["interface_id"] = int(m.group("iid"))
+                elif peer_if_dict is not None:
+                    peer_if_dict["interface_id"] = int(m.group("iid"))
+                continue
+
+            # Port State: Down
+            m = p10.match(line)
+            if m and local_if_dict is not None:
+                local_if_dict["port_state"] = m.group("pstate").strip()
+                continue
+
+            # Fail Flags: 0x2
+            m = p11.match(line)
+            if m and local_if_dict is not None:
+                local_if_dict["fail_flags"] = m.group("fflags")
+                continue
+
+            # Primary VLAN State: Down
+            m = p12.match(line)
+            if m:
+                if local_if_dict is not None:
+                    local_if_dict["primary_vlan_state"] = m.group("pvstate").strip()
+                elif peer_if_dict is not None:
+                    peer_if_dict["primary_vlan_state"] = m.group("pvstate").strip()
+                continue
+
+            # Secondary VLAN State: Down
+            m = p13.match(line)
+            if m:
+                if local_if_dict is not None:
+                    local_if_dict["secondary_vlan_state"] = m.group("svstate").strip()
+                elif peer_if_dict is not None:
+                    peer_if_dict["secondary_vlan_state"] = m.group("svstate").strip()
                 continue
 
         return ret_dict

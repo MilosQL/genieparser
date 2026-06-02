@@ -202,7 +202,8 @@ class ShowDiagDetails(ShowDiagDetailsSchema):
 
         # Rack 0-Chassis IDPROM - Cisco 8000 Series 32x400G QSFPDD 1RU Fixed System w/HBM
         # 0/0-DB-IDPROM - 400G Modular Linecard, Service Edge Optimized
-        p0 = re.compile(r'(?P<item>.+?)[\s-]IDPROM\s+\-\s+(?P<description>.+?)\s*$')
+        # 0/SYNC0-GNSS_LC-IDPROM0 - Cisco GNSS 1PPS/10M MODULE
+        p0 = re.compile(r'(?P<item>.+?)[\s-]IDPROM\d*\s+\-\s+(?P<description>.+?)\s*$')
 
         # Controller Family          : 0045
         p1 = re.compile(r'^Controller Family\s+:\s+(?P<controller_family>\w+)$')
@@ -211,7 +212,8 @@ class ShowDiagDetails(ShowDiagDetailsSchema):
         p2 = re.compile(r'^Controller Type\s+:\s+(?P<controller_type>\w+)$')
 
         # PID                        : 8201-32FH
-        p3 = re.compile(r'^(PID|Product ID)\s*:\s+(?P<pid>[\w\.-]+)$')
+        # PID                        : N/A
+        p3 = re.compile(r'^(PID|Product ID)\s*:\s+(?P<pid>\S+)$')
 
         # Version Identifier         : V03
         p4 = re.compile(r'^(VID|Version Identifier)\s*:\s+(?P<version_identifier>.+?)$')

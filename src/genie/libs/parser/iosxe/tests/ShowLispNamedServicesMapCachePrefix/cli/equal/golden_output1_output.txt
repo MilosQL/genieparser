@@ -1,0 +1,14 @@
+xtr12#sh lisp in 4 named-services map-cache firewall
+LISP DN Mapping Cache for LISP 0 EID-table N/A (IID 4), 1 entries
+
+firewall, uptime: 00:00:16, expires: 23:59:44, via transient-publication, complete
+  Sources: transient-publication
+  State: complete, last modified: 00:00:16, map-source: 100.55.55.55
+  Active, Packets out: 0(0 bytes)
+  Locator       Uptime    State  Pri/Wgt     Encap-IID
+  100.11.11.11  00:00:16  up      10/50        -
+    Last up-down state change:         00:00:16, state change count: 1
+    Last route reachability change:    00:00:16, state change count: 1
+    Last priority / weight change:     never/never
+    RLOC-probing loc-status algorithm:
+      Last RLOC-probe sent:            never

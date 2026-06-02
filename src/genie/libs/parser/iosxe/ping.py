@@ -239,8 +239,9 @@ class PingMpls(PingMplsSchema):
     cli_command = [
         'ping mpls ip {addr} {mask} repeat {count}',
         'ping mpls traffic-eng tunnel {tunnel_id}',
-        'ping mpls pseudowire {addr} {vc_id}'
-        
+        'ping mpls pseudowire {addr} {vc_id}',
+        'ping mpls pseudowire {addr} {vc_id} reply {reply_option}',
+        'ping mpls tp tunnel-tp {tunnel_tp_id} lsp {lsp_selector} channel ip repeat {count}',
     ]
 
     def cli(self,
@@ -250,11 +251,18 @@ class PingMpls(PingMplsSchema):
             timeout=None,
             command=None,
             tunnel_id=None,
+            tunnel_tp_id=None,
+            lsp_selector='working',
             vc_id=None,
+            reply_option=None,
             output=None):
 
         if not output:
-            if not tunnel_id and not vc_id:
+            if tunnel_tp_id:
+                cmd = 'ping mpls tp tunnel-tp {tunnel_tp_id} lsp {lsp_selector} channel ip'.format(tunnel_tp_id=tunnel_tp_id, lsp_selector=lsp_selector)
+                if count:
+                    cmd += ' repeat {count}'.format(count=count)
+            elif not tunnel_id and not vc_id:
                 cmd = []
                 if mask:
                     cmd.append('ping mpls ip {addr} {mask}'.format(addr=addr,mask=mask))
@@ -266,7 +274,9 @@ class PingMpls(PingMplsSchema):
                 if command:
                     cmd = command
             elif vc_id and addr:
-                cmd = "ping mpls pseudowire {addr} {vc_id}".format(addr=addr, vc_id=vc_id)          
+                cmd = "ping mpls pseudowire {addr} {vc_id}".format(addr=addr, vc_id=vc_id)
+                if reply_option:
+                    cmd += ' reply {reply_option}'.format(reply_option=reply_option)
             else:
                 cmd = "ping mpls traffic-eng tunnel {tunnel_id}".format(tunnel_id=tunnel_id)
             out = self.device.execute(cmd)

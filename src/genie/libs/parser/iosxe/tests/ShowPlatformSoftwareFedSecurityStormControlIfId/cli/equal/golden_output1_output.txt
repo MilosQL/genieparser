@@ -1,0 +1,36 @@
+IIF-ID   : 0000000000000478
+IIF-Name : FiftyGigE1/1/3
+Speed    : 10000000000 BitsPerSecond
+
+Traffic type: BCAST
+Storm Control Not Configured
+
+Traffic type: MCAST
+
+  Supp Type    : PPS
+  Level        : 10000
+  Low Level    : 5000
+  Storm Exists : No
+  Bytes drop   : 0
+  Packets drop : 0
+  Current Rate : 0
+
+Traffic type: UCAST
+
+  Supp Type    : PPS
+  Level        : 10000
+  Low Level    : 5000
+  Storm Exists : No
+  Bytes drop   : 0
+  Packets drop : 0
+  Current Rate : 0
+
+Traffic type: UNKNOWN_UCAST
+
+  Supp Type    : PPS
+  Level        : 10000
+  Low Level    : 5000
+  Storm Exists : No
+  Bytes drop   : 0
+  Packets drop : 0
+  Current Rate : 0

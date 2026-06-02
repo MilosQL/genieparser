@@ -1,0 +1,29 @@
+network-advantage (C9500X_NW_A):
+  Description: Network Advantage License for Catalyst 9500X Switches
+  Count: 2
+  Version: 1.0
+  Status: IN USE
+  Export status: NOT RESTRICTED
+  Feature Name: network-advantage
+  Feature Description: Network Advantage License for Catalyst 9500X Switches
+  Enforcement type: NOT ENFORCED
+  License type: Perpetual
+
+dna-advantage (C9500X_DNA_A):
+  Description: DNA Advantage License for Catalyst 9500X Switches
+  Count: 2
+  Version: 1.0
+  Status: IN USE
+  Export status: NOT RESTRICTED
+  Feature Name: dna-advantage
+  Feature Description: DNA Advantage License for Catalyst 9500X Switches
+  Enforcement type: NOT ENFORCED
+  License type: Subscription
+
+C9K HSEC (Cat9K HSEC):
+  Description: HSEC Key for Export Compliance on Cat9K Series Switches
+  Count: 0
+  Status: NOT IN USE
+  Export status: RESTRICTED - ALLOWED
+  Enforcement type: EXPORT RESTRICTED
+  License type: Perpetual

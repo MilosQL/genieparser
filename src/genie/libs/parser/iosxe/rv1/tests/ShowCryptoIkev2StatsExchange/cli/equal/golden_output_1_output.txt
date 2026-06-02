@@ -1,0 +1,34 @@
+show crypto ikev2 stats exchange
+----------------------------------------------------------------------------------------------------------------------
+EXCHANGE/NOTIFY                   TX(REQ)    TX(RES)    RX(REQ)    RX(RES)   RTX(REQ)   RTX(RES)   RRX(REQ)   RRX(RES)
+
+EXCHANGES
+
+IKE_SA_INIT                             8         11         11          8          0          0          0          0
+IKE_AUTH                                8         11         11          8          0          0          0          0
+INFORMATIONAL                          26         12         12          2        138          0         47          0
+
+ERROR NOTIFY
+
+
+OTHER NOTIFY
+
+INITIAL_CONTACT                         8          0          8          0          0          0          0          0
+SET_WINDOW_SIZE                         8         11         11          8          0          0          0          0
+NAT_DETECTION_SOURCE_IP                 8         11         11          8          0          0          0          0
+NAT_DETECTION_DESTINATION_IP            8         11         11          8          0          0          0          0
+USE_TRANSPORT_MODE                      8         11         11          8          0          0          0          0
+HTTP_CERT_LOOKUP_SUPPORTED              0         11          0          8          0          0          0          0
+DELETE_REASON                          12          0          4          0          0          0          0          0
+SIGNATURE_HASH_ALGORITHMS_NOTI          0         11          0          8          0          0          0          0
+
+
+CONFIG PAYLOAD TYPE                    TX         RX        RTX        RRX
+
+CFG_REQUEST                             8         11          0          0
+
+
+OTHER COUNTERS                         TX        RTX
+
+NO_NAT                                 19          0
+----------------------------------------------------------------------------------------------------------------------

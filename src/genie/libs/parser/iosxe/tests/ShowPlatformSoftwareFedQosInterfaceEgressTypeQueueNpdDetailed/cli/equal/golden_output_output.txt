@@ -1,0 +1,38 @@
+***********************************************************************************
+ [GigabitEthernet2/0/2, 1p1q, Egress]: CGID = 0x383810 
+***********************************************************************************
+  cgid: 0x383810
+  No of classes: 3
+  TCG ref count: 3
+  Filter state: UP TO DATE
+  VMR state: DIRTY
+
+  ============================================================
+   NPD: Egress Queue Profile
+  ============================================================
+  Profile: ID 0x5, OID 0x1EB, Ref Count 3
+  Device: 0
+  Queues: total 3, priority 1
+  Traffic class to queue map
+    TC  Queue
+    --  -----
+    0   0    
+    1   0    
+    2   0    
+    3   0    
+    4   0    
+    5   0    
+    6   6    
+    7   7    
+  ============================================================
+   NPD: Interface Bind
+  ============================================================
+  Port Type: L3
+  Port: OID 0x792, system port OID 0x796
+  State: Active, Speed: 1000000000 bps
+  Scheduler
+    OID: 0x797, ASIC: Argon
+    Programmable: False
+  VOQ Set
+    OID: 0x794, device 0, base VOQ ID 472, size 8
+    State: Active, Flush: Flush not active, Empty: False

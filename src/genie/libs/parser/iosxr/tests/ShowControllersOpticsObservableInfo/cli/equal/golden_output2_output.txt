@@ -1,5 +1,5 @@
-show controller optics 0/0/0/2 observable-info
-Tue May  6 15:25:41.069 UTC
+show controller optics 0/0/0/8 observable-info
+Tue Jan 14 21:03:19.600 UTC
 
 Observable Information
 
@@ -25,13 +25,13 @@ Observable Information
  Unit: None
  Id       Value               LowThreshWarn       HighThresWarn       LowThreshAlarm      HighThreshAlarm     TCAWarn   TCAAlarm
                                                                                                               Low High  Low High
- Lane1    0                   n/a                 n/a                 n/a                 n/a                 n/a n/a   n/a n/a
+ Lane1    1                   n/a                 n/a                 n/a                 n/a                 n/a n/a   n/a n/a
 
 [Config Command Result Status]
  Unit: None
  Id       Value               LowThreshWarn       HighThresWarn       LowThreshAlarm      HighThreshAlarm     TCAWarn   TCAAlarm
                                                                                                               Low High  Low High
- Lane1    0                   n/a                 n/a                 n/a                 n/a                 n/a n/a   n/a n/a
+ Lane1    1                   n/a                 n/a                 n/a                 n/a                 n/a n/a   n/a n/a
 
 [Rx Output Signal Valid]
  Unit: None

@@ -1,0 +1,104 @@
+3M9350Stack#$show platform software fed switch 3 ifm interface_name TenGigabitEthernet3/0/1       
+Interface IF_ID         : 0x000000000000048a
+Interface Name          : TenGigabitEthernet3/0/1
+Interface Block Pointer : 0x752b7a807c18
+Interface Block State   : Ready
+Interface State         : Enabled
+Interface Admin mode    : Admin Up
+Interface Status        : NPD
+Interface Ref-Cnt       : 1
+Interface Type          : ETHER
+      Port Type         : SWITCH PORT
+      Port Location     : LOCAL
+      Slot              : 7
+      Unit              : 0
+      Slot Unit         : 1
+      SNMP IF Index     : 125
+      GPN               : 385
+      EC Channel        : 0
+      EC Index          : 0
+      MTU               : 1500
+      QoS Trust Type    : 3 (DSCP)
+Ref Count : 1 (feature Ref Counts + 1)
+No Feature Reference count Present
+IFM Feature Sub block information
+        Port Physical Subblock
+                Affinity .......... [local]
+                LPN ............... [1]
+                GPN ............... [385]
+                Speed ............. [1GB]
+                type .............. [IFM_PORT_TYPE_L2]
+                MTU ............... [1518]
+                ac profile ........ [IFM_AC_PROFILE_L2_DEFAULT]
+        Port Subblock [0]
+                Mpp port oid................... [0x1647(5703)]
+                System port oid................ [0x1648(5704)]
+                System port gid................ [683]
+                Ethernet port oid.............. [0x1649(5705)]
+                Port mode...................... [Dense Mode]
+                Dense mode service port gid.... [0x1e04c(122956)]
+                Dense mode service port oid.... [0x164b(5707)]
+                Dense mode port vid............ [1]
+                Voq oid........................ [0x0(0)]
+        Port Subblock [1]
+                Mpp port oid................... [0x15f5(5621)]
+                System port oid................ [0x15f9(5625)]
+                System port gid................ [683]
+                Ethernet port oid.............. [0x15fc(5628)]
+                Port mode...................... [Dense Mode]
+                Dense mode service port gid.... [0x1e04c(122956)]
+                Dense mode service port oid.... [0x1608(5640)]
+                Dense mode port vid............ [1]
+                Voq oid........................ [0x15f7(5623)]
+        Platform Subblock
+                Asic.............. [1]
+                Core.............. [0]
+                Asic Port......... [0]
+                Asic Sub Port..... [65535]
+                Ifg Id............ [0]
+                Mac Num........... [129]
+                First Serdes...... [19]
+                Last Serdes....... [19]
+                FC Mode........... [0]
+                FEC Mode.......... [0]
+                Context Id........ [0]
+        Port L2 Subblock
+                L2 Port Mode ................ [port_mode_access]
+                L2 Port Mode set............. [Yes]
+                Ethertype.................... [8100]
+                Port vlan  .................. [1]
+                  Native vlan (trunk) .............. [0]
+                  Untagged port bd vlan (access) ... [1]
+                  Default vlan (dot1q tunnel) ...... [0]
+                Native Vlan Tagging.......... [Native Vlan UnTagged]
+                status....................... [0]
+                ac profile .................. [IFM_AC_PROFILE_L2_DEFAULT]
+                DNS punt client count........ [0]
+         Port CTS Subblock is NULL if_id = 0x48a 
+         Port CTS Subblock
+                Disable SGACL .................... [0x0]
+                Trust ............................ [0x0]
+                Propagate ........................ [0x0]
+                Port SGT ......................... [0xffff]
+Events Log
+[2026/05/04 19:49:20.065] Mode None
+[2026/05/04 19:49:24.329] XCVR enable
+[2026/05/04 19:49:24.329] Port mode enable
+[2026/05/04 19:49:24.329] Mode None
+[2026/05/04 19:49:24.330] Mode None
+[2026/05/04 19:49:24.330] AC profile set success
+[2026/05/04 19:49:24.330] AC profile set success
+[2026/05/04 19:49:24.330] AC profile set success
+[2026/05/04 19:49:24.330] AC profile set success
+[2026/05/04 19:49:24.330] Mode None
+[2026/05/04 19:49:24.330] Mode None
+[2026/05/04 19:49:24.331] Mode None
+[2026/05/04 19:49:24.331] Mode None
+[2026/05/04 19:49:27.392] link state up
+[2026/05/04 19:49:27.411] Mode Access
+[2026/05/04 19:49:27.411] Mode Access
+[2026/05/04 19:49:27.411] Mode Access
+[2026/05/04 19:49:27.411] Mode Access
+[2026/05/04 19:49:27.412] Mode Access
+[2026/05/04 19:49:27.412] Mode Access
+          
